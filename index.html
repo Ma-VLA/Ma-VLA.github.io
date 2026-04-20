@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FlowBridge Project Page</title>
+  <meta name="description" content="FlowBridge: Flow-Matched Manipulation VLA for Scalable Robot Embodiments project page." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root, [data-theme="light"] {
+      --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+      --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+      --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+      --text-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
+      --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
+      --text-2xl: clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
+      --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem; --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-10: 2.5rem; --space-12: 3rem; --space-16: 4rem; --space-20: 5rem;
+      --color-bg: #f7f6f2; --color-surface: #f9f8f5; --color-surface-2: #fbfbf9; --color-surface-offset: #f0ede8; --color-border: #d4d1ca;
+      --color-text: #28251d; --color-text-muted: #6d6b66; --color-text-faint: #a09d96; --color-text-inverse: #f9f8f4;
+      --color-primary: #01696f; --color-primary-hover: #0c4e54; --shadow-sm: 0 1px 2px rgba(0,0,0,.06); --shadow-md: 0 10px 30px rgba(0,0,0,.08);
+      --radius-sm: .5rem; --radius-md: .9rem; --radius-lg: 1.25rem; --radius-xl: 1.75rem; --radius-full: 9999px;
+      --font-display: 'Manrope', 'Inter', sans-serif; --font-body: 'Instrument Sans', 'Inter', sans-serif;
+      --content: 1120px;
+    }
+    [data-theme="dark"] {
+      --color-bg: #171614; --color-surface: #1c1b19; --color-surface-2: #201f1d; --color-surface-offset: #262420; --color-border: #393836;
+      --color-text: #e4e1db; --color-text-muted: #aaa7a0; --color-text-faint: #76736c; --color-text-inverse: #181715;
+      --color-primary: #5bb2b8; --color-primary-hover: #7cc4c8; --shadow-sm: 0 1px 2px rgba(0,0,0,.25); --shadow-md: 0 10px 30px rgba(0,0,0,.35);
+    }
+    *,:before,:after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--font-body);font-size:var(--text-base);line-height:1.6;background:var(--color-bg);color:var(--color-text)}
+    img,svg{display:block;max-width:100%;height:auto}
+    a{color:inherit;text-decoration:none}
+    button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
+    .container{width:min(calc(100% - 2rem), var(--content));margin-inline:auto}
+    .skip-link{position:absolute;left:-999px;top:auto}.skip-link:focus{left:1rem;top:1rem;background:var(--color-primary);color:var(--color-text-inverse);padding:.75rem 1rem;border-radius:var(--radius-sm);z-index:1000}
+    .site-header{position:sticky;top:0;z-index:20;background:color-mix(in srgb, var(--color-bg) 86%, transparent);backdrop-filter:blur(14px);border-bottom:1px solid color-mix(in srgb, var(--color-text) 10%, transparent)}
+    .nav{display:flex;align-items:center;justify-content:space-between;padding:var(--space-4) 0;gap:var(--space-4)}
+    .brand{display:flex;align-items:center;gap:.8rem;font-weight:700}
+    .brand-mark{width:2.2rem;height:2.2rem;border-radius:.8rem;background:linear-gradient(135deg,var(--color-primary),color-mix(in srgb,var(--color-primary) 48%, white));display:grid;place-items:center;color:white;box-shadow:var(--shadow-sm)}
+    .brand-mark svg{width:1.2rem;height:1.2rem}
+    .nav-links{display:flex;gap:1rem;align-items:center;flex-wrap:wrap}
+    .nav-links a{font-size:var(--text-sm);color:var(--color-text-muted)}
+    .nav-links a:hover{color:var(--color-text)}
+    .theme-toggle{width:2.7rem;height:2.7rem;border:1px solid color-mix(in srgb, var(--color-text) 12%, transparent);border-radius:var(--radius-full);display:grid;place-items:center;background:var(--color-surface)}
+    .hero{padding:clamp(4rem,8vw,7rem) 0 3rem}
+    .hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:var(--space-8);align-items:end}
+    .eyebrow{display:inline-flex;align-items:center;gap:.5rem;padding:.45rem .8rem;border-radius:var(--radius-full);background:var(--color-surface);border:1px solid color-mix(in srgb, var(--color-text) 10%, transparent);font-size:var(--text-xs);letter-spacing:.08em;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:var(--space-4)}
+    h1{font-family:var(--font-display);font-size:var(--text-2xl);line-height:1.02;letter-spacing:-.04em;max-width:12ch}
+    .hero p{margin-top:var(--space-4);color:var(--color-text-muted);max-width:62ch}
+    .meta{margin-top:var(--space-6);display:flex;flex-wrap:wrap;gap:.75rem}
+    .chip{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1rem;border-radius:var(--radius-full);background:var(--color-surface);border:1px solid color-mix(in srgb, var(--color-text) 10%, transparent);font-size:var(--text-sm)}
+    .actions{display:flex;flex-wrap:wrap;gap:.9rem;margin-top:var(--space-6)}
+    .btn{display:inline-flex;align-items:center;gap:.65rem;padding:.95rem 1.2rem;border-radius:var(--radius-full);font-size:var(--text-sm);font-weight:700;min-height:44px}
+    .btn-primary{background:var(--color-primary);color:var(--color-text-inverse)}
+    .btn-primary:hover{background:var(--color-primary-hover)}
+    .btn-secondary{background:var(--color-surface);border:1px solid color-mix(in srgb, var(--color-text) 10%, transparent)}
+    .hero-card{background:linear-gradient(180deg,var(--color-surface),var(--color-surface-offset));border:1px solid color-mix(in srgb, var(--color-text) 10%, transparent);border-radius:var(--radius-xl);padding:var(--space-6);box-shadow:var(--shadow-md)}
+    .hero-card h2{font-size:var(--text-lg);margin-bottom:var(--space-4)}
+    .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-4)}
+    .stat{padding:var(--space-4);background:var(--color-surface-2);border-radius:var(--radius-md);border:1px solid color-mix(in srgb, var(--color-text) 8%, transparent)}
+    .stat strong{display:block;font-size:var(--text-lg);font-family:var(--font-display)}
+    .section{padding:clamp(3.5rem,6vw,5rem) 0}
+    .section-head{display:flex;justify-content:space-between;align-items:end;gap:var(--space-6);margin-bottom:var(--space-8)}
+    .section-head h2{font-family:var(--font-display);font-size:var(--text-xl);letter-spacing:-.03em}
+    .section-head p{color:var(--color-text-muted);max-width:60ch}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-5)}
+    .card{background:var(--color-surface);border:1px solid color-mix(in srgb, var(--color-text) 10%, transparent);border-radius:var(--radius-lg);padding:var(--space-5);box-shadow:var(--shadow-sm)}
+    .card h3{font-size:var(--text-lg);margin-bottom:.5rem}
+    .card p{color:var(--color-text-muted)}
+    .media-thumb{aspect-ratio:16/10;border-radius:var(--radius-md);background:var(--color-surface-offset);border:1px solid color-mix(in srgb, var(--color-text) 8%, transparent);display:flex;align-items:center;justify-content:center;padding:1rem;margin-bottom:1rem;overflow:hidden}
+    .media-thumb img{width:100%;height:100%;object-fit:contain}
+    .dataset-box{display:grid;grid-template-columns:1.1fr .9fr;gap:var(--space-6);align-items:start}
+    .table-wrap{background:var(--color-surface);border:1px solid color-mix(in srgb, var(--color-text) 10%, transparent);border-radius:var(--radius-lg);overflow:hidden}
+    table td{padding:1rem;border-bottom:1px solid color-mix(in srgb, var(--color-text) 8%, transparent);vertical-align:top}
+    table tr:last-child td{border-bottom:0}
+    table td:first-child{width:38%;color:var(--color-text-muted);font-weight:600}
+    .logo-row{display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem}
+    .logo-chip{display:inline-flex;align-items:center;gap:.7rem;padding:.8rem 1rem;border-radius:var(--radius-full);background:var(--color-surface-2);border:1px solid color-mix(in srgb, var(--color-text) 10%, transparent);font-size:var(--text-sm);font-weight:700}
+    .logo-chip img{width:20px;height:20px;object-fit:contain}
+    .projects{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-5)}
+    .project-card{display:flex;flex-direction:column;gap:.9rem;background:var(--color-surface);border:1px solid color-mix(in srgb, var(--color-text) 10%, transparent);border-radius:var(--radius-lg);padding:var(--space-5)}
+    .badge{display:inline-flex;align-items:center;padding:.35rem .7rem;border-radius:var(--radius-full);background:color-mix(in srgb,var(--color-primary) 10%, var(--color-surface));color:var(--color-primary);font-size:var(--text-xs);font-weight:700;width:max-content}
+    .project-card p{color:var(--color-text-muted)}
+    .project-card a{display:inline-flex;align-items:center;gap:.5rem;color:var(--color-primary);font-weight:700}
+    footer{padding:2rem 0 3rem;color:var(--color-text-muted);font-size:var(--text-sm)}
+    @media (max-width: 900px){
+      .hero-grid,.dataset-box,.grid-3,.projects{grid-template-columns:1fr}
+      .section-head{align-items:start;flex-direction:column}
+      h1{max-width:15ch}
+    }
+    @media (max-width: 640px){
+      .nav{align-items:flex-start;flex-direction:column}
+      .nav-links{width:100%;justify-content:space-between}
+      .stats{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="#top" aria-label="FlowBridge home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 16c3.5 0 3.5-8 7-8s3.5 8 7 8"/>
+            <path d="M4 8c3.5 0 3.5 8 7 8s3.5-8 7-8"/>
+          </svg>
+        </span>
+        <span>FlowBridge</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#overview">Overview</a>
+        <a href="#pipeline">Pipeline</a>
+        <a href="#dataset">Dataset</a>
+        <a href="#projects">Projects</a>
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="container hero-grid">
+        <div>
+          <span class="eyebrow">Manipulation VLA · Embodiment Transfer</span>
+          <h1>Flow-Matched Manipulation VLA for Scalable Robot Embodiments</h1>
+          <p>FlowBridge connects frozen vision-language priors with a robot-specific action head for real-world manipulation. The current embodiment targets the Dobot E6 with a suction gripper and is designed to extend toward broader manipulation setups.</p>
+          <div class="meta">
+            <span class="chip">Lead Contact</span>
+            <span class="chip">Dobot E6 · Jetson AGX Orin · ROS2</span>
+          </div>
+          <div class="actions">
+            <a class="btn btn-primary" href="https://huggingface.co/datasets/Kyle-Riss/dobot_e6_pick_place_random_v1" target="_blank" rel="noopener noreferrer">
+              <img src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" alt="Hugging Face logo" width="18" height="18" loading="lazy">
+              Dataset
+            </a>
+            <a class="btn btn-secondary" href="https://github.com/Kyle-Riss/6DOF-VLA" target="_blank" rel="noopener noreferrer">
+              <img src="https://cdn.simpleicons.org/github" alt="GitHub logo" width="18" height="18" loading="lazy">
+              Code
+            </a>
+            <a class="btn btn-secondary" href="https://github.com/Kyle-Riss/Dobot-Arm-DataCollect" target="_blank" rel="noopener noreferrer">Setup Guide</a>
+          </div>
+        </div>
+        <aside class="hero-card" aria-label="Project snapshot">
+          <h2>Current embodiment</h2>
+          <div class="stats">
+            <div class="stat"><strong>6-axis</strong><span>Dobot E6 arm</span></div>
+            <div class="stat"><strong>2 views</strong><span>Robot-mounted + overhead cameras</span></div>
+            <div class="stat"><strong>ROS2</strong><span>Robot communication and control</span></div>
+            <div class="stat"><strong>Real-time</strong><span>Jetson AGX Orin inference</span></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="overview">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Overview</h2>
+            <p>FlowBridge is a manipulation-focused VLA that reuses frozen vision-language priors and learns robot-specific action heads from demonstration data. The project aims to bridge semantic task understanding and executable real-world robot control.</p>
+          </div>
+        </div>
+        <div class="card">
+          <p>Instead of showing an unfinished paper or embedded video, this version keeps the page focused on the project status, dataset availability, and open-source components. That makes the page cleaner for the current stage while leaving room to add a paper section later.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="pipeline">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Pipeline</h2>
+            <p>The pipeline consists of embodiment data collection, flow-matched action head training, and real-world policy deployment.</p>
+          </div>
+        </div>
+        <div class="grid-3">
+          <article class="card">
+            <div class="media-thumb">
+              <img src="https://cdn.simpleicons.org/github/01696f" alt="Small GitHub logo used as repository visual placeholder" width="480" height="300" loading="lazy">
+            </div>
+            <h3>01. Data Collection</h3>
+            <p>Teleoperation captures robot-camera trajectories, suction grasp interactions, calibration data, and replayable manipulation episodes.</p>
+          </article>
+          <article class="card">
+            <div class="media-thumb">
+              <img src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" alt="Small Hugging Face logo used as training visual placeholder" width="480" height="300" loading="lazy">
+            </div>
+            <h3>02. Flow-Matched Action Head</h3>
+            <p>Training reuses frozen vision-language priors while learning a robot-specific action head that adapts semantic understanding to control.</p>
+          </article>
+          <article class="card">
+            <div class="media-thumb">
+              <img src="https://cdn.simpleicons.org/github/24292f" alt="Small GitHub logo used as deployment visual placeholder" width="480" height="300" loading="lazy">
+            </div>
+            <h3>03. Real-World Control Transfer</h3>
+            <p>The learned policy is deployed to the physical Dobot E6 setup for real-world manipulation execution across scenes.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="dataset">
+      <div class="container dataset-box">
+        <div>
+          <div class="section-head">
+            <div>
+              <h2>Dataset</h2>
+              <p>The Dobot E6 Pick &amp; Place Random v1 dataset provides RGB camera images, robot joint states, gripper status, and action trajectories for manipulation-oriented VLA training.</p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <tbody>
+                <tr><td>Robot Platform</td><td>Dobot E6 6-axis arm</td></tr>
+                <tr><td>Gripper</td><td>Suction gripper</td></tr>
+                <tr><td>Cameras</td><td>Robot-mounted + External</td></tr>
+                <tr><td>Tasks</td><td>Pick-and-place in randomized configurations</td></tr>
+                <tr><td>Data Type</td><td>RGB images, joint states, gripper status, action trajectories</td></tr>
+                <tr><td>Platform</td><td>Hugging Face</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <aside class="card" aria-label="Dataset links and visualizer note">
+          <h3>Dataset access</h3>
+          <p>The dataset section now uses small GitHub and Hugging Face brand visuals so the page does not look empty even before custom figures are prepared.</p>
+          <div class="logo-row">
+            <a class="logo-chip" href="https://huggingface.co/datasets/Kyle-Riss/dobot_e6_pick_place_random_v1" target="_blank" rel="noopener noreferrer">
+              <img src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" alt="Hugging Face logo" width="20" height="20" loading="lazy">
+              Hugging Face dataset
+            </a>
+            <a class="logo-chip" href="https://github.com/Kyle-Riss/Dobot-Arm-DataCollect" target="_blank" rel="noopener noreferrer">
+              <img src="https://cdn.simpleicons.org/github" alt="GitHub logo" width="20" height="20" loading="lazy">
+              Data collection repo
+            </a>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="projects">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Projects</h2>
+            <p>FlowBridge is organized into several open-source components covering inference, training, data collection, and dataset hosting.</p>
+          </div>
+        </div>
+        <div class="projects">
+          <article class="project-card">
+            <span class="badge">Inference</span>
+            <h3>E6-VLA_INFERENCE</h3>
+            <p>Real-robot inference pipeline connecting policy serving, robot execution, and deployment on the Dobot E6 platform.</p>
+            <a href="https://github.com/Kyle-Riss/E6-VLA_INFERENCE" target="_blank" rel="noopener noreferrer">Open repository</a>
+          </article>
+          <article class="project-card">
+            <span class="badge">Training</span>
+            <h3>6DOF-VLA</h3>
+            <p>Training and adaptation environment for manipulation-oriented VLA research with robot-specific action heads.</p>
+            <a href="https://github.com/Kyle-Riss/6DOF-VLA" target="_blank" rel="noopener noreferrer">Open repository</a>
+          </article>
+          <article class="project-card">
+            <span class="badge">Data</span>
+            <h3>Dobot-Arm-DataCollect</h3>
+            <p>Data collection and control stack including robot operation, calibration, logging, and dataset construction.</p>
+            <a href="https://github.com/Kyle-Riss/Dobot-Arm-DataCollect" target="_blank" rel="noopener noreferrer">Open repository</a>
+          </article>
+          <article class="project-card">
+            <span class="badge">Dataset</span>
+            <h3>Dobot E6 Pick &amp; Place Random v1</h3>
+            <p>Manipulation dataset with RGB images, robot states, gripper status, and action trajectories hosted on Hugging Face.</p>
+            <a href="https://huggingface.co/datasets/Kyle-Riss/dobot_e6_pick_place_random_v1" target="_blank" rel="noopener noreferrer">View dataset</a>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>This version intentionally removes the paper section, BibTeX block, and video area so the page matches the current project status.</p>
+    </div>
+  </footer>
+
+  <script>
+    (function(){
+      const toggle = document.querySelector('[data-theme-toggle]');
+      const root = document.documentElement;
+      let theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      root.setAttribute('data-theme', theme);
+      const render = () => {
+        toggle.innerHTML = theme === 'dark'
+          ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>'
+          : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
+      };
+      render();
+      toggle.addEventListener('click', () => { theme = theme === 'dark' ? 'light' : 'dark'; root.setAttribute('data-theme', theme); render(); });
+    })();
+  </script>
+</body>
+</html>
