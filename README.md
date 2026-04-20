@@ -1,15 +1,15 @@
-# Kyle-Riss.github.io starter
+# MaVLA.github.io starter
 
 This is a GitHub Pages starter site for a Dobot E6 / VLA research portfolio.
 
 ## Upload steps
 
-1. Create a new public repository named `Kyle-Riss.github.io`
+1. Create a new public repository named `MaVLA.github.io`
 2. Upload all files in this folder to the repository root
 3. Go to **Settings → Pages**
 4. Set **Deploy from a branch**
 5. Select **main** and **/(root)**
-6. Wait 1-2 minutes and open `https://kyle-riss.github.io`
+6. Wait 1-2 minutes and open `https://MaVLA.github.io`
 
 ## Included files
 
