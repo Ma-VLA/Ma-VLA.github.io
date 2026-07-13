@@ -1,27 +1,26 @@
-# Ma-VLA.github.io
+# FlowBridge Project Page
 
-GitHub Pages site for the FlowBridge / Ma-VLA research portfolio.
-Hosted at: https://ma-vla.github.io
+GitHub Pages site for the FlowBridge research program, hosted at
+[ma-vla.github.io](https://ma-vla.github.io/).
 
-## Upload steps
+## Site structure
 
-1. Create a new public repository named **`Ma-VLA.github.io`** under the `Ma-VLA` account
-   (the repo name must match the account name exactly, including the hyphen)
-2. Upload all files in this folder to the repository root
-3. Go to **Settings → Pages**
-4. Set **Deploy from a branch**
-5. Select **main** and **/(root)**
-6. Wait 1-2 minutes and open https://ma-vla.github.io
+- `index.html` — research-program landing page
+- `research.html` — active research tracks and future direction
+- `system/dobot-e6.html` — validated Dobot Magician E6 system
+- `results.html` — task-success and control-performance evaluation
+- `publications.html` — conference paper and journal manuscript
+- `resources.html` — training, inference, collection, and dataset resources
+- `style.css` — shared responsive design system
+- `script.js` — English/Korean and light/dark theme controls
 
-## Included files
+## Current public scope
 
-- `index.html` — main landing page
-- `style.css` — site styles
-- `script.js` — dark mode toggle
+The reported implementation uses `pi05_e6_v23_lora`, trained for 20,000 steps
+on `dobot_e6_pick_place_orange_v16`. Quantitative results apply only to the
+validated Dobot Magician E6 setup. Additional robot embodiments are described
+as future research rather than completed work.
 
-## Notes
+## Deployment
 
-- Project links (code repos, Hugging Face dataset) inside the page point to the
-  `Kyle-Riss` account on purpose — only the hosting location changed.
-- You can later add: `assets/hero.jpg`, pipeline image, demo video links,
-  publication section.
+GitHub Pages deploys the repository root from the `main` branch.
