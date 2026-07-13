@@ -86,6 +86,14 @@
     .demo-card video{display:block;width:100%;aspect-ratio:16/9;object-fit:contain;background:#111;border-radius:var(--radius-md)}
     .demo-card h3{font-size:var(--text-lg);margin:var(--space-4) var(--space-1) .25rem}
     .demo-card p{color:var(--color-text-muted);margin-inline:var(--space-1)}
+    .figure-stack{display:grid;gap:var(--space-6)}
+    .figure-card{background:var(--color-surface);border:1px solid color-mix(in srgb, var(--color-text) 10%, transparent);border-radius:var(--radius-lg);padding:var(--space-4);box-shadow:var(--shadow-sm)}
+    .figure-card a{display:block;border-radius:var(--radius-md);overflow:hidden;background:#fff;border:1px solid color-mix(in srgb, var(--color-text) 8%, transparent)}
+    .figure-card img{width:100%;height:auto;transition:transform .25s ease}
+    .figure-card a:hover img{transform:scale(1.01)}
+    .figure-card figcaption{padding:var(--space-4) var(--space-1) var(--space-1)}
+    .figure-card h3{font-size:var(--text-lg);margin-bottom:.25rem}
+    .figure-card p{color:var(--color-text-muted)}
     .dataset-box{display:grid;grid-template-columns:1.1fr .9fr;gap:var(--space-6);align-items:start}
     .table-wrap{background:var(--color-surface);border:1px solid color-mix(in srgb, var(--color-text) 10%, transparent);border-radius:var(--radius-lg);overflow:hidden}
     table td{padding:1rem;border-bottom:1px solid color-mix(in srgb, var(--color-text) 8%, transparent);vertical-align:top}
@@ -127,6 +135,7 @@
       </a>
       <nav class="nav-links" aria-label="Primary">
         <a href="#overview">Overview</a>
+        <a href="#architecture">Architecture</a>
         <a href="#demos">Demos</a>
         <a href="#pipeline">Pipeline</a>
         <a href="#dataset">Dataset</a>
@@ -183,6 +192,37 @@
         </div>
         <div class="card">
           <p>The project page brings together the current system status, real-world execution demos, dataset availability, and open-source components while leaving room to add a paper section later.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="architecture">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>System Architecture</h2>
+            <p>The model adaptation and ROS 2 execution stack connect dual-camera observations and robot state to safe, receding-horizon control on the Dobot Magician E6.</p>
+          </div>
+        </div>
+        <div class="figure-stack">
+          <figure class="figure-card">
+            <a href="assets/figures/model-architecture.png" target="_blank" rel="noopener noreferrer" aria-label="Open the model architecture figure at full size">
+              <img src="assets/figures/model-architecture.png" alt="Pi-Zero VLA adaptation architecture for the Dobot Magician E6, showing local demonstrations, vision encoder LoRA, frozen language backbone, fine-tuned action expert, and action chunks" width="2982" height="1476" loading="lazy">
+            </a>
+            <figcaption>
+              <h3>Model Architecture</h3>
+              <p>Pi-Zero adapts to the Dobot Magician E6 by applying LoRA to high-level SigLIP vision blocks and fine-tuning the flow-matching action expert while keeping the language-model backbone frozen.</p>
+            </figcaption>
+          </figure>
+          <figure class="figure-card">
+            <a href="assets/figures/ros2-control-architecture.png" target="_blank" rel="noopener noreferrer" aria-label="Open the ROS 2 control architecture figure at full size">
+              <img src="assets/figures/ros2-control-architecture.png" alt="ROS 2 control data flow from camera and robot observations through the inference bridge, execution supervisor, safety checks, and Dobot Magician E6 hardware" width="2260" height="906" loading="lazy">
+            </a>
+            <figcaption>
+              <h3>ROS 2 Control Architecture</h3>
+              <p>The ROS 2 stack streams observations to the external policy server, receives 16-step action chunks, executes the first eight steps at 16 Hz, and applies safety constraints before issuing robot commands.</p>
+            </figcaption>
+          </figure>
         </div>
       </div>
     </section>
