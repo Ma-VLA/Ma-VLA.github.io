@@ -1,176 +1,28 @@
 <!doctype html>
 <html lang="en" data-theme="light">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>FlowBridge — Flow-Matched VLA Adaptation</title>
-  <meta name="description" content="FlowBridge adapts flow-matched vision-language-action policies for real-world robot manipulation, currently validated on the Dobot Magician E6.">
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ma-VLA Research Archive — Robotics &amp; Physical AI</title>
+  <meta name="description" content="A longitudinal research archive by Yubeen Ha, documenting projects in robotics, embodied intelligence, and Physical AI.">
   <link rel="canonical" href="https://ma-vla.github.io/">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="FlowBridge — Flow-Matched VLA Adaptation">
-  <meta property="og:description" content="Efficient adaptation and real-time execution of a π0.5 policy on the Dobot Magician E6.">
-  <meta property="og:url" content="https://ma-vla.github.io/">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;family=Manrope:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
+  <meta property="og:type" content="website"><meta property="og:url" content="https://ma-vla.github.io/"><meta property="og:title" content="Ma-VLA Research Archive"><meta property="og:description" content="Research projects and publications in Robotics &amp; Physical AI.">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;family=Manrope:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css"><script src="/script.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main" data-en="Skip to content" data-ko="본문으로 건너뛰기">Skip to content</a>
-  <header class="site-header">
-    <div class="container nav-shell">
-      <a class="brand" href="/" aria-label="FlowBridge home">
-        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 16c3.5 0 3.5-8 7-8s3.5 8 7 8"/><path d="M4 8c3.5 0 3.5 8 7 8s3.5-8 7-8"/></svg></span>
-        <span>FlowBridge</span>
-      </a>
-      <nav class="primary-nav" aria-label="Primary navigation">
-        <a href="/" aria-current="page" data-en="Overview" data-ko="개요">Overview</a>
-        <a href="/research.html" data-en="Research" data-ko="연구">Research</a>
-        <a href="/system/dobot-e6.html" data-en="System" data-ko="시스템">System</a>
-        <a href="/results.html" data-en="Results" data-ko="결과">Results</a>
-        <a href="/publications.html" data-en="Publications" data-ko="논문">Publications</a>
-        <a href="/resources.html" data-en="Resources" data-ko="자료">Resources</a>
-        <span class="nav-actions">
-          <button class="lang-btn" type="button" data-language-toggle>한국어</button>
-          <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch to dark theme"></button>
-        </span>
-      </nav>
-    </div>
-  </header>
+  <header class="site-header"><div class="container nav-shell"><a class="brand" href="/" aria-label="Ma-VLA Research Archive home"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 16c3.5 0 3.5-8 7-8s3.5 8 7 8"/><path d="M4 8c3.5 0 3.5 8 7 8s3.5-8 7-8"/></svg></span><span>Ma-VLA</span></a><nav class="primary-nav" aria-label="Primary navigation"><a href="/" aria-current="page" data-en="Overview" data-ko="개요">Overview</a><a href="/projects.html" data-en="Projects" data-ko="프로젝트">Projects</a><a href="/research.html" data-en="Research Map" data-ko="연구 지도">Research Map</a><a href="/publications.html" data-en="Publications" data-ko="논문">Publications</a><a href="/resources.html" data-en="Resources" data-ko="자료">Resources</a><a href="https://kyle-riss.github.io/" target="_blank" rel="noopener noreferrer" data-en="Researcher ↗" data-ko="연구자 ↗">Researcher ↗</a><span class="nav-actions"><button class="lang-btn" type="button" data-language-toggle>한국어</button><button class="icon-btn" type="button" data-theme-toggle></button></span></nav></div></header>
 
   <main id="main">
-    <section class="hero">
-      <div class="container hero-grid">
-        <div>
-          <p class="eyebrow" data-en="Flow-matched VLA adaptation" data-ko="Flow-matched VLA 적응 연구">Flow-matched VLA adaptation</p>
-          <h1 data-en="Efficient VLA adaptation for real-world robot manipulation." data-ko="실세계 로봇 조작을 위한 효율적인 VLA 적응.">Efficient VLA adaptation for real-world robot manipulation.</h1>
-          <p class="hero-lead" data-en="FlowBridge originates from our Pi-Zero adaptation research and currently develops a π0.5-based policy validated on the Dobot Magician E6." data-ko="FlowBridge는 Pi-Zero 적응 연구에서 출발했으며, 현재 Dobot Magician E6에서 검증된 π0.5 기반 정책을 개발합니다.">FlowBridge originates from our Pi-Zero adaptation research and currently develops a π0.5-based policy validated on the Dobot Magician E6.</p>
-          <div class="status-row">
-            <span class="status-pill"><span class="status-dot"></span><span data-en="Dobot E6 · Validated" data-ko="Dobot E6 · 검증 완료">Dobot E6 · Validated</span></span>
-            <span class="status-pill">π0.5 · v23</span>
-            <span class="status-pill">ROS2 · 20 Hz</span>
-          </div>
-          <div class="button-row">
-            <a class="button primary" href="/research.html" data-en="Explore research" data-ko="연구 살펴보기">Explore research</a>
-            <a class="button" href="/results.html" data-en="View results" data-ko="결과 보기">View results</a>
-            <a class="button" href="https://github.com/Kyle-Riss/6DOF-VLA" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
-          </div>
-        </div>
-        <div class="hero-media">
-          <video autoplay muted loop playsinline preload="metadata" aria-label="Real-world Dobot E6 policy execution">
-            <source src="assets/videos/left-to-right.mp4" type="video/mp4">
-          </video>
-          <div class="media-note"><span data-en="Representative v23 real-world execution" data-ko="v23 대표 실세계 실행 영상">Representative v23 real-world execution</span><span>22.5 s</span></div>
-        </div>
-      </div>
-    </section>
+    <section class="archive-hero"><div class="container"><span class="archive-kicker" data-en="Robotics &amp; Physical AI" data-ko="로보틱스 및 Physical AI">Robotics &amp; Physical AI</span><h1 data-en="A living archive of research in motion." data-ko="진행 중인 연구를 기록하는 살아있는 아카이브.">A living archive of research in motion.</h1><p class="hero-lead" data-en="Ma-VLA documents the evolution of research by Yubeen Ha across robot learning, embodied intelligence, and real-world Physical AI—project by project, institution by institution." data-ko="Ma-VLA는 하유빈의 로봇 학습, embodied intelligence, 실세계 Physical AI 연구가 발전하는 과정을 프로젝트와 소속별로 기록합니다.">Ma-VLA documents the evolution of research by Yubeen Ha across robot learning, embodied intelligence, and real-world Physical AI—project by project, institution by institution.</p><div class="button-row"><a class="button primary" href="/projects.html" data-en="Explore projects" data-ko="프로젝트 보기">Explore projects</a><a class="button" href="/projects/flowbridge.html" data-en="Open Project 01" data-ko="Project 01 열기">Open Project 01</a></div><div class="archive-summary"><div><strong>01</strong><span data-en="Documented research project" data-ko="기록된 연구 프로젝트">Documented research project</span></div><div><strong>02</strong><span data-en="Publication milestones" data-ko="논문 마일스톤">Publication milestones</span></div><div><strong>2026—</strong><span data-en="Archive timeline" data-ko="아카이브 타임라인">Archive timeline</span></div></div></div></section>
 
-    <section class="section alt" id="vision">
-      <div class="container">
-        <div class="section-head">
-          <div><p class="section-label" data-en="Research lineage" data-ko="연구 계보">Research lineage</p><h2 data-en="From Pi-Zero research to a validated π0.5 system." data-ko="Pi-Zero 연구에서 검증된 π0.5 시스템까지.">From Pi-Zero research to a validated π0.5 system.</h2></div>
-          <p data-en="The research foundation remains Pi-Zero adaptation. The current representative implementation uses the π0.5 base model with parameter-efficient vision and action-expert adaptation." data-ko="연구의 근간은 Pi-Zero 적응이며, 현재 대표 구현은 π0.5 기반 모델에 시각 및 액션 전문가의 파라미터 효율적 적응을 적용합니다.">The research foundation remains Pi-Zero adaptation. The current representative implementation uses the π0.5 base model with parameter-efficient vision and action-expert adaptation.</p>
-        </div>
-        <div class="lineage">
-          <article class="lineage-card"><span>01 · Origin</span><strong>Pi-Zero research</strong><p data-en="Local VLA fine-tuning for a heterogeneous robot arm." data-ko="이기종 로봇팔을 위한 국소 VLA 미세조정 연구.">Local VLA fine-tuning for a heterogeneous robot arm.</p></article>
-          <article class="lineage-card"><span>02 · Base</span><strong>π0.5 initialization</strong><p data-en="Pretrained flow-matched policy foundation." data-ko="사전학습된 flow-matched 정책 기반.">Pretrained flow-matched policy foundation.</p></article>
-          <article class="lineage-card"><span>03 · Adaptation</span><strong>LoRA · v23</strong><p data-en="SigLIP blocks 18–26 and the action expert." data-ko="SigLIP 18–26 블록과 action expert 적응.">SigLIP blocks 18–26 and the action expert.</p></article>
-          <article class="lineage-card"><span>04 · Validation</span><strong>Dobot E6</strong><p data-en="Real-world execution with ROS2 safety control." data-ko="ROS2 안전 제어를 통한 실세계 실행.">Real-world execution with ROS2 safety control.</p></article>
-        </div>
-      </div>
-    </section>
+    <section class="section alt"><div class="container"><div class="section-head"><div><p class="section-label" data-en="Featured project" data-ko="대표 프로젝트">Featured project</p><h2 data-en="Project 01 · FlowBridge" data-ko="Project 01 · FlowBridge">Project 01 · FlowBridge</h2></div><p data-en="The first archive chapter follows a VLA system from local robot demonstrations and Pi-Zero research to π0.5 adaptation, ROS2 execution, and real-world evaluation." data-ko="첫 번째 아카이브 챕터는 로컬 로봇 시연과 Pi-Zero 연구에서 π0.5 적응, ROS2 실행, 실세계 평가로 이어지는 VLA 시스템을 다룹니다.">The first archive chapter follows a VLA system from local robot demonstrations and Pi-Zero research to π0.5 adaptation, ROS2 execution, and real-world evaluation.</p></div><article class="featured-project"><div class="project-visual"><video autoplay muted loop playsinline preload="metadata" aria-label="FlowBridge real-world robot execution"><source src="/assets/videos/left-to-right.mp4" type="video/mp4"></video><span class="project-number">PROJECT 01</span></div><div class="project-copy"><p class="section-label" data-en="Active · Validated system" data-ko="진행 중 · 시스템 검증 완료">Active · Validated system</p><h2>FlowBridge</h2><p data-en="Efficient adaptation of a flow-matched VLA policy for real-world manipulation on the Dobot Magician E6, with a modular ROS2 safety and execution layer." data-ko="모듈형 ROS2 안전·실행 계층과 함께 Dobot Magician E6 실세계 조작을 위해 flow-matched VLA 정책을 효율적으로 적응한 연구입니다.">Efficient adaptation of a flow-matched VLA policy for real-world manipulation on the Dobot Magician E6, with a modular ROS2 safety and execution layer.</p><div class="project-meta"><div><span data-en="Period" data-ko="기간">Period</span><strong>2026—</strong></div><div><span data-en="Institution" data-ko="소속">Institution</span><strong>Kangnam University</strong></div><div><span data-en="Current model" data-ko="현재 모델">Current model</span><strong>π0.5 · v23</strong></div><div><span data-en="Status" data-ko="상태">Status</span><strong data-en="Journal extension in progress" data-ko="저널 확장 연구 진행 중">Journal extension in progress</strong></div></div><div class="tag-row"><span class="tag">VLA</span><span class="tag">Robot Manipulation</span><span class="tag">ROS2</span><span class="tag">LoRA</span><span class="tag">Dataset</span></div><div class="button-row"><a class="button primary" href="/projects/flowbridge.html" data-en="Follow the research →" data-ko="연구 과정 보기 →">Follow the research →</a></div></div></article></div></section>
 
-    <section class="section" id="system">
-      <div class="container">
-        <div class="section-head">
-          <div><p class="section-label" data-en="Validated system" data-ko="검증 시스템">Validated system</p><h2 data-en="One system, described precisely." data-ko="검증된 하나의 시스템을 정확하게 설명합니다.">One system, described precisely.</h2></div>
-          <a class="text-link" href="/system/dobot-e6.html" data-en="Open system details →" data-ko="시스템 상세 보기 →">Open system details →</a>
-        </div>
-        <div class="snapshot">
-          <div class="panel">
-            <p class="section-label">Dobot Magician E6</p>
-            <h2 data-en="6-DoF manipulation with binary suction." data-ko="이진 흡착 명령을 사용하는 6축 로봇 조작.">6-DoF manipulation with binary suction.</h2>
-            <p class="muted" data-en="The policy consumes dual RGB observations, joint state, and a language prompt. It predicts a 16-step chunk of six joint deltas plus one absolute suction command." data-ko="정책은 듀얼 RGB 관측, 관절 상태, 언어 프롬프트를 입력받아 6개 관절 델타와 하나의 절대 흡착 명령으로 구성된 16-step 청크를 예측합니다.">The policy consumes dual RGB observations, joint state, and a language prompt. It predicts a 16-step chunk of six joint deltas plus one absolute suction command.</p>
-            <div class="tag-row"><span class="tag">6-DoF</span><span class="tag">7D action</span><span class="tag">Dual RGB</span><span class="tag">Jetson AGX Orin</span></div>
-          </div>
-          <div class="snapshot-visual snapshot-table">
-            <div class="snapshot-item"><span data-en="Policy" data-ko="정책">Policy</span><strong>π0.5 · pi05_e6_v23_lora</strong></div>
-            <div class="snapshot-item"><span data-en="Checkpoint" data-ko="체크포인트">Checkpoint</span><strong>20,000 steps</strong></div>
-            <div class="snapshot-item"><span data-en="Observation" data-ko="관측">Observation</span><strong>HIK + ZED RGB · 7D state · prompt</strong></div>
-            <div class="snapshot-item"><span data-en="Action" data-ko="액션">Action</span><strong>6 Δ-joints (deg) + suction</strong></div>
-            <div class="snapshot-item"><span data-en="Execution" data-ko="실행">Execution</span><strong>20 Hz · 16-step horizon</strong></div>
-            <div class="snapshot-item"><span data-en="Dataset" data-ko="데이터셋">Dataset</span><strong>198 episodes · 42,495 frames</strong></div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <section class="section"><div class="container"><div class="section-head"><div><p class="section-label" data-en="Research trajectory" data-ko="연구 궤적">Research trajectory</p><h2 data-en="Milestones, not disconnected pages." data-ko="분리된 페이지가 아닌 연결된 마일스톤.">Milestones, not disconnected pages.</h2></div><p data-en="Each project records its research question, technical evolution, evidence, publications, and institutional context so later work can be understood as part of a continuous trajectory." data-ko="각 프로젝트는 연구 질문, 기술 발전, 검증 결과, 논문, 당시 소속을 기록하여 이후 연구를 하나의 연속된 흐름으로 이해할 수 있게 합니다.">Each project records its research question, technical evolution, evidence, publications, and institutional context so later work can be understood as part of a continuous trajectory.</p></div><div class="timeline"><article class="timeline-item"><span class="timeline-dot"></span><span class="timeline-phase">2026 · Project 01</span><div class="timeline-copy"><h3 data-en="FlowBridge · VLA adaptation and robot control" data-ko="FlowBridge · VLA 적응 및 로봇 제어">FlowBridge · VLA adaptation and robot control</h3><p data-en="Conference publication completed; π0.5/v23 system validated; JKSCI journal extension in preparation." data-ko="학술대회 논문 발표 완료, π0.5/v23 시스템 검증, JKSCI 저널 확장 연구 준비 중.">Conference publication completed; π0.5/v23 system validated; JKSCI journal extension in preparation.</p></div></article></div></div></section>
 
-    <section class="section alt" id="tracks">
-      <div class="container">
-        <div class="section-head">
-          <div><p class="section-label" data-en="Research tracks" data-ko="연구 트랙">Research tracks</p><h2 data-en="A research program, not a repository list." data-ko="저장소 목록이 아닌 연구 프로그램.">A research program, not a repository list.</h2></div>
-          <a class="text-link" href="/research.html" data-en="Explore all tracks →" data-ko="전체 연구 트랙 보기 →">Explore all tracks →</a>
-        </div>
-        <div class="card-grid">
-          <article class="card"><span class="card-index">01</span><h3 data-en="Efficient VLA Adaptation" data-ko="효율적인 VLA 적응">Efficient VLA Adaptation</h3><p data-en="Parameter-efficient adaptation of vision and action modules under limited local data and compute." data-ko="제한된 로컬 데이터와 연산 자원에서 시각·액션 모듈을 파라미터 효율적으로 적응합니다.">Parameter-efficient adaptation of vision and action modules under limited local data and compute.</p></article>
-          <article class="card"><span class="card-index">02</span><h3 data-en="ROS2 Execution &amp; Safety" data-ko="ROS2 실행 및 안전">ROS2 Execution &amp; Safety</h3><p data-en="Action-chunk validation, joint-delta limits, tool-height constraints, and hardware command streaming." data-ko="액션 청크 검증, 관절 델타 제한, 도구 높이 제약, 하드웨어 명령 스트리밍을 다룹니다.">Action-chunk validation, joint-delta limits, tool-height constraints, and hardware command streaming.</p></article>
-          <article class="card"><span class="card-index">03</span><h3 data-en="Robot Data &amp; Benchmarking" data-ko="로봇 데이터 및 벤치마킹">Robot Data &amp; Benchmarking</h3><p data-en="Synchronized dual-camera demonstrations and task-level evaluation for repeatable manipulation research." data-ko="동기화된 듀얼 카메라 시연 데이터와 반복 가능한 조작 평가 체계를 구축합니다.">Synchronized dual-camera demonstrations and task-level evaluation for repeatable manipulation research.</p></article>
-          <article class="card"><span class="card-index">04</span><h3 data-en="Vision &amp; Action LoRA Analysis" data-ko="Vision 및 Action LoRA 분석">Vision &amp; Action LoRA Analysis</h3><p data-en="Layer-scoped studies across SigLIP and the action expert to understand adaptation behavior." data-ko="SigLIP과 action expert의 레이어 범위별 적응 동작을 분석합니다.">Layer-scoped studies across SigLIP and the action expert to understand adaptation behavior.</p></article>
-          <article class="card future-card"><span class="card-index">→</span><h3 data-en="Future Embodiment Transfer" data-ko="향후 Embodiment 전이">Future Embodiment Transfer</h3><p data-en="Future work will extend the interface to additional robot arms and end-effector configurations; no additional embodiment is claimed as validated today." data-ko="향후 다른 로봇팔과 말단장치 구성으로 인터페이스를 확장할 예정이며, 현재 추가 embodiment의 검증을 주장하지 않습니다.">Future work will extend the interface to additional robot arms and end-effector configurations; no additional embodiment is claimed as validated today.</p></article>
-        </div>
-      </div>
-    </section>
+    <section class="section alt"><div class="container"><div class="section-head"><div><p class="section-label" data-en="Research map" data-ko="연구 지도">Research map</p><h2 data-en="Current evidence and open directions." data-ko="현재 검증과 열려 있는 연구 방향.">Current evidence and open directions.</h2></div><a class="text-link" href="/research.html" data-en="Open research map →" data-ko="연구 지도 열기 →">Open research map →</a></div><div class="card-grid"><article class="card"><span class="card-index">01</span><h3 data-en="End-to-End VLA Policies" data-ko="End-to-End VLA 정책">End-to-End VLA Policies</h3><p data-en="From multimodal observations and language to robot action chunks." data-ko="멀티모달 관측과 언어에서 로봇 액션 청크까지 연결합니다.">From multimodal observations and language to robot action chunks.</p></article><article class="card"><span class="card-index">02</span><h3 data-en="Adaptation &amp; Embodiment" data-ko="적응 및 Embodiment">Adaptation &amp; Embodiment</h3><p data-en="Parameter-efficient adaptation today, broader embodiment transfer as future work." data-ko="현재의 파라미터 효율적 적응에서 향후 더 넓은 embodiment 전이로 확장합니다.">Parameter-efficient adaptation today, broader embodiment transfer as future work.</p></article><article class="card"><span class="card-index">03</span><h3 data-en="Execution &amp; Safety" data-ko="실행 및 안전">Execution &amp; Safety</h3><p data-en="Modular validation and command execution around learned policies." data-ko="학습된 정책을 둘러싼 모듈형 검증 및 명령 실행을 연구합니다.">Modular validation and command execution around learned policies.</p></article><article class="card"><span class="card-index">04</span><h3 data-en="Data &amp; Evaluation" data-ko="데이터 및 평가">Data &amp; Evaluation</h3><p data-en="Robot demonstrations, task-conditioned datasets, and real-world evidence." data-ko="로봇 시연, 작업 조건 데이터셋, 실세계 검증을 다룹니다.">Robot demonstrations, task-conditioned datasets, and real-world evidence.</p></article></div></div></section>
 
-    <section class="section" id="architecture">
-      <div class="container">
-        <div class="section-head"><div><p class="section-label" data-en="Architecture" data-ko="아키텍처">Architecture</p><h2 data-en="Model adaptation meets real-time control." data-ko="모델 적응과 실시간 제어의 연결.">Model adaptation meets real-time control.</h2></div></div>
-        <div class="figure-grid">
-          <figure class="figure-card"><a href="assets/figures/model-architecture.png" target="_blank" rel="noopener noreferrer"><img src="assets/figures/model-architecture.png" alt="VLA adaptation architecture for the Dobot E6" width="2982" height="1476" loading="lazy"></a><figcaption><h3 data-en="Model adaptation" data-ko="모델 적응">Model adaptation</h3><p data-en="Scoped SigLIP LoRA and a fine-tuned action expert." data-ko="범위 지정 SigLIP LoRA와 미세조정된 action expert.">Scoped SigLIP LoRA and a fine-tuned action expert.</p><small class="figure-note" data-en="Naming note: the figure retains the Pi-Zero research lineage; the representative v23 checkpoint is initialized from π0.5 base weights." data-ko="명칭 참고: 그림은 Pi-Zero 연구 계보를 유지하지만, 대표 v23 체크포인트는 π0.5 base weights에서 초기화됩니다.">Naming note: the figure retains the Pi-Zero research lineage; the representative v23 checkpoint is initialized from π0.5 base weights.</small></figcaption></figure>
-          <figure class="figure-card"><a href="assets/figures/ros2-control-architecture.png" target="_blank" rel="noopener noreferrer"><img src="assets/figures/ros2-control-architecture.png" alt="ROS2 inference, execution, and safety architecture for the Dobot E6" width="2260" height="906" loading="lazy"></a><figcaption><h3 data-en="ROS2 execution variant" data-ko="ROS2 실행 변형">ROS2 execution variant</h3><p data-en="WebSocket inference, action-chunk supervision, safety checks, and Dobot commands." data-ko="WebSocket 추론, 액션 청크 감독, 안전 검사, Dobot 명령 흐름.">WebSocket inference, action-chunk supervision, safety checks, and Dobot commands.</p><small class="figure-note" data-en="Configuration note: the figure depicts a 16 Hz / first-8-step receding-horizon variant; the public client defaults to 20 Hz / 16 steps per inference." data-ko="설정 참고: 그림은 16Hz / 최초 8-step receding-horizon 변형을 나타내며, 공개 클라이언트 기본값은 20Hz / 추론당 16 steps입니다.">Configuration note: the figure depicts a 16 Hz / first-8-step receding-horizon variant; the public client defaults to 20 Hz / 16 steps per inference.</small></figcaption></figure>
-        </div>
-      </div>
-    </section>
-
-    <section class="section alt" id="results">
-      <div class="container">
-        <div class="section-head"><div><p class="section-label" data-en="Validated results" data-ko="검증 결과">Validated results</p><h2 data-en="Measured on the Dobot E6 setup." data-ko="Dobot E6 환경에서 측정한 결과.">Measured on the Dobot E6 setup.</h2></div><a class="text-link" href="/results.html" data-en="See evaluation details →" data-ko="평가 상세 보기 →">See evaluation details →</a></div>
-        <div class="metrics">
-          <article class="metric"><strong>100%</strong><span data-en="Single-object recognition" data-ko="단일 객체 인식">Single-object recognition</span><small>80 / 80</small></article>
-          <article class="metric"><strong>100%</strong><span data-en="Color-conditioned recognition" data-ko="색상 조건 인식">Color-conditioned recognition</span><small>80 / 80</small></article>
-          <article class="metric"><strong>90%</strong><span data-en="Pick-and-place" data-ko="픽앤플레이스">Pick-and-place</span><small>18 / 20</small></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="demos">
-      <div class="container">
-        <div class="section-head"><div><p class="section-label" data-en="Real-world demos" data-ko="실세계 데모">Real-world demos</p><h2 data-en="Bidirectional policy execution." data-ko="양방향 정책 실행.">Bidirectional policy execution.</h2></div><p data-en="Representative v23 executions on the physical Dobot E6. Exact per-video control-mode metadata remains under verification." data-ko="실제 Dobot E6에서 수행한 v23 대표 실행 영상입니다. 영상별 정확한 제어 모드 메타데이터는 확인 중입니다.">Representative v23 executions on the physical Dobot E6. Exact per-video control-mode metadata remains under verification.</p></div>
-        <div class="demo-grid">
-          <article class="demo-card"><video controls playsinline preload="metadata"><source src="assets/videos/left-to-right.mp4" type="video/mp4"></video><div class="demo-copy"><h3>Left → Right</h3><p data-en="Real-world execution across the workspace." data-ko="작업 공간을 가로지르는 실세계 실행.">Real-world execution across the workspace.</p></div></article>
-          <article class="demo-card"><video controls playsinline preload="metadata"><source src="assets/videos/right-to-left.mp4" type="video/mp4"></video><div class="demo-copy"><h3>Right → Left</h3><p data-en="Reverse-direction execution with the same policy family." data-ko="동일 정책 계열의 반대 방향 실행.">Reverse-direction execution with the same policy family.</p></div></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section alt" id="publications">
-      <div class="container">
-        <div class="section-head"><div><p class="section-label" data-en="Publications" data-ko="논문">Publications</p><h2 data-en="Research record and current manuscript." data-ko="발표 논문과 준비 중인 원고.">Research record and current manuscript.</h2></div><a class="text-link" href="/publications.html" data-en="View publications →" data-ko="논문 보기 →">View publications →</a></div>
-        <div class="publication-list">
-          <article class="publication-card"><span class="pub-year">2026</span><div><h2>VLA 모델의 국소 미세조정을 이용한 이기종 로봇팔 궤적 예측 및 ROS 기반 제어</h2><p>Yubeen Ha · In-Yeop Choi*</p><p data-en="KSCI Summer Conference Proceedings · Vol. 34, No. 2" data-ko="한국컴퓨터정보학회 하계학술대회 논문집 · 제34권 제2호">KSCI Summer Conference Proceedings · Vol. 34, No. 2</p><div class="button-row"><a class="button" href="/assets/documents/ksci-2026-paper.pdf" target="_blank" rel="noopener noreferrer" data-en="Paper PDF ↗" data-ko="논문 PDF ↗">Paper PDF ↗</a><a class="button" href="/assets/documents/ksci-2026-presentation-deck.pdf" target="_blank" rel="noopener noreferrer" data-en="Presentation deck ↗" data-ko="발표자료 ↗">Presentation deck ↗</a></div></div><span class="pub-status" data-en="Published" data-ko="발표 완료">Published</span></article>
-          <article class="publication-card"><span class="pub-year">2026</span><div><h2>Trajectory Prediction and ROS-based Control for a Heterogeneous Robot Arm via Local Fine-Tuning of a Pi-Zero VLA Model</h2><p>Yubeen Ha · In-Yeop Choi*</p><p>JKSCI</p></div><span class="pub-status" data-en="In preparation" data-ko="투고 준비">In preparation</span></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container contact-strip">
-        <div><h2>FlowBridge Research Team</h2><p data-en="Yubeen Ha · In-Yeop Choi, corresponding author" data-ko="하유빈 · 최인엽 교신저자">Yubeen Ha · In-Yeop Choi, corresponding author</p></div>
-        <a class="button" href="mailto:gkdbqls889@kangnam.ac.kr">gkdbqls889@kangnam.ac.kr</a>
-      </div>
-    </section>
+    <section class="section"><div class="container"><div class="archive-owner"><div><p class="section-label" data-en="Archive owner" data-ko="아카이브 연구자">Archive owner</p><h2>Yubeen Ha</h2><p data-en="Research profile, interests, and broader personal portfolio are maintained separately." data-ko="연구자 프로필, 관심 분야, 개인 포트폴리오는 별도 사이트에서 관리합니다.">Research profile, interests, and broader personal portfolio are maintained separately.</p></div><a class="button primary" href="https://kyle-riss.github.io/" target="_blank" rel="noopener noreferrer" data-en="Open researcher profile ↗" data-ko="연구자 프로필 열기 ↗">Open researcher profile ↗</a></div></div></section>
   </main>
-
-  <footer class="site-footer"><div class="container footer-grid"><p>© 2026 FlowBridge Research Team</p><div class="footer-links"><a href="https://github.com/Kyle-Riss/6DOF-VLA" target="_blank" rel="noopener noreferrer">GitHub</a><a href="/resources.html" data-en="Resources" data-ko="자료">Resources</a></div></div></footer>
-</body>
-</html>
+  <footer class="site-footer"><div class="container footer-grid"><p>© 2026 Ma-VLA Research Archive</p><div class="footer-links"><a href="/projects.html" data-en="Projects" data-ko="프로젝트">Projects</a><a href="/publications.html" data-en="Publications" data-ko="논문">Publications</a><a href="mailto:gkdbqls889@kangnam.ac.kr">Contact</a></div></div></footer>
+</body></html>
