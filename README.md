@@ -10,6 +10,7 @@ GitHub Pages archive for Yubeen Ha's Robotics and Physical AI research, hosted a
 - `projects/flowbridge.html` — Project 01 research hub and evolution
 - `projects/quest3-xarm6.html` — Project 02 Quest 3 teleoperation and xArm6 VLA collection architecture
 - `research.html` — cross-project research map and open directions
+- `hardware.html` — validated E6 hardware, sensing and compute stack, plus the planned xArm6 integration track
 - `system/dobot-e6.html` — Project 01 validated Dobot E6 system deep dive
 - `system/e6-vla-inference.html` — Project 01 E6 inference ROS2 node and interface architecture
 - `results.html` — Project 01 task-success and control evaluation
