@@ -12,8 +12,10 @@ vision-language-action robot control:
 2. **Transition 1 — E6 Validation to xArm6:** v1–v26 evidence review and
    transfer rationale.
 3. **Stage 2A — Quest 3–xArm6 Demonstration Collection:** operational WebXR
-   teleoperation and synchronized ROS2 collection infrastructure. No trained
-   xArm6 policy result is claimed.
+   teleoperation and synchronized ROS2 collection infrastructure, with three
+   temporary validation episodes retained for camera-rate, synchronization,
+   and episode-integrity checks. No durable dataset or trained xArm6 policy
+   result is claimed.
 4. **Stage 2B — xArm6 VLA Adaptation:** planned action-contract validation,
    policy training, and physical evaluation.
 
@@ -29,7 +31,6 @@ vision-language-action robot control:
 - `system/` — E6 system and ROS2 runtime details
 - `hardware.html` — experimental hardware appendix
 - `publications.html` — KSCI record and JKSCI manuscript status
-- `resources.html` — compact landing page for selected public external links
 
 ## Representative Stage 1 contract
 
