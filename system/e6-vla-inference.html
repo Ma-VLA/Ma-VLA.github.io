@@ -5,7 +5,7 @@
   <title>E6-VLA_INFERENCE ROS2 Architecture — Stage 1 · Ma-VLA</title>
   <meta name="description" content="Detailed ROS2 node architecture for the FlowBridge E6 VLA inference, execution, context, visualization, and recording pipeline.">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;family=Manrope:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/style.css?v=20260724b"><script src="/script.js?v=20260724b" defer></script>
+  <link rel="stylesheet" href="/style.css?v=20260724d"><script src="/script.js?v=20260724d" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main" data-en="Skip to content" data-ko="본문으로 건너뛰기">Skip to content</a>
@@ -133,7 +133,7 @@ flowchart LR
       <div class="panel pipeline-comparison"><p class="section-label" data-en="Compared with the Stage 2 collection system" data-ko="Stage 2 수집 시스템과의 차이">Compared with the Stage 2 collection system</p><p data-en="The xArm6 pipeline separates human teleoperation and data collection across multiple packages and processes. The E6 pipeline runs observation, policy bridging, execution, and context as an autonomous loop within e6_vla_ros; there is no continuous human teleoperation point because the inference policy is the operator." data-ko="xArm6 파이프라인은 사람의 텔레옵과 데이터 수집을 여러 패키지와 프로세스로 분리합니다. E6 파이프라인은 e6_vla_ros 안에서 관측, 정책 브릿지, 실행, context를 자율 루프로 수행하며, 추론 정책이 조작자 역할을 하므로 지속적인 사람 텔레옵 지점이 없습니다.">The xArm6 pipeline separates human teleoperation and data collection across multiple packages and processes. The E6 pipeline runs observation, policy bridging, execution, and context as an autonomous loop within e6_vla_ros; there is no continuous human teleoperation point because the inference policy is the operator.</p><a class="text-link" href="/projects/quest3-xarm6.html" data-en="Open the xArm6 pipeline →" data-ko="xArm6 파이프라인 보기 →">Open the xArm6 pipeline →</a></div></div></section>
   </main>
 
-  <footer class="site-footer"><div class="container footer-grid"><p>© 2026 Ma-VLA Research Program · Stage 1</p><div class="footer-links"><a href="/projects/flowbridge.html">FlowBridge</a><a href="/system/dobot-e6.html" data-en="System overview" data-ko="시스템 개요">System overview</a><a href="/resources.html">Resources</a></div></div></footer>
+  <footer class="site-footer"><div class="container footer-grid"><p>© 2026 Ma-VLA Research Program · Stage 1</p><div class="footer-links"><a href="/projects/flowbridge.html">FlowBridge</a><a href="/system/dobot-e6.html" data-en="System overview" data-ko="시스템 개요">System overview</a><a href="/results.html">Experiments</a></div></div></footer>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <script>
     mermaid.initialize({
