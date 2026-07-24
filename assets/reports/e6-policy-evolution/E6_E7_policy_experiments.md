@@ -14,7 +14,7 @@
 ## 0. 요약 (TL;DR)
 
 - **26개 버전(v1~v26)** 학습 완료 로그를 wandb에서 전수 확보. loss는 모두 ~0.01로 수렴 → **loss는 성패의 판별자가 아니었음**. 실패는 전부 (a) 데이터 오염 (b) action contract (c) 추론 파이프라인 문제였음.
-- **확정된 action contract** (v16+, 실데이터로 증명): joint = **velocity delta**, gripper = **absolute {0,1}**.
+- **확정된 action contract** (v16+, 실데이터로 증명): joint = **frame-to-frame joint-position delta**, gripper = **absolute {0,1}**.
 - **Vision LoRA ablation 최종 승자: v23 (SigLIP 18~26 = Late 전체)** → E7 채택.
 - **E7 = xArm6 (6축, 7D)** 로 전환 중. `e7_policy.py`가 현재 8D native로 작성돼 있어 **7D+align_droid_state로 재작성 필요**.
 
@@ -43,7 +43,7 @@ state [j1~j6, grip] 7D→32D padded → Action Expert(Gemma 300m) LoRA → actio
 | 버전 | joint action 의미 | 추론 적용 | 근거 |
 |---|---|---|---|
 | v1~v5 | 절대 next-position (deg) | `target = action` | [메모리] RMSE 실험 |
-| **v6~** | **velocity delta** = `state[t+1]-state[t]` | `target = current + action` | **[데이터검증] ↓** |
+| **v6~** | **joint-position delta** = `state[t+1]-state[t]` | `target = current + action` | **[데이터검증] ↓** |
 
 **[데이터검증]** v16 데이터셋(198ep, 42,495f)에서 프레임쌍 전수 계산:
 
@@ -214,7 +214,7 @@ lift 청크가 grip≈0.026 출력 → 흡착 해제 → `_released=True` 오염
 |---|---|
 | 모델 | UFACTORY xArm6 (6-DOF), 7D `[j1..j6, gripper]` |
 | 그리퍼 | 기계식 G2 평행. **연속 정규화 [0,1] aperture** (absolute; 0=open,1=close). force는 학습 차원 아님(meta만) |
-| 카메라 | HIK + ZED, 224×224, **수집 15Hz(DROID 정렬)** |
+| 카메라 | HIK + ZED, 224×224, **현재 ROS2 수집 16Hz** |
 | action | joint delta + gripper absolute (E6 v16+ 방식) |
 
 ### 해야 할 작업 (TODO)
