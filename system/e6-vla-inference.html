@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>E6-VLA_INFERENCE ROS2 Architecture — Project 01 · Ma-VLA</title>
+  <meta name="description" content="Detailed ROS2 node architecture for the FlowBridge E6 VLA inference, execution, context, visualization, and recording pipeline.">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;family=Manrope:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css"><script src="/script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-en="Skip to content" data-ko="본문으로 건너뛰기">Skip to content</a>
+  <header class="site-header"><div class="container nav-shell"><a class="brand" href="/"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 16c3.5 0 3.5-8 7-8s3.5 8 7 8"/><path d="M4 8c3.5 0 3.5 8 7 8s3.5-8 7-8"/></svg></span><span>Ma-VLA</span></a><nav class="primary-nav"><a href="/" data-en="Overview" data-ko="개요">Overview</a><a href="/projects.html" aria-current="page" data-en="Projects" data-ko="프로젝트">Projects</a><a href="/research.html" data-en="Research Map" data-ko="연구 지도">Research Map</a><a href="/publications.html" data-en="Publications" data-ko="논문">Publications</a><a href="/resources.html" data-en="Resources" data-ko="자료">Resources</a><a href="https://kyle-riss.github.io/" target="_blank" rel="noopener noreferrer" data-en="Researcher ↗" data-ko="연구자 ↗">Researcher ↗</a><span class="nav-actions"><button class="lang-btn" data-language-toggle type="button">한국어</button><button class="icon-btn" data-theme-toggle type="button"></button></span></nav></div></header>
+
+  <main id="main">
+    <section class="page-hero"><div class="container"><p class="breadcrumb"><a href="/">Ma-VLA</a> / <a href="/projects/flowbridge.html">FlowBridge</a> / <a href="/system/dobot-e6.html">Dobot E6</a> / Inference</p><p class="eyebrow" data-en="Project 01 · ROS2 runtime deep dive" data-ko="Project 01 · ROS2 실행 구조 상세">Project 01 · ROS2 runtime deep dive</p><h1 data-en="E6-VLA_INFERENCE · Dobot E6 autonomous pipeline." data-ko="E6-VLA_INFERENCE · Dobot E6 자율 추론 파이프라인.">E6-VLA_INFERENCE · Dobot E6 autonomous pipeline.</h1><p data-en="Observation, policy bridging, and execution are connected by ROS2 topics inside the e6_vla_ros package. Policy computation runs as a separate WebSocket server outside the ROS2 graph, while the context layer launches either task_node or context_agent_node." data-ko="e6_vla_ros 단일 패키지 안에서 관측, 정책 브릿지, 실행이 ROS2 토픽으로 연결됩니다. 정책 계산은 ROS2 그래프 밖의 별도 WebSocket 서버에서 수행되며, context 계층은 task_node 또는 context_agent_node 중 하나만 실행합니다.">Observation, policy bridging, and execution are connected by ROS2 topics inside the e6_vla_ros package. Policy computation runs as a separate WebSocket server outside the ROS2 graph, while the context layer launches either task_node or context_agent_node.</p><div class="status-row"><span class="status-pill"><span class="status-dot"></span><span data-en="Operational runtime" data-ko="동작 중인 실행 구조">Operational runtime</span></span><span class="status-pill">e6_vla.launch.py</span><span class="status-pill">WebSocket :8000</span><span class="status-pill">No MoveIt2</span></div></div></section>
+
+    <section class="section alt"><div class="container"><div class="section-head"><div><p class="section-label" data-en="Runtime snapshot" data-ko="실행 구조 요약">Runtime snapshot</p><h2 data-en="Autonomous policy control with explicit hardware ownership." data-ko="명확한 하드웨어 소유 경계를 갖는 자율 정책 제어.">Autonomous policy control with explicit hardware ownership.</h2></div><p data-en="The executor is the only command owner. Observation and command traffic use separate Dobot channels, and the policy server remains an external process." data-ko="executor가 유일한 명령 소유자입니다. 관측과 명령은 분리된 Dobot 채널을 사용하며 정책 서버는 외부 프로세스로 유지됩니다.">The executor is the only command owner. Observation and command traffic use separate Dobot channels, and the policy server remains an external process.</p></div><div class="metrics four"><article class="metric"><strong>1</strong><span data-en="ROS2 package" data-ko="ROS2 패키지">ROS2 package</span><small>e6_vla_ros</small></article><article class="metric"><strong>16 Hz</strong><span data-en="Launch inference loop" data-ko="런치 추론 루프">Launch inference loop</span><small>e6_vla.launch.py</small></article><article class="metric"><strong>2</strong><span data-en="Exclusive context modes" data-ko="상호배타 context 모드">Exclusive context modes</span><small>task_node · context_agent</small></article><article class="metric"><strong>2</strong><span data-en="Robot network channels" data-ko="로봇 네트워크 채널">Robot network channels</span><small>FeedBack :30005 · Dashboard :29999</small></article></div><p class="figure-note" data-en="This page documents the e6_vla.launch.py runtime configuration. The 20 Hz value elsewhere on the site refers to the public standalone client default; the launch pipeline documented here runs its inference loop at 16 Hz." data-ko="이 페이지는 e6_vla.launch.py 실행 구성을 기록합니다. 사이트의 다른 위치에 표시된 20Hz는 공개 standalone client 기본값이며, 여기서 설명하는 launch pipeline의 추론 루프는 16Hz로 동작합니다.">This page documents the e6_vla.launch.py runtime configuration. The 20 Hz value elsewhere on the site refers to the public standalone client default; the launch pipeline documented here runs its inference loop at 16 Hz.</p></div></section>
+
+    <section class="section"><div class="container"><div class="section-head"><div><p class="section-label" data-en="ROS2 node graph" data-ko="ROS2 노드 그래프">ROS2 node graph</p><h2 data-en="Observation → policy bridge → execution." data-ko="관측 → 정책 브릿지 → 실행.">Observation → policy bridge → execution.</h2></div><p data-en="Solid arrows are runtime topics. Dashed arrows cross the ROS2 boundary or represent low-frequency visualization and recording subscriptions." data-ko="실선은 실행 로직의 토픽 흐름입니다. 점선은 ROS2 외부 경계를 넘거나 저빈도 시각화·기록 구독을 나타냅니다.">Solid arrows are runtime topics. Dashed arrows cross the ROS2 boundary or represent low-frequency visualization and recording subscriptions.</p></div>
+      <div class="architecture-legend"><span><i class="legend-line"></i><b data-en="Topic flow" data-ko="토픽 흐름">Topic flow</b></span><span><i class="legend-line dashed"></i><b data-en="External / hardware boundary" data-ko="외부 / 하드웨어 경계">External / hardware boundary</b></span><span><i class="legend-node"></i><b data-en="ROS2 node" data-ko="ROS2 노드">ROS2 node</b></span><span><i class="legend-alt"></i><b data-en="Mutually exclusive node" data-ko="상호배타 노드">Mutually exclusive node</b></span><span><i class="legend-hardware"></i><b data-en="Hardware / external API" data-ko="하드웨어 / 외부 API">Hardware / external API</b></span><span><i class="legend-store"></i><b data-en="MCAP storage" data-ko="MCAP 저장소">MCAP storage</b></span></div>
+      <div class="diagram-shell e6-diagram">
+<pre class="mermaid" aria-label="E6 VLA inference ROS2 node architecture">
+flowchart LR
+    dobot((Dobot E6))
+    hik((HIK camera))
+    zed((ZED camera))
+    mic((Voice / text input))
+    claude((Claude API))
+    disk[("External HDD<br/>inference_mcap")]
+
+    subgraph SG1["Observation"]
+        camstate[camera_state_node]
+    end
+    subgraph SG2["Policy bridge"]
+        infbridge[inference_bridge_node]
+        policysrv["Policy server<br/>run_server_v*.sh<br/>WebSocket :8000 · outside ROS2"]
+    end
+    subgraph SG3["Execution"]
+        exec[executor_supervisor_node]
+    end
+    subgraph SG4["Context layer · launch selects one"]
+        tasknode["task_node<br/>baseline"]
+        ctxagent["context_agent_node<br/>use_context_agent:=true"]
+    end
+    subgraph SG5["Voice · use_voice:=true"]
+        voice[voice_command_node]
+    end
+    subgraph SG6["Visualization · TF · recording"]
+        viz[e6_visualization_node]
+        jsb[joint_state_bridge_node.py]
+        rsp[robot_state_publisher]
+        fox["foxglove_bridge :8765"]
+        mcap["mcap recorder<br/>record_mcap:=true"]
+    end
+
+    hik --> camstate
+    zed --> camstate
+    dobot -. "FeedBack :30005 · read" .-> camstate
+
+    camstate -- "camera/image · zed_image" --> infbridge
+    camstate -- "robot/state" --> infbridge
+    infbridge <-. "observations / action_chunk" .-> policysrv
+
+    infbridge -- "policy/action_chunk" --> exec
+    infbridge -- "inference/count" --> exec
+    camstate -- "camera/image" --> exec
+    camstate -- "robot/state · state_vel · tcp · tcp_z" --> exec
+
+    tasknode -- "task/prompt · task/status" --> infbridge
+    tasknode -- "task/prompt · task/status" --> exec
+    ctxagent -- "task/prompt" --> infbridge
+    ctxagent -- "task/prompt" --> exec
+    ctxagent <-. "phase transitions only" .-> claude
+    exec -- "supervisor/status" --> tasknode
+
+    mic --> voice
+    voice -- "task/voice_command" --> tasknode
+    voice -- "voice_override · STOP" --> exec
+
+    exec -. "Dashboard MovJ / ServoJ / ToolDO :29999" .-> dobot
+
+    camstate -- "robot/state" --> jsb
+    jsb -- "/joint_states" --> rsp
+    camstate -.-> viz
+    infbridge -.-> viz
+    exec -.-> viz
+    tasknode -.-> viz
+    ctxagent -.-> viz
+    camstate -.-> fox
+    rsp -.-> fox
+    exec -.-> fox
+    camstate --> mcap
+    infbridge --> mcap
+    tasknode --> mcap
+    ctxagent --> mcap
+    mcap --> disk
+
+    classDef hardware fill:#f7ead6,stroke:#a8611c,color:#16211d,stroke-width:2px;
+    classDef alternate fill:#ece7f6,stroke:#7552a3,color:#16211d,stroke-width:2px;
+    classDef store fill:#e4f2f0,stroke:#1f7a72,color:#16211d,stroke-width:2px;
+    class dobot,hik,zed,mic,claude hardware;
+    class tasknode,ctxagent alternate;
+    class disk store;
+</pre>
+      </div><p class="caption" data-en="The graph is horizontally scrollable on narrow screens. The two context nodes are shown together for reference, but launch conditions keep them mutually exclusive at runtime." data-ko="좁은 화면에서는 그래프를 가로로 스크롤할 수 있습니다. 두 context 노드는 설명을 위해 함께 표시했지만, 실제 실행에서는 launch condition에 의해 상호배타적으로 동작합니다.">The graph is horizontally scrollable on narrow screens. The two context nodes are shown together for reference, but launch conditions keep them mutually exclusive at runtime.</p></div></section>
+
+    <section class="section alt"><div class="container"><div class="section-head"><div><p class="section-label" data-en="Topic and interface reference" data-ko="토픽 및 인터페이스 참조">Topic and interface reference</p><h2 data-en="Control path and supporting context." data-ko="제어 경로와 보조 context 계층.">Control path and supporting context.</h2></div></div><div class="reference-grid">
+      <article class="reference-card"><h3 data-en="Observation → policy → execution" data-ko="관측 → 정책 → 실행">Observation → policy → execution</h3><p data-en="The launch pipeline runs a 16 Hz inference loop. executor_supervisor_node is the only component that sends physical commands to the robot." data-ko="런치 파이프라인은 16Hz 추론 루프로 동작합니다. 실제 로봇 명령은 executor_supervisor_node만 전송합니다.">The launch pipeline runs a 16 Hz inference loop. executor_supervisor_node is the only component that sends physical commands to the robot.</p><div class="table-scroll"><table class="system-table"><thead><tr><th data-en="Publisher / caller" data-ko="발행 / 호출">Publisher / caller</th><th data-en="Topic / channel" data-ko="토픽 / 채널">Topic / channel</th><th data-en="Subscriber / target" data-ko="구독 / 대상">Subscriber / target</th></tr></thead><tbody>
+        <tr><td>camera_state_node</td><td><code>/e6/camera/image</code>, <code>/zed_image</code></td><td>inference_bridge · executor · MCAP</td></tr>
+        <tr><td>camera_state_node</td><td><code>/e6/robot/state</code>, <code>state_vel</code>, <code>tcp</code>, <code>tcp_z</code></td><td>inference_bridge · executor · context · visualization</td></tr>
+        <tr><td>inference_bridge_node</td><td><code>WebSocket :8000</code></td><td><span data-en="Policy server outside ROS2" data-ko="ROS2 외부 정책 서버">Policy server outside ROS2</span> <span class="command-pill" data-en="external" data-ko="외부">external</span></td></tr>
+        <tr><td>inference_bridge_node</td><td><code>/e6/policy/action_chunk</code></td><td>executor_supervisor · visualization · MCAP</td></tr>
+        <tr><td>inference_bridge_node</td><td><code>/e6/inference/count</code></td><td>executor_supervisor_node</td></tr>
+        <tr><td>executor_supervisor_node</td><td><code>/e6/supervisor/status</code></td><td>task_node</td></tr>
+        <tr><td>executor_supervisor_node</td><td><code>/e6/gripper/commanded</code></td><td>camera_state_node · visualization</td></tr>
+        <tr><td>executor_supervisor_node</td><td><code>/e6/emergency_stop</code></td><td data-en="Manual Trigger service" data-ko="수동 Trigger 서비스">Manual Trigger service</td></tr>
+        <tr><td>executor_supervisor_node</td><td><code>Dashboard :29999</code></td><td>Dobot E6 <span class="command-pill" data-en="robot command" data-ko="로봇 명령">robot command</span></td></tr>
+      </tbody></table></div></article>
+
+      <article class="reference-card"><h3 data-en="Context, voice, visualization, and recording" data-ko="Context, 음성, 시각화 및 기록">Context, voice, visualization, and recording</h3><p data-en="task_node and context_agent_node are mutually exclusive through UnlessCondition and IfCondition. Voice and MCAP recording are optional launch features." data-ko="task_node와 context_agent_node는 UnlessCondition 및 IfCondition으로 상호배타적입니다. 음성과 MCAP 기록은 선택적 launch 기능입니다.">task_node and context_agent_node are mutually exclusive through UnlessCondition and IfCondition. Voice and MCAP recording are optional launch features.</p><div class="table-scroll"><table class="system-table"><thead><tr><th data-en="Publisher / caller" data-ko="발행 / 호출">Publisher / caller</th><th data-en="Topic / channel" data-ko="토픽 / 채널">Topic / channel</th><th data-en="Subscriber / target" data-ko="구독 / 대상">Subscriber / target</th></tr></thead><tbody>
+        <tr><td>task_node <span class="command-pill alt" data-en="select one" data-ko="택1">select one</span></td><td><code>/e6/task/prompt</code>, <code>task/status</code></td><td>inference_bridge · executor · visualization · MCAP</td></tr>
+        <tr><td>context_agent_node <span class="command-pill alt" data-en="select one" data-ko="택1">select one</span></td><td><code>/e6/task/prompt</code></td><td>inference_bridge · executor</td></tr>
+        <tr><td>context_agent_node</td><td><code>Claude API</code></td><td><span data-en="Called only at phase transitions" data-ko="phase 전환 시점에만 호출">Called only at phase transitions</span> <span class="command-pill" data-en="external" data-ko="외부">external</span></td></tr>
+        <tr><td>voice_command_node</td><td><code>/e6/task/voice_command</code></td><td>task_node</td></tr>
+        <tr><td>voice_command_node</td><td><code>/e6/supervisor/voice_override</code></td><td>executor_supervisor_node</td></tr>
+        <tr><td>joint_state_bridge_node.py</td><td><code>/joint_states</code></td><td>robot_state_publisher</td></tr>
+        <tr><td>e6_visualization_node</td><td><code>/e6/tcp_actual_path</code>, <code>policy_pred_path</code>, <code>viz/*</code></td><td>Foxglove · RViz</td></tr>
+        <tr><td>mcap recorder</td><td data-en="record_mcap:=true" data-ko="record_mcap:=true">record_mcap:=true</td><td><code>mcap_output_dir/session_id/</code></td></tr>
+      </tbody></table></div></article>
+    </div></div></section>
+
+    <section class="section"><div class="container"><div class="ownership-note"><div><p class="section-label" data-en="Single-owner boundary" data-ko="Single-owner 경계">Single-owner boundary</p><h2 data-en="Read and command channels have separate owners." data-ko="읽기 채널과 명령 채널의 소유자를 분리합니다.">Read and command channels have separate owners.</h2></div><p data-en="camera_state_node exclusively owns Dobot FeedBack :30005 and both HIK/ZED camera devices. executor_supervisor_node exclusively owns Dashboard :29999 for MovJ, ServoJ, and ToolDO commands. The policy server is outside ROS2, so its live inference latency appears in the server console rather than this node graph or the current MCAP record." data-ko="camera_state_node가 Dobot FeedBack :30005와 HIK/ZED 카메라 장치를 단독 소유합니다. executor_supervisor_node는 MovJ, ServoJ, ToolDO 명령을 위한 Dashboard :29999를 단독 소유합니다. 정책 서버는 ROS2 밖에 있으므로 실시간 추론 latency는 이 노드 그래프나 현재 MCAP 기록이 아니라 서버 콘솔에 표시됩니다.">camera_state_node exclusively owns Dobot FeedBack :30005 and both HIK/ZED camera devices. executor_supervisor_node exclusively owns Dashboard :29999 for MovJ, ServoJ, and ToolDO commands. The policy server is outside ROS2, so its live inference latency appears in the server console rather than this node graph or the current MCAP record.</p></div>
+      <div class="panel pipeline-comparison"><p class="section-label" data-en="Compared with Project 02" data-ko="Project 02와의 차이">Compared with Project 02</p><p data-en="The xArm6 pipeline separates human teleoperation and data collection across multiple packages and processes. The E6 pipeline runs observation, policy bridging, execution, and context as an autonomous loop within e6_vla_ros; there is no continuous human teleoperation point because the inference policy is the operator." data-ko="xArm6 파이프라인은 사람의 텔레옵과 데이터 수집을 여러 패키지와 프로세스로 분리합니다. E6 파이프라인은 e6_vla_ros 안에서 관측, 정책 브릿지, 실행, context를 자율 루프로 수행하며, 추론 정책이 조작자 역할을 하므로 지속적인 사람 텔레옵 지점이 없습니다.">The xArm6 pipeline separates human teleoperation and data collection across multiple packages and processes. The E6 pipeline runs observation, policy bridging, execution, and context as an autonomous loop within e6_vla_ros; there is no continuous human teleoperation point because the inference policy is the operator.</p><a class="text-link" href="/projects/quest3-xarm6.html" data-en="Open the xArm6 pipeline →" data-ko="xArm6 파이프라인 보기 →">Open the xArm6 pipeline →</a></div></div></section>
+  </main>
+
+  <footer class="site-footer"><div class="container footer-grid"><p>© 2026 Ma-VLA Research Archive · Project 01</p><div class="footer-links"><a href="/projects/flowbridge.html">FlowBridge</a><a href="/system/dobot-e6.html" data-en="System overview" data-ko="시스템 개요">System overview</a><a href="/resources.html">Resources</a></div></div></footer>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      securityLevel: "loose",
+      theme: "base",
+      flowchart: { curve: "basis", htmlLabels: true },
+      themeVariables: {
+        primaryColor: "#eef3f1",
+        primaryTextColor: "#17211f",
+        primaryBorderColor: "#64716d",
+        lineColor: "#64716d",
+        secondaryColor: "#ffffff",
+        tertiaryColor: "#f4f0e8",
+        clusterBkg: "#f7f8f6",
+        clusterBorder: "#dce4e1",
+        fontFamily: "Instrument Sans, Apple SD Gothic Neo, sans-serif"
+      }
+    });
+  </script>
+</body>
+</html>

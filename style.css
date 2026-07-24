@@ -198,10 +198,12 @@ h1, h2, h3 { font-family: var(--font-display); }
 .legend-line { width: 1.8rem; height: 0; border-top: 2px solid var(--text); }
 .legend-line.dashed { border-top-style: dashed; }
 .legend-node, .legend-hardware, .legend-store { width: 1rem; height: .8rem; border: 1.5px solid var(--muted); border-radius: .2rem; background: var(--surface-soft); }
+.legend-alt { width: 1rem; height: .8rem; border: 1.5px solid var(--purple); border-radius: .2rem; background: color-mix(in srgb, var(--purple) 15%, var(--surface)); }
 .legend-hardware { width: .85rem; height: .85rem; border-color: var(--amber); border-radius: 50%; background: var(--surface-warm); }
 .legend-store { width: 1.1rem; border-color: var(--primary); background: var(--primary-soft); }
 .diagram-shell { overflow-x: auto; padding: 1.25rem; border: 1px solid var(--line); background: #fff; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); }
 .diagram-shell .mermaid { min-width: 1240px; margin: 0; }
+.diagram-shell.e6-diagram .mermaid { min-width: 1380px; }
 .diagram-shell svg { max-width: none !important; }
 .caption { margin: .8rem .25rem 0; color: var(--muted); font-size: .82rem; }
 .reference-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
@@ -215,10 +217,14 @@ h1, h2, h3 { font-family: var(--font-display); }
 .system-table tr:last-child td { border-bottom: 0; }
 .system-table code { padding: .12rem .3rem; border-radius: .3rem; background: var(--surface-soft); overflow-wrap: anywhere; }
 .command-pill { display: inline-flex; margin-left: .3rem; padding: .12rem .4rem; border: 1px solid var(--amber); border-radius: 999px; color: var(--amber); font-size: .63rem; font-weight: 800; white-space: nowrap; }
+.command-pill.alt { border-color: var(--purple); color: var(--purple); }
 .ownership-note { display: grid; grid-template-columns: .75fr 1.25fr; gap: 2rem; padding: 1.6rem; border-left: 4px solid var(--amber); background: var(--surface-warm); border-radius: var(--radius-md); }
 .ownership-note h2 { margin: 0; }
 .ownership-note > p { margin: 0; color: var(--muted); }
 .project-scope { margin-top: 1.25rem; }
+.pipeline-comparison { margin-top: 1.25rem; }
+.pipeline-comparison .text-link { display: inline-flex; margin-top: .7rem; }
+.infrastructure-principles { margin-top: 1.25rem; }
 
 .timeline { position: relative; display: grid; gap: 0; margin-top: 2rem; }
 .timeline::before { content: ""; position: absolute; left: 1.1rem; top: 1rem; bottom: 1rem; width: 1px; background: var(--line); }

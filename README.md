@@ -11,6 +11,7 @@ GitHub Pages archive for Yubeen Ha's Robotics and Physical AI research, hosted a
 - `projects/quest3-xarm6.html` — Project 02 Quest 3 teleoperation and xArm6 VLA collection architecture
 - `research.html` — cross-project research map and open directions
 - `system/dobot-e6.html` — Project 01 validated Dobot E6 system deep dive
+- `system/e6-vla-inference.html` — Project 01 E6 inference ROS2 node and interface architecture
 - `results.html` — Project 01 task-success and control evaluation
 - `publications.html` — publication record organized by project
 - `resources.html` — code, datasets, and infrastructure organized by project
