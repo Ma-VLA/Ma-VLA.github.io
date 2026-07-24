@@ -159,6 +159,11 @@ h1, h2, h3 { font-family: var(--font-display); }
 .collection-showcase { display: grid; grid-template-columns: .8fr 1.2fr; gap: 1.25rem; align-items: stretch; }
 .collection-video video { aspect-ratio: 3/4; max-height: 680px; object-fit: contain; }
 .collection-showcase > .panel { align-self: stretch; }
+.section-continuation { padding-top: 0; }
+.collection-dashboard img { width: 100%; aspect-ratio: 1834/980; object-fit: contain; background: #0e0f1d; }
+.collection-dashboard figcaption { display: grid; gap: .35rem; }
+.collection-dashboard figcaption h3, .collection-dashboard figcaption p { margin: 0; }
+.figure-hint { color: var(--muted); font-size: .82rem; }
 
 .page-hero { padding: 5rem 0 3rem; }
 .page-hero h1 { max-width: 18ch; margin-bottom: 1rem; font-size: clamp(2.5rem, 6vw, 5rem); line-height: 1; letter-spacing: -.05em; }
