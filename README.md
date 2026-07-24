@@ -1,44 +1,46 @@
-# Ma-VLA Research Archive
+# Ma-VLA Research Program
 
-GitHub Pages archive for Yubeen Ha's Robotics and Physical AI research, hosted at
+GitHub Pages site for Yubeen Ha's progressive research program in adaptive
+vision-language-action robot control:
 [ma-vla.github.io](https://ma-vla.github.io/).
+
+## Public research progression
+
+1. **Stage 1 — FlowBridge / E6 VLA Adaptation:** validated π0.5/v23 policy,
+   explicit 7D action contract, ROS2 execution, and physical evaluation on the
+   Dobot Magician E6.
+2. **Transition 1 — E6 Validation to xArm6:** v1–v26 evidence review and
+   transfer rationale.
+3. **Stage 2 — Quest 3–xArm6 Demonstration Collection:** operational WebXR
+   teleoperation and synchronized ROS2 collection infrastructure. No trained
+   xArm6 policy result is claimed.
 
 ## Site structure
 
-- `index.html` — archive overview and current research trajectory
-- `projects.html` — chronological project index
-- `projects/flowbridge.html` — Project 01 research hub and evolution
-- `projects/quest3-xarm6.html` — Project 02 Quest 3 teleoperation and xArm6 VLA collection architecture
-- `research.html` — cross-project research map and open directions
-- `hardware.html` — validated E6 hardware, sensing and compute stack, plus the planned xArm6 integration track
-- `system/dobot-e6.html` — Project 01 validated Dobot E6 system deep dive
-- `system/e6-vla-inference.html` — Project 01 E6 inference ROS2 node and interface architecture
-- `results.html` — Project 01 task-success and control evaluation
-- `publications.html` — publication record organized by project
-- `resources.html` — code, datasets, and infrastructure organized by project
-- `style.css` — shared responsive design system
-- `script.js` — English/Korean and light/dark theme controls
+- `index.html` — program thesis, cumulative architecture, public stages, and representative evidence
+- `research.html` — research-program narrative and collection-method comparison
+- `projects/flowbridge.html` — validated Stage 1 research
+- `transitions/e6-to-xarm6.html` — Transition 1 rationale
+- `projects/quest3-xarm6.html` — operational Stage 2 collection system
+- `results.html` — protocol-separated E6 task and control experiments
+- `technical/e6-policy-evolution.html` — curated F1–F10 v1–v26 validation report
+- `system/` — E6 system and ROS2 runtime details
+- `hardware.html` — experimental hardware appendix
+- `publications.html` — KSCI record and JKSCI manuscript status
+- `resources.html` — code, datasets, source reports, JSON, and reproduction scripts
 
-## Project 01 · FlowBridge
+## Representative Stage 1 contract
 
-The reported implementation uses `pi05_e6_v23_lora`, trained for 20,000 steps
-on `dobot_e6_pick_place_orange_v16`. Quantitative results apply only to the
-validated Dobot Magician E6 setup. Pi-Zero is retained as the research
-foundation, while the current implementation is identified precisely as
-π0.5-based. Additional robot embodiments remain future research rather than
-completed work.
+- Model: `pi05_e6_v23_lora`, 20,000 steps
+- Dataset: `dobot_e6_pick_place_orange_v16`, 198 episodes / 42,495 frames
+- Action: six frame-to-frame joint-position deltas in degrees plus one
+  absolute binary suction command
+- Horizon: 16
+- Standalone default: 20 Hz / consume 16
+- Experimental ROS2 launch: 16 Hz / consume first 8
 
-New projects are added only when the corresponding research begins. Institution
-and collaborator information is recorded as project-specific context so the
-archive can continue across future affiliations.
-
-## Project 02 · Quest3–xArm6 Teleoperation
-
-Project 02 documents the operational ROS2 infrastructure for Quest 3 WebXR
-teleoperation, xArm6 + G2 command execution, synchronized HIK/ZED observations,
-and 16 Hz VLA demonstration collection. It records infrastructure status only;
-trained-policy and task-success results are not yet claimed.
+Quantitative task results apply only to the validated Dobot E6 setup.
 
 ## Deployment
 
-GitHub Pages deploys the repository root from the `main` branch.
+GitHub Pages deploys the repository root from `main`.
