@@ -381,6 +381,19 @@ h1, h2, h3 { font-family: var(--font-display); }
 .resource-card { padding: 1.5rem; }
 .resource-card h2 { margin-bottom: .4rem; }
 .resource-card p { color: var(--muted); }
+.report-resource-feature { display: grid; grid-template-columns: .92fr 1.08fr; gap: clamp(1.5rem, 4vw, 4rem); padding: clamp(1.5rem, 4vw, 3.5rem); border-top: 1px solid var(--text); border-bottom: 1px solid var(--line); background: var(--surface); }
+.report-resource-copy h3 { margin: 1.1rem 0 .8rem; font-size: clamp(1.65rem, 3vw, 2.6rem); line-height: 1.1; letter-spacing: -.035em; }
+.report-resource-copy > p { color: var(--muted); }
+.report-resource-figures { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: start; }
+.report-resource-figures figure { margin: 0; border: 1px solid var(--line); background: #fff; }
+.report-resource-figures img { width: 100%; aspect-ratio: 16/10; object-fit: contain; }
+.report-resource-figures figcaption { padding: .65rem .75rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .76rem; }
+.artifact-index { border-bottom: 1px solid var(--line); }
+.artifact-index article { display: grid; grid-template-columns: 3rem minmax(0, 1fr) auto; gap: 1rem; align-items: center; padding: 1.25rem 0; border-top: 1px solid var(--line); }
+.artifact-index article > span { color: var(--primary); font: 800 .75rem var(--font-display); }
+.artifact-index h3, .artifact-index p { margin: 0; }
+.artifact-index p { color: var(--muted); font-size: .88rem; }
+.artifact-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .8rem; color: var(--primary); font-size: .82rem; font-weight: 800; }
 
 details { border: 1px solid var(--line); background: var(--surface); border-radius: var(--radius-sm); }
 details + details { margin-top: .75rem; }
@@ -407,6 +420,7 @@ summary { padding: 1rem 1.15rem; cursor: pointer; font-family: var(--font-displa
   .primary-nav > a { padding: .75rem; }
   .nav-actions { margin-left: 0; }
   .hero-grid, .snapshot, .split, .reference-grid, .ownership-note, .collection-showcase, .collection-flow, .hardware-feature-grid, .hardware-grid, .hardware-primary, .hardware-card.compact, .hardware-note { grid-template-columns: 1fr; }
+  .report-resource-feature { grid-template-columns: 1fr; }
   .collection-flow li { min-height: auto; }
   .collection-flow li:not(:last-child)::after { content: "↓"; top: auto; right: 1rem; bottom: -.7rem; transform: none; }
   .featured-project { grid-template-columns: 1fr; }
@@ -450,6 +464,9 @@ summary { padding: 1rem 1.15rem; cursor: pointer; font-family: var(--font-displa
   .comparison-row { grid-template-columns: 4.2rem 1fr; }
   .comparison-row strong { grid-column: 2; }
   .hero-evidence, .report-figure-grid { grid-template-columns: 1fr; }
+  .report-resource-figures { grid-template-columns: 1fr; }
+  .artifact-index article { grid-template-columns: 2rem 1fr; align-items: start; }
+  .artifact-index .text-link, .artifact-links { grid-column: 2; justify-content: flex-start; }
   .architecture-chain { grid-template-columns: 1fr; }
   .architecture-step, .architecture-step:nth-child(3) { border-right: 0; border-bottom: 1px solid var(--line); }
   .architecture-step:last-child { border-bottom: 0; }
