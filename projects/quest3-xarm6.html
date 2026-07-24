@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project 02 · Quest3–xArm6 Teleoperation — Ma-VLA Research Archive</title>
+  <meta name="description" content="ROS2 architecture for Quest 3 teleoperation and VLA demonstration collection on an xArm6 with a G2 gripper.">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;family=Manrope:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css"><script src="/script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-en="Skip to content" data-ko="본문으로 건너뛰기">Skip to content</a>
+  <header class="site-header"><div class="container nav-shell"><a class="brand" href="/"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 16c3.5 0 3.5-8 7-8s3.5 8 7 8"/><path d="M4 8c3.5 0 3.5 8 7 8s3.5-8 7-8"/></svg></span><span>Ma-VLA</span></a><nav class="primary-nav"><a href="/" data-en="Overview" data-ko="개요">Overview</a><a href="/projects.html" aria-current="page" data-en="Projects" data-ko="프로젝트">Projects</a><a href="/research.html" data-en="Research Map" data-ko="연구 지도">Research Map</a><a href="/publications.html" data-en="Publications" data-ko="논문">Publications</a><a href="/resources.html" data-en="Resources" data-ko="자료">Resources</a><a href="https://kyle-riss.github.io/" target="_blank" rel="noopener noreferrer" data-en="Researcher ↗" data-ko="연구자 ↗">Researcher ↗</a><span class="nav-actions"><button class="lang-btn" data-language-toggle type="button">한국어</button><button class="icon-btn" data-theme-toggle type="button"></button></span></nav></div></header>
+
+  <main id="main">
+    <section class="page-hero"><div class="container"><p class="breadcrumb"><a href="/">Ma-VLA</a> / <a href="/projects.html">Projects</a> / Project 02</p><p class="eyebrow">Project 02 · 2026-07-24— · Active</p><h1 data-en="Quest 3 → xArm6 teleoperation and VLA data pipeline." data-ko="Quest 3 → xArm6 텔레옵 및 VLA 데이터 파이프라인.">Quest 3 → xArm6 teleoperation and VLA data pipeline.</h1><p data-en="An operational ROS2 system that separates real-time Quest controller teleoperation from synchronized demonstration collection using dual cameras, robot state, gripper commands, and a browser-based episode monitor." data-ko="Quest 컨트롤러 기반 실시간 텔레옵과 듀얼 카메라·로봇 상태·그리퍼 명령을 동기화한 시연 데이터 수집을 분리하고, 브라우저에서 에피소드를 관리하는 ROS2 시스템입니다.">An operational ROS2 system that separates real-time Quest controller teleoperation from synchronized demonstration collection using dual cameras, robot state, gripper commands, and a browser-based episode monitor.</p><div class="status-row"><span class="status-pill"><span class="status-dot"></span><span data-en="Infrastructure operational" data-ko="인프라 동작 완료">Infrastructure operational</span></span><span class="status-pill">xArm6 + G2</span><span class="status-pill">Quest 3 · WebXR</span><span class="status-pill">ROS2</span></div></div></section>
+
+    <section class="section alt"><div class="container"><div class="section-head"><div><p class="section-label" data-en="System snapshot" data-ko="시스템 요약">System snapshot</p><h2 data-en="Two parallel paths, one hardware owner." data-ko="두 개의 병렬 경로, 하나의 하드웨어 소유자.">Two parallel paths, one hardware owner.</h2></div><p data-en="Five ROS2 packages organize eleven running nodes. The manipulation and collection paths remain separate processes while sharing only published state and image topics." data-ko="5개 ROS2 패키지에 실행 노드 11개가 구성됩니다. 조작 경로와 수집 경로는 서로 다른 프로세스로 동작하며, 발행된 상태 및 이미지 토픽만 공유합니다.">Five ROS2 packages organize eleven running nodes. The manipulation and collection paths remain separate processes while sharing only published state and image topics.</p></div><div class="metrics four"><article class="metric"><strong>5</strong><span data-en="ROS2 packages" data-ko="ROS2 패키지">ROS2 packages</span><small>teleop · policy · bridge · driver · collector</small></article><article class="metric"><strong>11</strong><span data-en="Running nodes" data-ko="실행 노드">Running nodes</span><small data-en="Including ufactory_driver" data-ko="ufactory_driver 포함">Including ufactory_driver</small></article><article class="metric"><strong>2</strong><span data-en="RGB camera streams" data-ko="RGB 카메라 스트림">RGB camera streams</span><small>HIK + ZED · 224 × 224</small></article><article class="metric"><strong>16 Hz</strong><span data-en="Collection rate" data-ko="수집 주기">Collection rate</span><small data-en="Episode snapshots" data-ko="에피소드 스냅샷">Episode snapshots</small></article></div></div></section>
+
+    <section class="section"><div class="container"><div class="section-head"><div><p class="section-label" data-en="ROS2 node graph" data-ko="ROS2 노드 그래프">ROS2 node graph</p><h2 data-en="Quest control, robot execution, and synchronized collection." data-ko="Quest 제어, 로봇 실행, 동기화 수집.">Quest control, robot execution, and synchronized collection.</h2></div><p data-en="Solid arrows represent published topic flow. Dashed arrows represent service, action, SDK, or direct command boundaries." data-ko="실선 화살표는 pub/sub 토픽 흐름을, 점선 화살표는 서비스·액션·SDK·직접 명령 경계를 나타냅니다.">Solid arrows represent published topic flow. Dashed arrows represent service, action, SDK, or direct command boundaries.</p></div>
+      <div class="architecture-legend" aria-label="Diagram legend"><span><i class="legend-line"></i><b data-en="Topic flow" data-ko="토픽 흐름">Topic flow</b></span><span><i class="legend-line dashed"></i><b data-en="Service / action / SDK" data-ko="서비스 / 액션 / SDK">Service / action / SDK</b></span><span><i class="legend-node"></i><b data-en="ROS2 node" data-ko="ROS2 노드">ROS2 node</b></span><span><i class="legend-hardware"></i><b data-en="Hardware / operator" data-ko="하드웨어 / 조작자">Hardware / operator</b></span><span><i class="legend-store"></i><b data-en="Episode storage" data-ko="에피소드 저장소">Episode storage</b></span></div>
+      <div class="diagram-shell">
+<pre class="mermaid" aria-label="Quest 3 to xArm6 ROS2 node architecture">
+flowchart LR
+    human((Operator))
+    bridge[bridge_node]
+    vrpolicy[vr_policy_dryrun_node]
+    tcp[robot_states_to_tcp_pose_node]
+    vel[twist_to_xarm_velocity_node]
+    grip[trigger_to_gripper_node]
+    btn[button_recovery_node]
+    driver[ufactory_driver]
+    robot((xArm6 + G2))
+    hikcam((HIK camera))
+    zedcam((ZED camera))
+    hik[hik_camera_publisher_node]
+    zed[zed_camera_publisher_node]
+    collector[vla_data_collector_node]
+    web["web_monitor_node :8092"]
+    browser((Web browser))
+    disk[("External HDD<br/>xArm-VLA-collect")]
+
+    subgraph SG1["quest3_webxr_bridge"]
+        bridge
+    end
+    subgraph SG2["droid_vr_policy_ros2 · dry-run"]
+        vrpolicy
+    end
+    subgraph SG3["xarm_velocity_bridge"]
+        tcp
+        vel
+        grip
+        btn
+    end
+    subgraph SG4["xarm_api"]
+        driver
+    end
+    subgraph SG5["xarm_vla_collector · cameras"]
+        hik
+        zed
+    end
+    subgraph SG6["xarm_vla_collector · episodes"]
+        collector
+        web
+    end
+
+    human -- WebXR --> bridge
+    hikcam --> hik
+    zedcam --> zed
+    driver -. SDK .-> robot
+
+    bridge -- "pose / grip / trigger / buttons" --> vrpolicy
+    tcp -- "/xarm_api/tcp_pose" --> vrpolicy
+    vrpolicy -- "twist_safe / enabled" --> vel
+    bridge -- trigger --> grip
+    bridge -- "three buttons" --> btn
+
+    driver -- "/xarm/robot_states" --> tcp
+    driver -- "/xarm/robot_states" --> vel
+    driver -- "/xarm/robot_states" --> btn
+    vel -. velocity_cmd .-> driver
+    grip -. gripper_action .-> driver
+    btn -. "mode / state / position / servo_angle" .-> driver
+
+    hik -- "/xarm/hik/image_224" --> collector
+    zed -- "/xarm/zed/image_224" --> collector
+    driver -- "joint_states / robot_states" --> collector
+    grip -- gripper_commanded --> collector
+    vrpolicy -- enabled --> collector
+    btn -- anchor_arrived --> collector
+
+    hik -. preview .-> web
+    zed -. preview .-> web
+    collector -- status --> web
+    browser <-->|"MJPEG + controls"| web
+    web -- "episode_cmd / set_prompt / set_anchor" --> collector
+    web -. recovery .-> btn
+    collector --> disk
+
+    classDef hardware fill:#f7ead6,stroke:#a8611c,color:#16211d,stroke-width:2px;
+    classDef store fill:#e4f2f0,stroke:#1f7a72,color:#16211d,stroke-width:2px;
+    class human,robot,hikcam,zedcam,browser hardware;
+    class disk store;
+</pre>
+      </div><p class="caption" data-en="The diagram is horizontally scrollable on narrow screens. Hardware access is intentionally centralized: ufactory_driver owns the robot connection, while the two camera publisher nodes exclusively own their camera devices." data-ko="좁은 화면에서는 다이어그램을 가로로 스크롤할 수 있습니다. 하드웨어 접근은 의도적으로 중앙화되어 있으며, ufactory_driver가 로봇 연결을 단독 소유하고 두 camera publisher 노드가 각각의 카메라 장치를 단독 소유합니다.">The diagram is horizontally scrollable on narrow screens. Hardware access is intentionally centralized: ufactory_driver owns the robot connection, while the two camera publisher nodes exclusively own their camera devices.</p></div></section>
+
+    <section class="section alt"><div class="container"><div class="section-head"><div><p class="section-label" data-en="Reference paths" data-ko="경로 상세">Reference paths</p><h2 data-en="Manipulation and collection contracts." data-ko="조작 및 수집 계약.">Manipulation and collection contracts.</h2></div></div><div class="reference-grid">
+      <article class="reference-card"><h3 data-en="Manipulation · Quest → robot" data-ko="조작 경로 · Quest → 로봇">Manipulation · Quest → robot</h3><p data-en="Teleoperation calculation and execution. Only the velocity, gripper, and recovery bridge nodes can request physical robot commands through the driver." data-ko="텔레옵 계산 및 실행 경로입니다. velocity, gripper, recovery bridge 노드만 드라이버를 통해 실제 로봇 명령을 요청할 수 있습니다.">Teleoperation calculation and execution. Only the velocity, gripper, and recovery bridge nodes can request physical robot commands through the driver.</p><div class="table-scroll"><table class="system-table"><thead><tr><th data-en="Publisher / caller" data-ko="발행 / 호출">Publisher / caller</th><th data-en="Topic / interface" data-ko="토픽 / 인터페이스">Topic / interface</th><th data-en="Subscriber / target" data-ko="구독 / 대상">Subscriber / target</th></tr></thead><tbody>
+        <tr><td>bridge_node</td><td><code>/quest3/right/pose</code></td><td>vr_policy_dryrun_node</td></tr>
+        <tr><td>bridge_node</td><td><code>/grip</code>, <code>/trigger</code></td><td>vr_policy · trigger_to_gripper</td></tr>
+        <tr><td>bridge_node</td><td><code>/thumbstick_click</code>, <code>/button_a/b</code></td><td>button_recovery_node</td></tr>
+        <tr><td>robot_states_to_tcp_pose</td><td><code>/xarm_api/tcp_pose</code></td><td>vr_policy_dryrun_node</td></tr>
+        <tr><td>vr_policy_dryrun_node</td><td><code>/teleop/twist_safe</code></td><td>twist_to_xarm_velocity <span class="command-pill" data-en="robot command" data-ko="로봇 명령">robot command</span></td></tr>
+        <tr><td>vr_policy_dryrun_node</td><td><code>/teleop/enabled</code></td><td>velocity bridge · collector</td></tr>
+        <tr><td>trigger_to_gripper_node</td><td><code>/xarm_gripper/gripper_action</code></td><td>ufactory_driver <span class="command-pill" data-en="robot command" data-ko="로봇 명령">robot command</span></td></tr>
+        <tr><td>button_recovery_node</td><td><code>set_mode / state / position / servo_angle</code></td><td>ufactory_driver <span class="command-pill" data-en="robot command" data-ko="로봇 명령">robot command</span></td></tr>
+        <tr><td>ufactory_driver</td><td><code>/xarm/robot_states</code>, <code>/xarm/joint_states</code></td><td>tcp_pose · velocity · recovery · collector</td></tr>
+      </tbody></table></div></article>
+
+      <article class="reference-card"><h3 data-en="Collection · cameras → episodes" data-ko="수집 경로 · 카메라 → 에피소드">Collection · cameras → episodes</h3><p data-en="Synchronized observations are sampled at 16 Hz and written to episode folders, while the browser monitor provides previews and collection controls." data-ko="동기화된 관측을 16Hz로 샘플링해 에피소드 폴더에 저장하며, 브라우저 모니터에서 미리보기와 수집 제어를 제공합니다.">Synchronized observations are sampled at 16 Hz and written to episode folders, while the browser monitor provides previews and collection controls.</p><div class="table-scroll"><table class="system-table"><thead><tr><th data-en="Publisher" data-ko="발행">Publisher</th><th data-en="Topic / output" data-ko="토픽 / 출력">Topic / output</th><th data-en="Subscriber / target" data-ko="구독 / 대상">Subscriber / target</th></tr></thead><tbody>
+        <tr><td>hik_camera_publisher_node</td><td><code>/xarm/hik/image_224</code></td><td>collector · web monitor</td></tr>
+        <tr><td>zed_camera_publisher_node</td><td><code>/xarm/zed/image_224</code></td><td>collector · web monitor</td></tr>
+        <tr><td>trigger_to_gripper_node</td><td><code>/teleop/gripper_commanded</code></td><td>vla_data_collector_node</td></tr>
+        <tr><td>vla_data_collector_node</td><td><code>/collector/status</code></td><td>web_monitor_node</td></tr>
+        <tr><td>web_monitor_node</td><td><code>/collector/episode_cmd</code></td><td>vla_data_collector_node</td></tr>
+        <tr><td>web_monitor_node</td><td><code>/collector/set_prompt</code></td><td>vla_data_collector_node</td></tr>
+        <tr><td>web_monitor_node</td><td><code>/collector/set_anchor</code></td><td>button_recovery · collector</td></tr>
+        <tr><td>button_recovery_node</td><td><code>/collector/anchor_arrived</code></td><td>vla_data_collector_node</td></tr>
+        <tr><td>vla_data_collector_node</td><td data-en="Episode storage" data-ko="에피소드 저장">Episode storage</td><td><code>/media/.../Dobot/xArm-VLA-collect/</code></td></tr>
+      </tbody></table></div></article>
+    </div></div></section>
+
+    <section class="section"><div class="container"><div class="ownership-note"><div><p class="section-label" data-en="Single-owner boundary" data-ko="Single-owner 경계">Single-owner boundary</p><h2 data-en="One process owns each physical device." data-ko="각 물리 장치는 하나의 프로세스만 소유합니다.">One process owns each physical device.</h2></div><p data-en="Only ufactory_driver connects directly to the robot SDK. Only the HIK and ZED camera publisher nodes open their respective camera devices. Every other process consumes existing ROS2 topics; a second direct connection would risk socket or device conflicts." data-ko="ufactory_driver만 로봇 SDK에 직접 연결합니다. HIK와 ZED camera publisher 노드만 각 카메라 장치를 직접 엽니다. 나머지 프로세스는 기존 ROS2 토픽만 구독하며, 두 번째 직접 연결은 소켓 또는 장치 충돌을 일으킬 수 있습니다.">Only ufactory_driver connects directly to the robot SDK. Only the HIK and ZED camera publisher nodes open their respective camera devices. Every other process consumes existing ROS2 topics; a second direct connection would risk socket or device conflicts.</p></div>
+      <div class="panel narrow project-scope"><p class="section-label" data-en="Current scope" data-ko="현재 범위">Current scope</p><p data-en="This project page documents an operational teleoperation and data-collection infrastructure. It does not yet claim a trained xArm VLA policy, task-success results, or cross-robot transfer performance." data-ko="이 프로젝트 페이지는 동작하는 텔레옵 및 데이터 수집 인프라를 기록합니다. 아직 학습된 xArm VLA 정책, 태스크 성공 결과, 로봇 간 전이 성능을 주장하지 않습니다.">This project page documents an operational teleoperation and data-collection infrastructure. It does not yet claim a trained xArm VLA policy, task-success results, or cross-robot transfer performance.</p></div></div></section>
+  </main>
+
+  <footer class="site-footer"><div class="container footer-grid"><p>© 2026 Ma-VLA Research Archive · Project 02</p><div class="footer-links"><a href="/projects.html" data-en="All Projects" data-ko="전체 프로젝트">All Projects</a><a href="/projects/flowbridge.html">Project 01</a></div></div></footer>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      securityLevel: "loose",
+      theme: "base",
+      flowchart: { curve: "basis", htmlLabels: true },
+      themeVariables: {
+        primaryColor: "#eef3f1",
+        primaryTextColor: "#17211f",
+        primaryBorderColor: "#64716d",
+        lineColor: "#64716d",
+        secondaryColor: "#ffffff",
+        tertiaryColor: "#f4f0e8",
+        clusterBkg: "#f7f8f6",
+        clusterBorder: "#dce4e1",
+        fontFamily: "Instrument Sans, Apple SD Gothic Neo, sans-serif"
+      }
+    });
+  </script>
+</body>
+</html>

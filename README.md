@@ -8,6 +8,7 @@ GitHub Pages archive for Yubeen Ha's Robotics and Physical AI research, hosted a
 - `index.html` — archive overview and current research trajectory
 - `projects.html` — chronological project index
 - `projects/flowbridge.html` — Project 01 research hub and evolution
+- `projects/quest3-xarm6.html` — Project 02 Quest 3 teleoperation and xArm6 VLA collection architecture
 - `research.html` — cross-project research map and open directions
 - `system/dobot-e6.html` — Project 01 validated Dobot E6 system deep dive
 - `results.html` — Project 01 task-success and control evaluation
@@ -28,6 +29,13 @@ completed work.
 New projects are added only when the corresponding research begins. Institution
 and collaborator information is recorded as project-specific context so the
 archive can continue across future affiliations.
+
+## Project 02 · Quest3–xArm6 Teleoperation
+
+Project 02 documents the operational ROS2 infrastructure for Quest 3 WebXR
+teleoperation, xArm6 + G2 command execution, synchronized HIK/ZED observations,
+and 16 Hz VLA demonstration collection. It records infrastructure status only;
+trained-policy and task-success results are not yet claimed.
 
 ## Deployment
 
