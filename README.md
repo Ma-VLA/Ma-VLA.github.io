@@ -11,13 +11,8 @@ vision-language-action robot control:
    Dobot Magician E6.
 2. **Transition 1 — E6 Validation to xArm6:** v1–v26 evidence review and
    transfer rationale.
-3. **Stage 2A — Quest 3–xArm6 Demonstration Collection:** operational WebXR
-   teleoperation and synchronized ROS2 collection infrastructure, with three
-   temporary validation episodes retained for camera-rate, synchronization,
-   and episode-integrity checks. No durable dataset or trained xArm6 policy
-   result is claimed.
-4. **Stage 2B — xArm6 VLA Adaptation:** planned action-contract validation,
-   policy training, and physical evaluation.
+3. **Stage 2A — Quest 3–xArm6 Demonstration Collection:** Quest 3 WebXR
+   teleoperation and synchronized ROS2 demonstration-capture infrastructure.
 
 ## Site structure
 
@@ -27,9 +22,8 @@ vision-language-action robot control:
 - `transitions/e6-to-xarm6.html` — Transition 1 rationale
 - `projects/quest3-xarm6.html` — operational Stage 2A collection system
 - `results.html` — protocol-separated E6 task and control experiments
-- `technical/e6-policy-evolution.html` — curated F1–F10 v1–v26 validation report
+- `technical/e6-policy-evolution.html` — curated Stage 1 technical analysis
 - `system/` — E6 system and ROS2 runtime details
-- `hardware.html` — experimental hardware appendix
 - `publications.html` — KSCI record and JKSCI manuscript status
 
 ## Representative Stage 1 contract
@@ -39,8 +33,8 @@ vision-language-action robot control:
 - Action: six frame-to-frame joint-position deltas in degrees plus one
   absolute binary suction command
 - Horizon: 16
-- Standalone default: 20 Hz / consume 16
-- Experimental ROS2 launch: 16 Hz / consume first 8
+- ROS2 executor: measured 16 Hz
+- Action horizon: 16 / consume first 8 steps
 
 Quantitative task results apply only to the validated Dobot E6 setup.
 
