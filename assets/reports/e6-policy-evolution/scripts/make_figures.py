@@ -24,7 +24,7 @@ if os.path.exists(_KFONT):
 else:
     _KNAME = "DejaVu Sans"
 
-REPO = "/home/billy/26kp/openpi_upstream_clean"
+REPO = os.environ.get("OPENPI_REPO", "/path/to/openpi")
 FIG = os.path.join(REPO, "docs/figures/e6_e7_policy")
 DATA = os.path.join(FIG, "data")
 

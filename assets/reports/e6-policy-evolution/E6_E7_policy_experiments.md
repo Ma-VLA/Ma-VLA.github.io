@@ -234,7 +234,7 @@ uv run scripts/train.py pi05_e7_v1_lora --exp-name e7_2cam_lora_v1
 이 리포트가 **실데이터로 재현하지 못한** 것들 — 추후 보강 대상:
 
 1. **오염 ep272~399 재현 불가** — v2/v6 400ep 원본 수집분이 HF 캐시에 없음. repo `data/2CAM-Orange-init`은 clean 199-ep(v13/v14/v16 소스)라 오염 없음. → F10은 [메모리] 수치, F5로 간접 반증.
-2. **외장 체크포인트 백업 미마운트** — `/media/billy/새 볼륨2·3/e6_checkpoints/` 현재 접근 불가. 백업본 step 검증 불가. (로컬 `checkpoints/`에는 v14/v11/v1_lora merged 없음, v6/v7/v15 merged 없음.)
+2. **외장 체크포인트 백업 미마운트** — `<external_checkpoint_root>/` 현재 접근 불가. 백업본 step 검증 불가. (로컬 `checkpoints/`에는 v14/v11/v1_lora merged 없음, v6/v7/v15 merged 없음.)
 3. **E7 자산 부재** — `pi05_e7_*` 체크포인트/assets/`xarm_e7_*` 데이터셋 아직 없음(데이터 수집 전).
 4. **실기 정량치는 v21/v23만** — 나머지 ablation은 정성적 "열세" 판정([메모리]).
 5. **`j4 min>-20°` 품질검사 코드 부재** — 메모리의 이 기준은 실제 convert 스크립트에 없음. 실재하는 것은 v10의 `mode=9` IK-flip 제외(`exclude=(16,97,98,129,149,150,193)`), v13/v14는 `exclude=(193,)`뿐.
@@ -244,7 +244,7 @@ uv run scripts/train.py pi05_e7_v1_lora --exp-name e7_2cam_lora_v1
 ## 부록: 재현 방법
 
 ```bash
-cd /home/billy/26kp/openpi_upstream_clean
+cd <openpi_repo>
 uv run --no-sync python scripts/analysis_e6_e7/compute_wandb.py      # loss/wandb → data/wandb_curves.json
 uv run --no-sync python scripts/analysis_e6_e7/compute_datasets.py   # action/분포 → data/datasets_analysis.json
 uv run --no-sync python scripts/analysis_e6_e7/make_figures.py       # F1~F10 PNG

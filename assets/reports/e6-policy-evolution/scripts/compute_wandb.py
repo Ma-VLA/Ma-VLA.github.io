@@ -16,7 +16,7 @@ import re
 import glob
 import os
 
-REPO = "/home/billy/26kp/openpi_upstream_clean"
+REPO = os.environ.get("OPENPI_REPO", "/path/to/openpi")
 WANDB = os.path.join(REPO, "wandb")
 OUT_DIR = os.path.join(REPO, "docs/figures/e6_e7_policy/data")
 os.makedirs(OUT_DIR, exist_ok=True)
