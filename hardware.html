@@ -48,7 +48,7 @@
     <section class="section">
       <div class="container">
         <div class="section-head">
-          <div><p class="section-label">Project 01 · Validated hardware</p><h2 data-en="Dobot E6 manipulation platform." data-ko="Dobot E6 조작 플랫폼.">Dobot E6 manipulation platform.</h2></div>
+          <div><p class="section-label">Stage 1 · Validated hardware</p><h2 data-en="Dobot E6 manipulation platform." data-ko="Dobot E6 조작 플랫폼.">Dobot E6 manipulation platform.</h2></div>
           <p data-en="This is the hardware configuration associated with the current FlowBridge dataset, π0.5/v23 adaptation, ROS2 runtime, and reported real-world results." data-ko="현재 FlowBridge 데이터셋, π0.5/v23 적응, ROS2 실행 환경, 실세계 결과와 연결된 하드웨어 구성입니다.">This is the hardware configuration associated with the current FlowBridge dataset, π0.5/v23 adaptation, ROS2 runtime, and reported real-world results.</p>
         </div>
         <div class="hardware-feature-grid">
@@ -128,23 +128,23 @@
     <section class="section alt">
       <div class="container">
         <div class="section-head">
-          <div><p class="section-label">Next embodiment · Integration track</p><h2 data-en="xArm6 with parallel gripper." data-ko="xArm6와 평행 그리퍼.">xArm6 with parallel gripper.</h2></div>
-          <p data-en="This hardware is documented as a future cross-robot and end-effector extension. No xArm6 VLA success rate or completed policy-transfer result is claimed on this site." data-ko="이 하드웨어는 향후 cross-robot 및 말단장치 확장 대상으로 기록합니다. 이 사이트에서는 xArm6 VLA 성공률이나 완료된 정책 전이 결과를 주장하지 않습니다.">This hardware is documented as a future cross-robot and end-effector extension. No xArm6 VLA success rate or completed policy-transfer result is claimed on this site.</p>
+          <div><p class="section-label" data-en="Stage 2 · Collection hardware" data-ko="Stage 2 · 수집 하드웨어">Stage 2 · Collection hardware</p><h2 data-en="xArm6 with parallel gripper." data-ko="xArm6와 평행 그리퍼.">xArm6 with parallel gripper.</h2></div>
+          <p data-en="This hardware is operational in the Quest 3 teleoperation and demonstration-collection pipeline. No trained xArm6 VLA policy, task-success rate, or completed policy-transfer result is claimed." data-ko="이 하드웨어는 Quest 3 텔레옵 및 시연 수집 파이프라인에서 동작합니다. 학습된 xArm6 VLA 정책, 태스크 성공률, 완료된 정책 전이 결과는 주장하지 않습니다.">This hardware is operational for teleoperation and demonstration collection; no trained-policy result is claimed.</p>
         </div>
         <div class="hardware-feature-grid">
-          <article class="hardware-card hardware-primary planned-card">
+          <article class="hardware-card hardware-primary">
             <div class="hardware-image tall"><img src="/assets/hardware/xarm6.png" alt="UFACTORY xArm6 six-axis robot arm" width="1142" height="1726"></div>
             <div class="hardware-copy">
-              <div class="hardware-heading"><div><p class="section-label" data-en="Robot arm" data-ko="로봇팔">Robot arm</p><h3>UFACTORY xArm6</h3></div><span class="pub-status planned" data-en="Planned" data-ko="예정">Planned</span></div>
+              <div class="hardware-heading"><div><p class="section-label" data-en="Robot arm" data-ko="로봇팔">Robot arm</p><h3>UFACTORY xArm6</h3></div><span class="pub-status" data-en="Collection operational" data-ko="수집 동작">Collection operational</span></div>
               <dl class="spec-list"><div><dt data-en="Degrees of freedom" data-ko="자유도">Degrees of freedom</dt><dd>6</dd></div><div><dt data-en="Payload" data-ko="가반하중">Payload</dt><dd>5 kg</dd></div><div><dt data-en="Reach" data-ko="도달 거리">Reach</dt><dd>700 mm</dd></div><div><dt data-en="Repeatability" data-ko="반복 정밀도">Repeatability</dt><dd>±0.1 mm</dd></div><div><dt data-en="Maximum TCP speed" data-ko="최대 TCP 속도">Maximum TCP speed</dt><dd>1 m/s</dd></div><div><dt data-en="Planned interface" data-ko="예정 인터페이스">Planned interface</dt><dd>ROS2 · xArm API</dd></div></dl>
             </div>
           </article>
-          <article class="hardware-card hardware-primary planned-card">
+          <article class="hardware-card hardware-primary">
             <div class="hardware-image"><img src="/assets/hardware/xarm-gripper.jpg" alt="UFACTORY xArm two-finger gripper" width="447" height="447"></div>
             <div class="hardware-copy">
-              <div class="hardware-heading"><div><p class="section-label" data-en="End effector" data-ko="말단장치">End effector</p><h3>UFACTORY xArm Gripper</h3></div><span class="pub-status planned" data-en="Planned" data-ko="예정">Planned</span></div>
+              <div class="hardware-heading"><div><p class="section-label" data-en="End effector" data-ko="말단장치">End effector</p><h3>UFACTORY xArm Gripper</h3></div><span class="pub-status" data-en="Collection operational" data-ko="수집 동작">Collection operational</span></div>
               <p data-en="Continuous parallel-gripper control introduces a different action meaning from the E6 binary suction command." data-ko="연속형 평행 그리퍼 제어는 E6의 이진 흡착 명령과 다른 액션 의미를 갖습니다.">Continuous parallel-gripper control introduces a different action meaning from the E6 binary suction command.</p>
-              <dl class="spec-list"><div><dt data-en="Working range" data-ko="작동 범위">Working range</dt><dd>84 mm</dd></div><div><dt data-en="Maximum clamping force" data-ko="최대 파지력">Maximum clamping force</dt><dd>30 N</dd></div><div><dt data-en="Communication" data-ko="통신">Communication</dt><dd>RS-485</dd></div><div><dt data-en="Rated voltage" data-ko="정격 전압">Rated voltage</dt><dd>24 V DC</dd></div><div><dt data-en="Control" data-ko="제어">Control</dt><dd>Position · speed</dd></div><div><dt data-en="Feedback" data-ko="피드백">Feedback</dt><dd>Position</dd></div></dl>
+              <dl class="spec-list"><div><dt data-en="Working range" data-ko="작동 범위">Working range</dt><dd>86 mm</dd></div><div><dt data-en="Maximum payload" data-ko="최대 가반하중">Maximum payload</dt><dd>3 kg</dd></div><div><dt data-en="Communication" data-ko="통신">Communication</dt><dd>RS-485 · Modbus RTU</dd></div><div><dt data-en="Rated voltage" data-ko="정격 전압">Rated voltage</dt><dd>24 V DC</dd></div><div><dt data-en="Control" data-ko="제어">Control</dt><dd>Position · speed · force</dd></div><div><dt data-en="Feedback" data-ko="피드백">Feedback</dt><dd>Motor current · position</dd></div></dl>
             </div>
           </article>
         </div>
@@ -168,7 +168,7 @@
   </main>
 
   <footer class="site-footer">
-    <div class="container footer-grid"><p>© 2026 Ma-VLA Research Archive · Hardware</p><div class="footer-links"><a href="/projects/flowbridge.html">Project 01</a><a href="/projects/quest3-xarm6.html">Project 02</a><a href="/resources.html">Resources</a></div></div>
+    <div class="container footer-grid"><p>© 2026 Ma-VLA Research Program · Hardware</p><div class="footer-links"><a href="/projects/flowbridge.html">Stage 1</a><a href="/projects/quest3-xarm6.html">Stage 2</a><a href="/resources.html">Resources</a></div></div>
   </footer>
 </body>
 </html>

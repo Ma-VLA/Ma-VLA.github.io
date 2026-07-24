@@ -1,9 +1,55 @@
 (() => {
   const root = document.documentElement;
+  const header = document.querySelector('.site-header');
+  const navShell = document.querySelector('.nav-shell');
+  const nav = document.querySelector('.primary-nav');
+  const currentPath = window.location.pathname.replace(/\/index\.html$/, '/') || '/';
+  const navItems = [
+    ['/', 'Home', '홈'],
+    ['/research.html', 'Research Program', '연구 프로그램'],
+    ['/system/dobot-e6.html', 'Systems', '시스템'],
+    ['/results.html', 'Experiments', '실험'],
+    ['/publications.html', 'Publications', '논문'],
+    ['/resources.html', 'Resources', '자료'],
+  ];
+
+  if (nav) {
+    nav.innerHTML = navItems.map(([href, en, ko]) => {
+      const isCurrent = href === '/'
+        ? currentPath === '/'
+        : currentPath === href || (href === '/system/dobot-e6.html' && currentPath.startsWith('/system/'));
+      return `<a href="${href}"${isCurrent ? ' aria-current="page"' : ''} data-en="${en}" data-ko="${ko}">${en}</a>`;
+    }).join('') + `
+      <a href="https://kyle-riss.github.io/" target="_blank" rel="noopener noreferrer" data-en="Researcher ↗" data-ko="연구자 ↗">Researcher ↗</a>
+      <span class="nav-actions">
+        <button class="lang-btn" data-language-toggle type="button">한국어</button>
+        <button class="icon-btn" data-theme-toggle type="button"></button>
+      </span>`;
+  }
+
+  if (navShell && nav) {
+    const menuButton = document.createElement('button');
+    menuButton.className = 'menu-btn';
+    menuButton.type = 'button';
+    menuButton.setAttribute('aria-label', 'Open navigation');
+    menuButton.setAttribute('aria-expanded', 'false');
+    menuButton.innerHTML = '<span></span><span></span><span></span>';
+    navShell.insertBefore(menuButton, nav);
+    menuButton.addEventListener('click', () => {
+      const isOpen = nav.classList.toggle('is-open');
+      menuButton.setAttribute('aria-expanded', String(isOpen));
+      menuButton.setAttribute('aria-label', isOpen ? 'Close navigation' : 'Open navigation');
+    });
+    nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
+      nav.classList.remove('is-open');
+      menuButton.setAttribute('aria-expanded', 'false');
+    }));
+  }
+
   const languageButton = document.querySelector('[data-language-toggle]');
   const themeButton = document.querySelector('[data-theme-toggle]');
   let language = localStorage.getItem('flowbridge-language') || 'en';
-  let theme = 'light';
+  let theme = localStorage.getItem('ma-vla-theme') || 'light';
 
   const applyLanguage = () => {
     root.lang = language === 'ko' ? 'ko' : 'en';
@@ -33,6 +79,7 @@
 
   themeButton?.addEventListener('click', () => {
     theme = theme === 'light' ? 'dark' : 'light';
+    localStorage.setItem('ma-vla-theme', theme);
     applyTheme();
   });
 
