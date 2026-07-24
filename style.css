@@ -159,8 +159,14 @@ h1, h2, h3 { font-family: var(--font-display); }
 .collection-showcase { display: grid; grid-template-columns: .8fr 1.2fr; gap: 1.25rem; align-items: stretch; }
 .collection-video video { aspect-ratio: 3/4; max-height: 680px; object-fit: contain; }
 .collection-showcase > .panel { align-self: stretch; }
-.section-continuation { padding-top: 0; }
+.collection-flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: .75rem; margin: 0 0 1.25rem; padding: 0; list-style: none; }
+.collection-flow li { position: relative; display: grid; gap: .2rem; min-height: 8.5rem; padding: 1rem; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface); }
+.collection-flow li:not(:last-child)::after { content: "→"; position: absolute; z-index: 1; top: 50%; right: -.65rem; color: var(--accent); font-weight: 800; transform: translateY(-50%); }
+.collection-flow span { color: var(--accent); font-family: var(--font-display); font-size: .75rem; font-weight: 800; letter-spacing: .08em; }
+.collection-flow strong { align-self: end; font-family: var(--font-display); }
+.collection-flow small { color: var(--muted); line-height: 1.35; }
 .collection-dashboard img { width: 100%; aspect-ratio: 1834/980; object-fit: contain; background: #0e0f1d; }
+.collection-dashboard { margin-top: 1.25rem; }
 .collection-dashboard figcaption { display: grid; gap: .35rem; }
 .collection-dashboard figcaption h3, .collection-dashboard figcaption p { margin: 0; }
 .figure-hint { color: var(--muted); font-size: .82rem; }
@@ -312,7 +318,9 @@ summary { padding: 1rem 1.15rem; cursor: pointer; font-family: var(--font-displa
   .nav-shell { align-items: flex-start; flex-direction: column; padding: .8rem 0; }
   .primary-nav { justify-content: flex-start; }
   .nav-actions { margin-left: 0; }
-  .hero-grid, .snapshot, .split, .reference-grid, .ownership-note, .collection-showcase { grid-template-columns: 1fr; }
+  .hero-grid, .snapshot, .split, .reference-grid, .ownership-note, .collection-showcase, .collection-flow { grid-template-columns: 1fr; }
+  .collection-flow li { min-height: auto; }
+  .collection-flow li:not(:last-child)::after { content: "↓"; top: auto; right: 1rem; bottom: -.7rem; transform: none; }
   .featured-project { grid-template-columns: 1fr; }
   .hero-media { max-width: 720px; }
   .lineage { grid-template-columns: repeat(2, 1fr); }
