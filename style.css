@@ -192,6 +192,34 @@ h1, h2, h3 { font-family: var(--font-display); }
 .project-row h2 { margin-bottom: .4rem; }
 .project-row p { margin-bottom: .8rem; color: var(--muted); }
 
+.architecture-legend { display: flex; flex-wrap: wrap; gap: .8rem 1.5rem; margin-bottom: 1rem; padding: 1rem 1.2rem; border: 1px solid var(--line); background: var(--surface); border-radius: var(--radius-sm); box-shadow: var(--shadow-sm); }
+.architecture-legend span { display: inline-flex; align-items: center; gap: .55rem; color: var(--muted); font-size: .82rem; }
+.architecture-legend b { font-weight: 700; }
+.legend-line { width: 1.8rem; height: 0; border-top: 2px solid var(--text); }
+.legend-line.dashed { border-top-style: dashed; }
+.legend-node, .legend-hardware, .legend-store { width: 1rem; height: .8rem; border: 1.5px solid var(--muted); border-radius: .2rem; background: var(--surface-soft); }
+.legend-hardware { width: .85rem; height: .85rem; border-color: var(--amber); border-radius: 50%; background: var(--surface-warm); }
+.legend-store { width: 1.1rem; border-color: var(--primary); background: var(--primary-soft); }
+.diagram-shell { overflow-x: auto; padding: 1.25rem; border: 1px solid var(--line); background: #fff; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); }
+.diagram-shell .mermaid { min-width: 1240px; margin: 0; }
+.diagram-shell svg { max-width: none !important; }
+.caption { margin: .8rem .25rem 0; color: var(--muted); font-size: .82rem; }
+.reference-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+.reference-card { min-width: 0; padding: 1.4rem; border: 1px solid var(--line); background: var(--surface); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); }
+.reference-card h3 { margin-bottom: .35rem; }
+.reference-card > p { color: var(--muted); font-size: .9rem; }
+.table-scroll { overflow-x: auto; }
+.system-table { width: 100%; min-width: 680px; border-collapse: collapse; font-size: .78rem; }
+.system-table th { padding: .65rem .7rem; border-bottom: 1px solid var(--line); color: var(--muted); font-size: .68rem; letter-spacing: .06em; text-align: left; text-transform: uppercase; }
+.system-table td { padding: .7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+.system-table tr:last-child td { border-bottom: 0; }
+.system-table code { padding: .12rem .3rem; border-radius: .3rem; background: var(--surface-soft); overflow-wrap: anywhere; }
+.command-pill { display: inline-flex; margin-left: .3rem; padding: .12rem .4rem; border: 1px solid var(--amber); border-radius: 999px; color: var(--amber); font-size: .63rem; font-weight: 800; white-space: nowrap; }
+.ownership-note { display: grid; grid-template-columns: .75fr 1.25fr; gap: 2rem; padding: 1.6rem; border-left: 4px solid var(--amber); background: var(--surface-warm); border-radius: var(--radius-md); }
+.ownership-note h2 { margin: 0; }
+.ownership-note > p { margin: 0; color: var(--muted); }
+.project-scope { margin-top: 1.25rem; }
+
 .timeline { position: relative; display: grid; gap: 0; margin-top: 2rem; }
 .timeline::before { content: ""; position: absolute; left: 1.1rem; top: 1rem; bottom: 1rem; width: 1px; background: var(--line); }
 .timeline-item { position: relative; display: grid; grid-template-columns: 2.2rem 9rem 1fr; gap: 1rem; padding: 0 0 2rem; }
@@ -269,7 +297,7 @@ summary { padding: 1rem 1.15rem; cursor: pointer; font-family: var(--font-displa
   .nav-shell { align-items: flex-start; flex-direction: column; padding: .8rem 0; }
   .primary-nav { justify-content: flex-start; }
   .nav-actions { margin-left: 0; }
-  .hero-grid, .snapshot, .split { grid-template-columns: 1fr; }
+  .hero-grid, .snapshot, .split, .reference-grid, .ownership-note { grid-template-columns: 1fr; }
   .featured-project { grid-template-columns: 1fr; }
   .hero-media { max-width: 720px; }
   .lineage { grid-template-columns: repeat(2, 1fr); }
