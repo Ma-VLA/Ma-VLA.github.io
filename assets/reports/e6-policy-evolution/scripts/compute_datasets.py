@@ -23,7 +23,7 @@ import pyarrow.parquet as pq
 
 HOME = os.path.expanduser("~")
 BASE = os.path.join(HOME, ".cache/huggingface/lerobot/Kyle-Riss")
-REPO = "/home/billy/26kp/openpi_upstream_clean"
+REPO = os.environ.get("OPENPI_REPO", "/path/to/openpi")
 OUT_DIR = os.path.join(REPO, "docs/figures/e6_e7_policy/data")
 os.makedirs(OUT_DIR, exist_ok=True)
 
