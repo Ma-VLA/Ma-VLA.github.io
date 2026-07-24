@@ -1,4 +1,6 @@
 <title>Archived Development Record — E6 VLA Policy Evolution</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" crossorigin>
 <style>
   :root{
     --ground:#f6f7f9; --surface:#ffffff; --surface-2:#f0f2f5;
@@ -28,8 +30,9 @@
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--ground);color:var(--ink);
-    font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
-    line-height:1.65;-webkit-font-smoothing:antialiased;}
+    font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",sans-serif;
+    font-weight:400;line-height:1.65;letter-spacing:-.008em;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-synthesis:none;}
   .mono{font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;}
   .wrap{max-width:1180px;margin:0 auto;padding:0 24px;
     display:grid;grid-template-columns:230px minmax(0,1fr);gap:44px;}
@@ -41,7 +44,7 @@
   .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;
     color:var(--accent);font-weight:700;}
   h1{font-size:clamp(26px,4vw,38px);line-height:1.12;margin:.35em 0 .3em;
-    letter-spacing:-.02em;text-wrap:balance;font-weight:800;}
+    letter-spacing:-.03em;text-wrap:balance;font-weight:750;}
   .sub{color:var(--ink-2);font-size:15px;max-width:70ch;}
   .meta-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
   .tag{font-size:12px;padding:3px 10px;border-radius:999px;border:1px solid var(--line);
