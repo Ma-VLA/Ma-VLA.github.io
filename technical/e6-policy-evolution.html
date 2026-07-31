@@ -13,6 +13,94 @@
       <div class="paper-section"><h2 data-en="Executive finding" data-ko="핵심 결론">Executive finding</h2><div><p data-en="Across 26 versions, final training losses clustered near 0.01 but did not predict reported physical behavior. Dataset contamination, action-contract mismatch, gripper representation, visual-layer selection, and inference-runtime corrections were more decisive in the retained chronology." data-ko="26개 버전의 최종 학습 손실은 약 0.01에 모였지만 보고된 물리 행동을 예측하지 못했습니다. 보존된 연구 기록에서는 데이터 오염, 액션 계약 불일치, 그리퍼 표현, 비전 레이어 선택, 추론 실행 수정이 더 결정적이었습니다.">Final training loss did not predict the reported real-world behavior across the 26-version history.</p><p><strong data-en="Representative decision:" data-ko="대표 결정:">Representative decision:</strong> v23 · SigLIP blocks 18–26 · action-expert LoRA · 20,000 steps.</p></div></div>
       <div class="paper-section"><h2 data-en="Action contract verification" data-ko="액션 계약 검증">Action contract verification</h2><div><table class="flat-table"><thead><tr><th>Component</th><th>Representation</th><th>v16 dataset check</th></tr></thead><tbody><tr><td>Joint 1–6</td><td><code>state[t+1] − state[t]</code></td><td>RMSE against delta: 0.0000</td></tr><tr><td>Suction</td><td>Absolute binary <code>{0,1}</code></td><td>RMSE against next absolute state: 0.0000</td></tr></tbody></table><p class="protocol-note" data-en="The joint values are frame-to-frame joint-position deltas in degrees. They are not labeled as velocity because no division by Δt is part of this verified contract." data-ko="관절 값은 degree 단위의 프레임 간 관절 위치 변화량입니다. 검증된 계약에 Δt로 나누는 과정이 없으므로 velocity로 표기하지 않습니다.">The joint values are frame-to-frame joint-position deltas, not velocity.</p></div></div>
     </div></section>
+<!-- ═══ OWNER: TRAINING-SERVER (RTX A5000) · DO NOT EDIT · 2026-07-31 ═══
+     결정 계보 그림. 데이터셋 계보와 vision LoRA 범위를 config.py 에서 직접 추출해
+     같은 x축(버전)에 겹친 것이다. 값은 전부 config 원문이며 추정이 없다:
+       데이터셋  v1 random_v1 | v2-5 orange_v2 | v6-7 orange_v6 | v8-9 orange_v8
+                 v10-12 orange_v10 | v13 orange_v13 | v14-15 orange_v14 | v16-26 orange_v16
+       LoRA      v1-16 전부 (22,26) 고정 · v17 (14,25) v18 (0,25) v19 (14,18) v20 (19,25)
+                 v21 (0,8) v22 (9,17) v23 (18,26) v24 (0,26) v25 (15,19) v26 (22,25)
+     결과(성공/실패) 색은 일부러 넣지 않았다 — 같은 페이지의 F2가 담당하고,
+     빨강-노랑-초록 3색은 색각 이상에서 붕괴한다(ΔE 3~6). 마크 색은 검증기 통과값.
+     SVG는 scratchpad의 gen_lineage.py 로 생성했다.
+═══════════════════════════════════════════════════════════════════════ -->
+    <section id="decision-lineage" class="section"><div class="container"><div class="section-head"><div><p class="section-label" data-en="Decision lineage · v1–v26" data-ko="결정 계보 · v1–v26">Decision lineage · v1–v26</p><h2 data-en="The 26 versions are two investigations, not one." data-ko="26개 버전은 하나가 아니라 두 개의 조사다.">The 26 versions are two investigations, not one.</h2></div><p data-en="Both tracks below are read directly from the training configurations. Placing them on the same version axis shows a structure that the version numbers alone hide." data-ko="아래 두 트랙은 모두 학습 config에서 그대로 읽은 값입니다. 같은 버전 축에 올려놓으면 버전 번호만으로는 보이지 않는 구조가 드러납니다.">Both tracks are read directly from the training configurations.</p></div>
+      <figure class="lineage-figure">
+<svg class="lineage" viewBox="0 0 1000 300" role="img" xmlns="http://www.w3.org/2000/svg" aria-label="E6 v1-v26: dataset lineage above, SigLIP vision-LoRA layer range below">
+<rect class="ln-band" x="96" y="199.4" width="888" height="40.6"/>
+<text class="ln-band-lbl" x="88" y="223.2" text-anchor="end">Early 0–8</text>
+<rect class="ln-band" x="96" y="153.7" width="888" height="40.6"/>
+<text class="ln-band-lbl" x="88" y="177.5" text-anchor="end">Mid 9–17</text>
+<rect class="ln-band" x="96" y="108.0" width="888" height="40.6"/>
+<text class="ln-band-lbl" x="88" y="131.8" text-anchor="end">Late 18–26</text>
+<line class="ln-divide" x1="642.5" y1="22" x2="642.5" y2="246"/>
+<text class="ln-phase" x="369.2" y="14" text-anchor="middle" data-en="Phase 1 — the dataset moves, the config does not" data-ko="1단계 — 데이터셋이 바뀌고, 설정은 고정">Phase 1 — the dataset moves, the config does not</text>
+<text class="ln-phase" x="813.2" y="14" text-anchor="middle" data-en="Phase 2 — the dataset is frozen, the range is swept" data-ko="2단계 — 데이터셋이 고정되고, 범위를 훑음">Phase 2 — the dataset is frozen, the range is swept</text>
+<text class="ln-axis" x="88" y="62.5" text-anchor="end" data-en="Dataset" data-ko="데이터셋">Dataset</text>
+<rect class="ln-ds ln-ds0" x="97.0" y="46" width="32.2" height="26" rx="4"/>
+<line class="ln-leader" x1="113.1" y1="43" x2="113.1" y2="35"/>
+<text class="ln-ds-lbl ln-ds-lbl--out" x="97.0" y="31" text-anchor="start">random_v1</text>
+<rect class="ln-ds ln-ds1" x="131.2" y="46" width="134.6" height="26" rx="4"/>
+<text class="ln-ds-lbl" x="198.5" y="62.5" text-anchor="middle">orange_v2</text>
+<rect class="ln-ds ln-ds0" x="267.8" y="46" width="66.3" height="26" rx="4"/>
+<text class="ln-ds-lbl" x="300.9" y="62.5" text-anchor="middle">orange_v6</text>
+<rect class="ln-ds ln-ds1" x="336.1" y="46" width="66.3" height="26" rx="4"/>
+<text class="ln-ds-lbl" x="369.2" y="62.5" text-anchor="middle">orange_v8</text>
+<rect class="ln-ds ln-ds0" x="404.4" y="46" width="100.5" height="26" rx="4"/>
+<text class="ln-ds-lbl" x="454.6" y="62.5" text-anchor="middle">orange_v10</text>
+<rect class="ln-ds ln-ds1" x="506.8" y="46" width="32.2" height="26" rx="4"/>
+<line class="ln-leader" x1="522.9" y1="43" x2="522.9" y2="35"/>
+<text class="ln-ds-lbl ln-ds-lbl--out" x="522.9" y="31" text-anchor="middle">orange_v13</text>
+<rect class="ln-ds ln-ds0" x="541.0" y="46" width="66.3" height="26" rx="4"/>
+<text class="ln-ds-lbl" x="574.2" y="62.5" text-anchor="middle">orange_v14</text>
+<rect class="ln-ds ln-ds1" x="609.3" y="46" width="373.7" height="26" rx="4"/>
+<text class="ln-ds-lbl" x="796.2" y="62.5" text-anchor="middle">orange_v16</text>
+<text class="ln-axis" x="88" y="112" text-anchor="end" data-en="SigLIP layer" data-ko="SigLIP 레이어">SigLIP layer</text>
+<rect class="ln-span" x="103.2" y="108.0" width="19.8" height="20.3" rx="4"><title>v1 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="137.3" y="108.0" width="19.8" height="20.3" rx="4"><title>v2 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="171.5" y="108.0" width="19.8" height="20.3" rx="4"><title>v3 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="205.6" y="108.0" width="19.8" height="20.3" rx="4"><title>v4 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="239.8" y="108.0" width="19.8" height="20.3" rx="4"><title>v5 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="273.9" y="108.0" width="19.8" height="20.3" rx="4"><title>v6 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="308.1" y="108.0" width="19.8" height="20.3" rx="4"><title>v7 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="342.2" y="108.0" width="19.8" height="20.3" rx="4"><title>v8 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="376.4" y="108.0" width="19.8" height="20.3" rx="4"><title>v9 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="410.6" y="108.0" width="19.8" height="20.3" rx="4"><title>v10 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="444.7" y="108.0" width="19.8" height="20.3" rx="4"><title>v11 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="478.9" y="108.0" width="19.8" height="20.3" rx="4"><title>v12 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="513.0" y="108.0" width="19.8" height="20.3" rx="4"><title>v13 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="547.2" y="108.0" width="19.8" height="20.3" rx="4"><title>v14 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="581.3" y="108.0" width="19.8" height="20.3" rx="4"><title>v15 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="615.5" y="108.0" width="19.8" height="20.3" rx="4"><title>v16 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="649.6" y="113.1" width="19.8" height="55.8" rx="4"><title>v17 · SigLIP 14–25</title></rect>
+<rect class="ln-span" x="683.8" y="113.1" width="19.8" height="126.9" rx="4"><title>v18 · SigLIP 0–25</title></rect>
+<rect class="ln-span" x="717.9" y="148.6" width="19.8" height="20.3" rx="4"><title>v19 · SigLIP 14–18</title></rect>
+<rect class="ln-span" x="752.1" y="113.1" width="19.8" height="30.5" rx="4"><title>v20 · SigLIP 19–25</title></rect>
+<rect class="ln-span" x="786.2" y="199.4" width="19.8" height="40.6" rx="4"><title>v21 · SigLIP 0–8</title></rect>
+<rect class="ln-span" x="820.4" y="153.7" width="19.8" height="40.6" rx="4"><title>v22 · SigLIP 9–17</title></rect>
+<rect class="ln-span ln-span--best" x="854.6" y="108.0" width="19.8" height="40.6" rx="4"><title>v23 · SigLIP 18–26</title></rect>
+<rect class="ln-span" x="888.7" y="108.0" width="19.8" height="132.0" rx="4"><title>v24 · SigLIP 0–26</title></rect>
+<rect class="ln-span" x="922.9" y="143.5" width="19.8" height="20.3" rx="4"><title>v25 · SigLIP 15–19</title></rect>
+<rect class="ln-span" x="957.0" y="113.1" width="19.8" height="15.2" rx="4"><title>v26 · SigLIP 22–25</title></rect>
+<text class="ln-best-lbl" x="864.5" y="99.0" text-anchor="middle">v23 · 18–26</text>
+<text class="ln-tick" x="113.1" y="259" text-anchor="middle">v1</text>
+<text class="ln-tick" x="249.7" y="259" text-anchor="middle">v5</text>
+<text class="ln-tick" x="420.5" y="259" text-anchor="middle">v10</text>
+<text class="ln-tick" x="625.4" y="259" text-anchor="middle">v16</text>
+<text class="ln-tick" x="762.0" y="259" text-anchor="middle">v20</text>
+<text class="ln-tick" x="864.5" y="259" text-anchor="middle">v23</text>
+<text class="ln-tick" x="966.9" y="259" text-anchor="middle">v26</text>
+<line class="ln-baseline" x1="96" y1="241" x2="984" y2="241"/>
+<text class="ln-axis" x="96" y="290" data-en="Policy version" data-ko="정책 버전">Policy version</text>
+</svg>
+        <figcaption><div class="evidence-badges"><span class="evidence-badge code">Config verified</span><span class="evidence-badge">v1–v26</span></div><span data-en="Dataset lineage above, vision-LoRA layer range below, on a shared version axis. Dataset names are abbreviated from dobot_e6_pick_place_*." data-ko="위는 데이터셋 계보, 아래는 vision LoRA 레이어 범위, 버전 축을 공유합니다. 데이터셋 이름은 dobot_e6_pick_place_* 에서 줄인 것입니다.">Dataset lineage above, vision-LoRA layer range below, on a shared version axis.</span></figcaption>
+      </figure>
+      <div class="research-paper" style="margin-top:2rem">
+        <div class="paper-section"><h3 data-en="Phase 1 — sixteen versions of rebuilding the data" data-ko="1단계 — 데이터를 다시 쌓은 16개 버전">Phase 1 — sixteen versions of rebuilding the data</h3><div><p data-en="Across v1 to v16 the dataset was rebuilt seven times while the vision-LoRA range never moved from blocks 22–26. Those sixteen versions are therefore not sixteen model experiments; they are one long data investigation carried out with the model held still. Read against the loss figure above, the first seven of them — the ones on the earliest datasets — are the runs that failed, including the run with the lowest final loss of all twenty-six." data-ko="v1부터 v16까지 데이터셋은 일곱 번 재구축됐지만 vision LoRA 범위는 22–26 블록에서 한 번도 움직이지 않았습니다. 따라서 이 16개 버전은 16번의 모델 실험이 아니라, 모델을 고정한 채 수행한 하나의 긴 데이터 조사입니다. 위의 loss 그림과 같이 읽으면, 가장 이른 데이터셋을 쓴 앞의 일곱 버전이 실패한 쪽이며, 그중에는 26개 중 최종 loss가 가장 낮았던 run도 들어 있습니다.">v1–v16 rebuilt the dataset seven times with the LoRA range fixed at 22–26 — one long data investigation, not sixteen model experiments.</p></div></div>
+        <div class="paper-section"><h3 data-en="Phase 2 — the sweep only becomes possible once the data stops moving" data-ko="2단계 — 데이터가 멈춰야 ablation이 성립한다">Phase 2 — the sweep only becomes possible once the data stops moving</h3><div><p data-en="From v16 onward the dataset is frozen, and only then does the layer range start to vary — ten versions covering the early, middle, and late bands. This ordering is the point: a layer-range comparison run while the dataset is still changing would confound the two, and no amount of training loss would reveal which factor moved the result." data-ko="v16부터 데이터셋이 고정되고, 그러고 나서야 레이어 범위가 변하기 시작합니다 — 초반·중반·후반 구간을 덮는 10개 버전입니다. 순서 자체가 핵심입니다. 데이터셋이 아직 변하는 중에 레이어 범위를 비교했다면 둘이 교란되고, 학습 loss로는 어느 요인이 결과를 움직였는지 알 수 없습니다.">From v16 the dataset is frozen and only then does the layer range vary — a comparison run on a moving dataset would confound the two.</p></div></div>
+      </div>
+    </div></section>
+
     <section id="measured-ros2-runtime" class="section"><div class="container"><div class="section-head"><div><p class="section-label" data-en="Measured ROS2 runtime" data-ko="실측 ROS2 실행">Measured ROS2 runtime</p><h2 data-en="Executor timing for the E6 control loop." data-ko="E6 제어 루프의 executor timing.">Executor timing for the E6 control loop.</h2></div><p data-en="The measured executor timing supports the deployed ROS2 execution path." data-ko="실측 executor timing은 배포된 ROS2 실행 경로를 보여줍니다.">The measured executor timing supports the deployed ROS2 execution path.</p></div><div class="research-paper">
       <div class="paper-section"><h2>J3 · Executor timing</h2><div><p data-en="The 16 Hz value is the executor dispatch cadence. The action-chunk refresh interval is approximately 2.5 seconds and is not an end-to-end VLA inference frequency." data-ko="16Hz는 executor dispatch 주기입니다. Action chunk 갱신 간격은 약 2.5초이며 end-to-end VLA 추론 빈도가 아닙니다.">Executor timing and policy refresh are separate runtime quantities.</p><figure class="report-figure"><a href="/assets/evidence/jetson-audit/fig3_executor_timing.png" target="_blank" rel="noopener noreferrer"><img src="/assets/evidence/jetson-audit/fig3_executor_timing.png" alt="J3 executor timing evidence"></a><figcaption><div class="evidence-badges"><span class="evidence-badge log">Log verified</span><span class="evidence-badge">25 blocks</span></div>J3 · Executor mean 62.52 ms · chunk refresh mean 2500.5 ms</figcaption></figure></div></div>
     </div></div></section>

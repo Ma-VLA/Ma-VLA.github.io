@@ -516,3 +516,138 @@ summary { padding: 1rem 1.15rem; cursor: pointer; font-family: var(--font-displa
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
 }
+
+/* ═══ OWNER: TRAINING-SERVER (RTX A5000) · 2026-07-31 · 규약: /OWNERSHIP.md ═══
+   페이지 내 탐색(플로팅 목차 + scroll-spy), 그림 라이트박스, 인쇄 스타일.
+   전부 script.js가 기존 <section id> 에서 자동 생성한다 — 페이지 HTML은 건드리지 않는다.
+   섹션을 추가하면 목차에 저절로 들어간다. id만 붙이면 된다.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── 플로팅 목차 ── */
+.page-toc {
+  position: fixed; top: 50%; right: 0; transform: translateY(-50%);
+  z-index: 60; display: flex; align-items: flex-start; gap: 0;
+  font-family: var(--font-display);
+}
+.page-toc__tab {
+  writing-mode: vertical-rl; text-orientation: mixed;
+  background: var(--surface); color: var(--muted);
+  border: 1px solid var(--line); border-right: none;
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  padding: .9rem .5rem; font-size: .72rem; font-weight: 700;
+  letter-spacing: .09em; cursor: pointer; white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+  transition: color .15s ease, background .15s ease;
+}
+.page-toc__tab:hover { color: var(--primary-strong); background: var(--primary-soft); }
+.page-toc__panel {
+  display: none; width: min(19rem, 78vw); max-height: 78vh; overflow-y: auto;
+  background: var(--surface); border: 1px solid var(--line); border-right: none;
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+  padding: .9rem 0; box-shadow: var(--shadow-lg);
+}
+.page-toc.is-open .page-toc__panel { display: block; }
+.page-toc__panel a {
+  display: flex; gap: .6rem; align-items: baseline;
+  padding: .5rem 1.1rem; text-decoration: none; color: var(--muted);
+  font-size: .84rem; line-height: 1.45;
+  border-left: 2px solid transparent;
+}
+.page-toc__panel a:hover { color: var(--text); background: var(--surface-soft); }
+.page-toc__panel a.is-active {
+  color: var(--primary-strong); border-left-color: var(--primary); font-weight: 600;
+  background: var(--primary-soft);
+}
+.page-toc__num {
+  font-family: var(--font-mono); font-size: .68rem; opacity: .65;
+  min-width: 1.4rem; flex-shrink: 0;
+}
+@media (max-width: 900px) { .page-toc { display: none; } }
+
+/* ── 그림 라이트박스 ── */
+.lightbox {
+  position: fixed; inset: 0; z-index: 200; display: none;
+  background: rgba(12, 20, 18, .93);
+  padding: clamp(1rem, 4vw, 3rem);
+  flex-direction: column; align-items: center; justify-content: center; gap: 1rem;
+}
+.lightbox.is-open { display: flex; }
+.lightbox img {
+  max-width: 100%; max-height: calc(100vh - 11rem);
+  object-fit: contain; border-radius: var(--radius-sm); background: #fff;
+}
+.lightbox__bar {
+  display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  justify-content: center; color: #edf5f2; font-size: .85rem;
+  font-family: var(--font-display); max-width: 60rem; text-align: center;
+}
+.lightbox__bar button {
+  background: rgba(255, 255, 255, .1); color: #edf5f2;
+  border: 1px solid rgba(255, 255, 255, .22); border-radius: var(--radius-sm);
+  padding: .4rem .85rem; font-size: .85rem; cursor: pointer; font-family: inherit;
+}
+.lightbox__bar button:hover { background: rgba(255, 255, 255, .2); }
+.lightbox__count { font-family: var(--font-mono); font-size: .78rem; opacity: .7; }
+.report-figure a { cursor: zoom-in; }
+
+/* ── 인쇄 ── */
+@media print {
+  /* 인쇄물은 항상 밝게. 화면 테마가 무엇이든 결과가 같아야 한다. */
+  :root, [data-theme="dark"] {
+    --bg: #fff; --surface: #fff; --surface-soft: #f4f6f5; --surface-warm: #f7f5f0;
+    --text: #14201d; --muted: #4a5551; --line: #d4dcd9;
+    --primary: #075c5a; --primary-strong: #05403f; --primary-soft: #eaf3f2;
+    --shadow-sm: none; --shadow-lg: none;
+  }
+  html, body { background: #fff !important; color: #14201d !important; }
+  .site-header, .page-toc, .lightbox, .skip-link, .menu-btn, .nav-actions { display: none !important; }
+  .section, .page-hero, .program-hero, .hero { padding: 1.2rem 0 !important; }
+  .paper-section, .report-figure, .panel, .metric, .result-card,
+  .reference-card, .research-node, figure, table { break-inside: avoid; page-break-inside: avoid; }
+  h1, h2, h3 { break-after: avoid; page-break-after: avoid; }
+  .report-figure img, .figure-card img { max-width: 15cm !important; height: auto !important; }
+  .diagram-shell { overflow: visible !important; }
+  a { color: #0a4f7a !important; text-decoration: none; }
+  /* 링크는 종이에서 죽으므로 주소를 펼친다. 내부 링크는 사이트 기준으로 */
+  main a[href^="http"]::after { content: " (" attr(href) ")"; font-size: .72em; color: #4a5551; word-break: break-all; }
+  .site-footer { border-top: 1px solid #d4dcd9; }
+}
+
+/* ── 결정 계보 그림 (technical/e6-policy-evolution.html) ──
+   OWNER: TRAINING-SERVER · 데이터 마크 색은 dataviz 검증기 통과값이다.
+   사이트 teal은 이 명도에서 채도 0.1을 못 넘어 회색으로 읽히므로 마크에는 쓰지 않는다.
+   바꾸려면 validate_palette.js 를 두 모드 모두 통과시킬 것. */
+.lineage-figure { margin: 0; }
+.lineage {
+  --viz-mark: #2a78d6;
+  --viz-band: #f1f4f3;
+  --viz-seg-a: #e4ebe9;
+  --viz-seg-b: #eceae2;
+  width: 100%; height: auto; display: block;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius-sm); padding: .5rem 0;
+  font-family: var(--font-display);
+}
+[data-theme="dark"] .lineage {
+  --viz-mark: #3987e5;
+  --viz-band: #1b2421;
+  --viz-seg-a: #24312c;
+  --viz-seg-b: #2e2a21;
+}
+.ln-band { fill: var(--viz-band); }
+.ln-band-lbl { fill: var(--muted); font-size: 10px; font-family: var(--font-mono); }
+.ln-divide { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 3; opacity: .75; }
+.ln-phase { fill: var(--muted); font-size: 11px; font-weight: 600; }
+.ln-axis { fill: var(--muted); font-size: 11px; font-weight: 600; }
+.ln-ds0 { fill: var(--viz-seg-a); }
+.ln-ds1 { fill: var(--viz-seg-b); }
+.ln-ds { stroke: var(--line); stroke-width: 1; }
+.ln-ds-lbl { fill: var(--text); font-size: 10.5px; font-family: var(--font-mono); }
+.ln-ds-lbl--out { fill: var(--muted); }
+.ln-leader { stroke: var(--muted); stroke-width: 1; opacity: .6; }
+.ln-span { fill: var(--viz-mark); }
+.ln-span--best { stroke: var(--surface); stroke-width: 2; }
+.ln-best-lbl { fill: var(--viz-mark); font-size: 10.5px; font-weight: 700; font-family: var(--font-mono); }
+.ln-tick { fill: var(--muted); font-size: 10px; font-family: var(--font-mono); }
+.ln-baseline { stroke: var(--line); stroke-width: 1; }
+@media print { .lineage { border-color: #d4dcd9; } }
