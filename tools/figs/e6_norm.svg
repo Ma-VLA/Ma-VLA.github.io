@@ -1,0 +1,52 @@
+<svg class="vz" viewBox="0 0 1000 268" role="img" xmlns="http://www.w3.org/2000/svg" aria-label="E6 joint j5 spans two degrees across the dataset, so its per-frame delta range is one thirteenth of the other joints">
+<text class="vz-title" x="16" y="20" data-en="A joint that does not move, divided by how little it moves" data-ko="움직이지 않는 관절을, 움직이지 않는 만큼으로 나누기">A joint that does not move, divided by how little it moves</text>
+<text class="vz-lbl" x="54" y="50" data-en="Joint span across the dataset" data-ko="데이터셋 전체 관절 가동 폭">Joint span across the dataset</text>
+<text class="vz-sub" x="54" y="64">degrees</text>
+<rect class="vz-track" x="54" y="74" width="434.0" height="15" rx="3"/>
+<rect class="vz-seg vz1 vz-dim" x="54" y="74" width="214.6" height="15" rx="3"><title>j1 · 35.66 degrees</title></rect>
+<text class="vz-sub" x="275.6" y="85.5">35.66</text>
+<rect class="vz-track" x="54" y="100" width="434.0" height="15" rx="3"/>
+<rect class="vz-seg vz1 vz-dim" x="54" y="100" width="257.3" height="15" rx="3"><title>j2 · 42.77 degrees</title></rect>
+<text class="vz-sub" x="318.3" y="111.5">42.77</text>
+<rect class="vz-track" x="54" y="126" width="434.0" height="15" rx="3"/>
+<rect class="vz-seg vz1 vz-dim" x="54" y="126" width="434.0" height="15" rx="3"><title>j3 · 72.12 degrees</title></rect>
+<text class="vz-in" x="481.0" y="137.5" text-anchor="end">72.12</text>
+<rect class="vz-track" x="54" y="152" width="434.0" height="15" rx="3"/>
+<rect class="vz-seg vz1 vz-dim" x="54" y="152" width="326.7" height="15" rx="3"><title>j4 · 54.29 degrees</title></rect>
+<text class="vz-sub" x="387.7" y="163.5">54.29</text>
+<rect class="vz-track" x="54" y="178" width="434.0" height="15" rx="3"/>
+<rect class="vz-seg vz1" x="54" y="178" width="12.3" height="15" rx="3"><title>j5 · 2.042 degrees</title></rect>
+<text class="vz-val" x="73.3" y="189.5">2.042</text>
+<rect class="vz-track" x="54" y="204" width="434.0" height="15" rx="3"/>
+<rect class="vz-seg vz1 vz-dim" x="54" y="204" width="214.6" height="15" rx="3"><title>j6 · 35.67 degrees</title></rect>
+<text class="vz-sub" x="275.6" y="215.5">35.67</text>
+<text class="vz-lbl" x="546.0" y="50" data-en="Per-frame delta range — the divisor" data-ko="프레임당 델타 범위 — 나누는 값">Per-frame delta range — the divisor</text>
+<text class="vz-sub" x="546.0" y="64">deg / frame</text>
+<rect class="vz-track" x="546.0" y="74" width="434.0" height="15" rx="3"/>
+<rect class="vz-seg vz1 vz-dim" x="546.0" y="74" width="332.4" height="15" rx="3"><title>j1 · 3.285 deg / frame</title></rect>
+<text class="vz-sub" x="885.4" y="85.5">3.285</text>
+<rect class="vz-track" x="546.0" y="100" width="434.0" height="15" rx="3"/>
+<rect class="vz-seg vz1 vz-dim" x="546.0" y="100" width="266.5" height="15" rx="3"><title>j2 · 2.634 deg / frame</title></rect>
+<text class="vz-sub" x="819.5" y="111.5">2.634</text>
+<rect class="vz-track" x="546.0" y="126" width="434.0" height="15" rx="3"/>
+<rect class="vz-seg vz1 vz-dim" x="546.0" y="126" width="434.0" height="15" rx="3"><title>j3 · 4.289 deg / frame</title></rect>
+<text class="vz-in" x="973.0" y="137.5" text-anchor="end">4.289</text>
+<rect class="vz-track" x="546.0" y="152" width="434.0" height="15" rx="3"/>
+<rect class="vz-seg vz1 vz-dim" x="546.0" y="152" width="361.7" height="15" rx="3"><title>j4 · 3.575 deg / frame</title></rect>
+<text class="vz-sub" x="914.7" y="163.5">3.575</text>
+<rect class="vz-track" x="546.0" y="178" width="434.0" height="15" rx="3"/>
+<rect class="vz-seg vz1" x="546.0" y="178" width="24.8" height="15" rx="3"><title>j5 · 0.2448 deg / frame</title></rect>
+<text class="vz-val" x="577.8" y="189.5">0.2448</text>
+<rect class="vz-track" x="546.0" y="204" width="434.0" height="15" rx="3"/>
+<rect class="vz-seg vz1 vz-dim" x="546.0" y="204" width="333.2" height="15" rx="3"><title>j6 · 3.293 deg / frame</title></rect>
+<text class="vz-sub" x="886.2" y="215.5">3.293</text>
+<text class="vz-rowlbl" x="44" y="85.5" text-anchor="end">j1</text>
+<text class="vz-rowlbl" x="44" y="111.5" text-anchor="end">j2</text>
+<text class="vz-rowlbl" x="44" y="137.5" text-anchor="end">j3</text>
+<text class="vz-rowlbl" x="44" y="163.5" text-anchor="end">j4</text>
+<text class="vz-val" x="44" y="189.5" text-anchor="end">j5</text>
+<text class="vz-rowlbl" x="44" y="215.5" text-anchor="end">j6</text>
+<text class="vz-flag" x="980" y="189.5" text-anchor="end">13.4x narrower</text>
+<text class="vz-note" x="16" y="238" data-en="j5 is held near −88° by the arm geometry: it spans 2.0° across the whole dataset while the others span 35–72°. Its per-frame delta range is 0.245 against a median of 3.29." data-ko="j5는 팔 구조상 −88° 부근에 고정된다 — 전체 데이터셋에서 2.0°만 움직이는 동안 다른 관절은 35–72° 움직인다. 프레임당 델타 범위는 0.245로 중앙값 3.29 대비 13.4배 좁다.">j5 is held near −88° by the arm geometry — 2.0° across the whole dataset against 35–72° for the others.</text>
+<text class="vz-note" x="16" y="256" data-en="This model normalizes by the percentile range, not by standard deviation, so that 0.245 is the divisor: whatever jitter remains in a joint that barely moves is stretched to fill the same ±1 the working joints get." data-ko="이 모델은 표준편차가 아니라 백분위 범위로 정규화하므로 0.245가 나누는 값이 된다 — 거의 안 움직이는 관절에 남은 지터가 실제로 일하는 관절과 똑같은 ±1로 펴진다.">The divisor is that 0.245 — jitter in a barely-moving joint is stretched to the same ±1 the working joints get.</text>
+</svg>

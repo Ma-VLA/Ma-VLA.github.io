@@ -699,3 +699,4 @@ summary { padding: 1rem 1.15rem; cursor: pointer; font-family: var(--font-displa
 .vz-dot--bad { fill: var(--vz2); stroke: var(--surface); stroke-width: 1.5; }
 .vz-seg { stroke: none; }
 @media print { .vz { border-color: #d4dcd9; } }
+.vz-dim { opacity: .38; }
