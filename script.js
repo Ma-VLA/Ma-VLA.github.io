@@ -107,8 +107,11 @@
     toc.className = 'page-toc';
     toc.setAttribute('aria-label', 'On this page');
     toc.innerHTML = `
-      <button class="page-toc__tab" type="button" aria-expanded="false" data-en="Contents" data-ko="목차">Contents</button>
-      <div class="page-toc__panel">${entries.map(({ id, en, ko }, i) =>
+      <button class="page-toc__tab" type="button" aria-expanded="false" aria-controls="page-toc-panel">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h8"/></svg>
+        <span data-en="Contents" data-ko="목차">Contents</span>
+      </button>
+      <div class="page-toc__panel" id="page-toc-panel">${entries.map(({ id, en, ko }, i) =>
         `<a href="#${id}" data-toc="${id}"><span class="page-toc__num">${String(i + 1).padStart(2, '0')}</span><span data-en="${en.replace(/"/g, '&quot;')}" data-ko="${ko.replace(/"/g, '&quot;')}">${en}</span></a>`
       ).join('')}</div>`;
     document.body.appendChild(toc);

@@ -529,17 +529,23 @@ summary { padding: 1rem 1.15rem; cursor: pointer; font-family: var(--font-displa
   z-index: 60; display: flex; align-items: flex-start; gap: 0;
   font-family: var(--font-display);
 }
+/* 컨트롤처럼 보여야 한다. 이전에는 배경이 --surface, 글자가 --muted 여서
+   페이지 가장자리와 구분이 안 갔고, 있는 줄도 모르고 지나쳤다. */
 .page-toc__tab {
-  writing-mode: vertical-rl; text-orientation: mixed;
-  background: var(--surface); color: var(--muted);
-  border: 1px solid var(--line); border-right: none;
+  display: flex; flex-direction: column; align-items: center; gap: .45rem;
+  background: var(--primary-soft); color: var(--primary-strong);
+  border: 1px solid var(--primary); border-right: none;
   border-radius: var(--radius-sm) 0 0 var(--radius-sm);
-  padding: .9rem .5rem; font-size: .72rem; font-weight: 700;
+  padding: .85rem .45rem; font-size: .72rem; font-weight: 700;
   letter-spacing: .09em; cursor: pointer; white-space: nowrap;
-  box-shadow: var(--shadow-sm);
-  transition: color .15s ease, background .15s ease;
+  box-shadow: var(--shadow-sm); font-family: inherit;
+  transition: color .15s ease, background .15s ease, padding .15s ease;
 }
-.page-toc__tab:hover { color: var(--primary-strong); background: var(--primary-soft); }
+.page-toc__tab span { writing-mode: vertical-rl; text-orientation: mixed; }
+.page-toc__tab svg { width: 13px; height: 13px; flex-shrink: 0; }
+.page-toc__tab:hover, .page-toc__tab:focus-visible { background: var(--primary); color: var(--surface); padding-inline: .65rem; }
+.page-toc__tab:focus-visible { outline: 2px solid var(--primary-strong); outline-offset: 2px; }
+.page-toc.is-open .page-toc__tab { background: var(--primary); color: var(--surface); }
 .page-toc__panel {
   display: none; width: min(19rem, 78vw); max-height: 78vh; overflow-y: auto;
   background: var(--surface); border: 1px solid var(--line); border-right: none;
@@ -562,7 +568,11 @@ summary { padding: 1rem 1.15rem; cursor: pointer; font-family: var(--font-displa
   font-family: var(--font-mono); font-size: .68rem; opacity: .65;
   min-width: 1.4rem; flex-shrink: 0;
 }
-@media (max-width: 900px) { .page-toc { display: none; } }
+@media (max-width: 640px) { .page-toc { display: none; } }
+@media (max-width: 900px) {
+  .page-toc__panel { width: min(15rem, 62vw); max-height: 64vh; }
+  .page-toc__tab { padding: .7rem .4rem; font-size: .68rem; }
+}
 
 /* ── 그림 라이트박스 ── */
 .lightbox {
