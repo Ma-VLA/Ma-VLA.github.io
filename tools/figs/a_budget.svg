@@ -1,0 +1,19 @@
+<svg class="vz" viewBox="0 0 1000 190" role="img" xmlns="http://www.w3.org/2000/svg" aria-label="Token budget: 512 image plus 200 prompt plus 16 action equals 728">
+<text class="vz-title" x="16" y="20" data-en="Where the 728 tokens go" data-ko="728 토큰의 배분">Where the 728 tokens go</text>
+<rect class="vz-seg vz1" x="16.0" y="44" width="678.8" height="42" rx="4"><title>image · 512 tokens · 70.3%</title></rect>
+<text class="vz-in" x="355.4" y="70.0" text-anchor="middle">512</text>
+<text class="vz-lbl" x="355.4" y="104.0" text-anchor="middle">image</text>
+<text class="vz-sub" x="355.4" y="119.0" text-anchor="middle">2 slots × 256 patches</text>
+<rect class="vz-seg vz2" x="696.8" y="44" width="263.9" height="42" rx="4"><title>prompt · 200 tokens · 27.5%</title></rect>
+<text class="vz-in" x="828.8" y="70.0" text-anchor="middle">200</text>
+<text class="vz-lbl" x="828.8" y="104.0" text-anchor="middle">prompt</text>
+<text class="vz-sub" x="828.8" y="119.0" text-anchor="middle">padded field</text>
+<rect class="vz-seg vz3" x="962.7" y="44" width="19.3" height="42" rx="4"><title>action · 16 tokens · 2.2%</title></rect>
+<text class="vz-out" x="972.4" y="36.0" text-anchor="middle">16</text>
+<text class="vz-lbl" x="954.0" y="104.0" text-anchor="middle">action</text>
+<text class="vz-sub" x="954.0" y="119.0" text-anchor="middle">= action horizon</text>
+<rect class="vz-used" x="697.8" y="130" width="45.2" height="8" rx="3"/>
+<rect class="vz-usedtrack" x="743.0" y="130" width="218.7" height="8" rx="3"/>
+<text class="vz-note" x="697.8" y="156" data-en="12–34 tokens actually used, measured with the PaliGemma tokenizer — the rest is padding" data-ko="PaliGemma 토크나이저 실측 12–34 토큰 사용, 나머지는 패딩">12–34 tokens actually used — the rest is padding</text>
+<text class="vz-total" x="984" y="20" text-anchor="end">728 total</text>
+</svg>

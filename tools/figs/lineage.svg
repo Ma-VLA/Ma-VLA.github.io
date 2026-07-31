@@ -1,0 +1,67 @@
+<svg class="lineage" viewBox="0 0 1000 300" role="img" xmlns="http://www.w3.org/2000/svg" aria-label="E6 v1-v26: dataset lineage above, SigLIP vision-LoRA layer range below">
+<rect class="ln-band" x="96" y="199.4" width="888" height="40.6"/>
+<text class="ln-band-lbl" x="88" y="223.2" text-anchor="end">Early 0–8</text>
+<rect class="ln-band" x="96" y="153.7" width="888" height="40.6"/>
+<text class="ln-band-lbl" x="88" y="177.5" text-anchor="end">Mid 9–17</text>
+<rect class="ln-band" x="96" y="108.0" width="888" height="40.6"/>
+<text class="ln-band-lbl" x="88" y="131.8" text-anchor="end">Late 18–26</text>
+<line class="ln-divide" x1="642.5" y1="22" x2="642.5" y2="246"/>
+<text class="ln-phase" x="369.2" y="14" text-anchor="middle" data-en="Phase 1 — the dataset moves, the config does not" data-ko="1단계 — 데이터셋이 바뀌고, 설정은 고정">Phase 1 — the dataset moves, the config does not</text>
+<text class="ln-phase" x="813.2" y="14" text-anchor="middle" data-en="Phase 2 — the dataset is frozen, the range is swept" data-ko="2단계 — 데이터셋이 고정되고, 범위를 훑음">Phase 2 — the dataset is frozen, the range is swept</text>
+<text class="ln-axis" x="88" y="62.5" text-anchor="end" data-en="Dataset" data-ko="데이터셋">Dataset</text>
+<rect class="ln-ds ln-ds0" x="97.0" y="46" width="32.2" height="26" rx="4"/>
+<line class="ln-leader" x1="113.1" y1="43" x2="113.1" y2="35"/>
+<text class="ln-ds-lbl ln-ds-lbl--out" x="97.0" y="31" text-anchor="start">random_v1</text>
+<rect class="ln-ds ln-ds1" x="131.2" y="46" width="134.6" height="26" rx="4"/>
+<text class="ln-ds-lbl" x="198.5" y="62.5" text-anchor="middle">orange_v2</text>
+<rect class="ln-ds ln-ds0" x="267.8" y="46" width="66.3" height="26" rx="4"/>
+<text class="ln-ds-lbl" x="300.9" y="62.5" text-anchor="middle">orange_v6</text>
+<rect class="ln-ds ln-ds1" x="336.1" y="46" width="66.3" height="26" rx="4"/>
+<text class="ln-ds-lbl" x="369.2" y="62.5" text-anchor="middle">orange_v8</text>
+<rect class="ln-ds ln-ds0" x="404.4" y="46" width="100.5" height="26" rx="4"/>
+<text class="ln-ds-lbl" x="454.6" y="62.5" text-anchor="middle">orange_v10</text>
+<rect class="ln-ds ln-ds1" x="506.8" y="46" width="32.2" height="26" rx="4"/>
+<line class="ln-leader" x1="522.9" y1="43" x2="522.9" y2="35"/>
+<text class="ln-ds-lbl ln-ds-lbl--out" x="522.9" y="31" text-anchor="middle">orange_v13</text>
+<rect class="ln-ds ln-ds0" x="541.0" y="46" width="66.3" height="26" rx="4"/>
+<text class="ln-ds-lbl" x="574.2" y="62.5" text-anchor="middle">orange_v14</text>
+<rect class="ln-ds ln-ds1" x="609.3" y="46" width="373.7" height="26" rx="4"/>
+<text class="ln-ds-lbl" x="796.2" y="62.5" text-anchor="middle">orange_v16</text>
+<text class="ln-axis" x="88" y="112" text-anchor="end" data-en="SigLIP layer" data-ko="SigLIP 레이어">SigLIP layer</text>
+<rect class="ln-span" x="103.2" y="108.0" width="19.8" height="20.3" rx="4"><title>v1 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="137.3" y="108.0" width="19.8" height="20.3" rx="4"><title>v2 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="171.5" y="108.0" width="19.8" height="20.3" rx="4"><title>v3 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="205.6" y="108.0" width="19.8" height="20.3" rx="4"><title>v4 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="239.8" y="108.0" width="19.8" height="20.3" rx="4"><title>v5 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="273.9" y="108.0" width="19.8" height="20.3" rx="4"><title>v6 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="308.1" y="108.0" width="19.8" height="20.3" rx="4"><title>v7 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="342.2" y="108.0" width="19.8" height="20.3" rx="4"><title>v8 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="376.4" y="108.0" width="19.8" height="20.3" rx="4"><title>v9 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="410.6" y="108.0" width="19.8" height="20.3" rx="4"><title>v10 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="444.7" y="108.0" width="19.8" height="20.3" rx="4"><title>v11 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="478.9" y="108.0" width="19.8" height="20.3" rx="4"><title>v12 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="513.0" y="108.0" width="19.8" height="20.3" rx="4"><title>v13 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="547.2" y="108.0" width="19.8" height="20.3" rx="4"><title>v14 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="581.3" y="108.0" width="19.8" height="20.3" rx="4"><title>v15 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="615.5" y="108.0" width="19.8" height="20.3" rx="4"><title>v16 · SigLIP 22–26</title></rect>
+<rect class="ln-span" x="649.6" y="113.1" width="19.8" height="55.8" rx="4"><title>v17 · SigLIP 14–25</title></rect>
+<rect class="ln-span" x="683.8" y="113.1" width="19.8" height="126.9" rx="4"><title>v18 · SigLIP 0–25</title></rect>
+<rect class="ln-span" x="717.9" y="148.6" width="19.8" height="20.3" rx="4"><title>v19 · SigLIP 14–18</title></rect>
+<rect class="ln-span" x="752.1" y="113.1" width="19.8" height="30.5" rx="4"><title>v20 · SigLIP 19–25</title></rect>
+<rect class="ln-span" x="786.2" y="199.4" width="19.8" height="40.6" rx="4"><title>v21 · SigLIP 0–8</title></rect>
+<rect class="ln-span" x="820.4" y="153.7" width="19.8" height="40.6" rx="4"><title>v22 · SigLIP 9–17</title></rect>
+<rect class="ln-span ln-span--best" x="854.6" y="108.0" width="19.8" height="40.6" rx="4"><title>v23 · SigLIP 18–26</title></rect>
+<rect class="ln-span" x="888.7" y="108.0" width="19.8" height="132.0" rx="4"><title>v24 · SigLIP 0–26</title></rect>
+<rect class="ln-span" x="922.9" y="143.5" width="19.8" height="20.3" rx="4"><title>v25 · SigLIP 15–19</title></rect>
+<rect class="ln-span" x="957.0" y="113.1" width="19.8" height="15.2" rx="4"><title>v26 · SigLIP 22–25</title></rect>
+<text class="ln-best-lbl" x="864.5" y="99.0" text-anchor="middle">v23 · 18–26</text>
+<text class="ln-tick" x="113.1" y="259" text-anchor="middle">v1</text>
+<text class="ln-tick" x="249.7" y="259" text-anchor="middle">v5</text>
+<text class="ln-tick" x="420.5" y="259" text-anchor="middle">v10</text>
+<text class="ln-tick" x="625.4" y="259" text-anchor="middle">v16</text>
+<text class="ln-tick" x="762.0" y="259" text-anchor="middle">v20</text>
+<text class="ln-tick" x="864.5" y="259" text-anchor="middle">v23</text>
+<text class="ln-tick" x="966.9" y="259" text-anchor="middle">v26</text>
+<line class="ln-baseline" x1="96" y1="241" x2="984" y2="241"/>
+<text class="ln-axis" x="96" y="290" data-en="Policy version" data-ko="정책 버전">Policy version</text>
+</svg>

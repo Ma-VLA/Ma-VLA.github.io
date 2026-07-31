@@ -1,0 +1,108 @@
+<svg class="vz" viewBox="0 0 1000 300" role="img" xmlns="http://www.w3.org/2000/svg" aria-label="One wrapped frame lands about 722 normalized units outside the training range; the correction moves only that frame">
+<text class="vz-title" x="16" y="20" data-en="What one wrapped frame does after percentile normalization" data-ko="wrap 1프레임이 백분위 정규화 후 어디에 놓이는가">What one wrapped frame does after percentile normalization</text>
+<text class="vz-rowlbl" x="122" y="57" text-anchor="end" data-en="naive difference" data-ko="단순 차분">naive difference</text>
+<line class="vz-axis" x1="132" y1="72" x2="974" y2="72"/>
+<rect class="vz-seg vz1" x="912.3" y="45" width="3.0" height="22" rx="3"><title>539 frames, normalized -1.52 to 1.27</title></rect>
+<text class="vz-flag2" x="910.1" y="41.0" text-anchor="end">539</text>
+<circle class="vz-dot--bad" cx="190.0" cy="56" r="5.5"><title>the wrapped frame</title></circle>
+<text class="vz-flag" x="202.0" y="60">-722</text>
+<text class="vz-rowlbl" x="122" y="103" text-anchor="end" data-en="shortest path" data-ko="최단경로">shortest path</text>
+<line class="vz-axis" x1="132" y1="118" x2="974" y2="118"/>
+<rect class="vz-seg vz1" x="912.3" y="91" width="3.0" height="22" rx="3"><title>540 frames, normalized -1.55 to 1.27</title></rect>
+<text class="vz-flag2" x="910.1" y="87.0" text-anchor="end">540</text>
+<line class="vz-grid" x1="162.1" y1="40" x2="162.1" y2="122"/>
+<text class="vz-sub" x="162.1" y="136" text-anchor="middle">-750</text>
+<line class="vz-grid" x1="412.7" y1="40" x2="412.7" y2="122"/>
+<text class="vz-sub" x="412.7" y="136" text-anchor="middle">-500</text>
+<line class="vz-grid" x1="663.3" y1="40" x2="663.3" y2="122"/>
+<text class="vz-sub" x="663.3" y="136" text-anchor="middle">-250</text>
+<line class="vz-grid" x1="913.9" y1="40" x2="913.9" y2="122"/>
+<text class="vz-sub" x="913.9" y="136" text-anchor="middle">0</text>
+<text class="vz-sub" x="974" y="152" text-anchor="end" data-en="normalized action units" data-ko="정규화 액션 단위">normalized action units</text>
+<text class="vz-rowlbl" x="122" y="207.0" text-anchor="end" data-en="zoom ±2" data-ko="확대 ±2">zoom ±2</text>
+<rect class="vz-okband" x="342.5" y="170" width="421.0" height="74" rx="3"><title>training range ±1</title></rect>
+<rect class="vz-hist2" x="217.2" y="236.9" width="12.0" height="1.1" rx="2"/>
+<rect class="vz-seg vz1" x="231.2" y="236.9" width="12.0" height="1.1" rx="2"/>
+<rect class="vz-hist2" x="259.3" y="236.9" width="12.0" height="1.1" rx="2"/>
+<rect class="vz-seg vz1" x="273.3" y="236.9" width="12.0" height="1.1" rx="2"/>
+<rect class="vz-seg vz1" x="287.4" y="236.9" width="12.0" height="1.1" rx="2"/>
+<rect class="vz-hist2" x="287.4" y="236.9" width="12.0" height="1.1" rx="2"/>
+<rect class="vz-seg vz1" x="301.4" y="236.9" width="12.0" height="1.1" rx="2"/>
+<rect class="vz-hist2" x="301.4" y="236.9" width="12.0" height="1.1" rx="2"/>
+<rect class="vz-seg vz1" x="329.5" y="236.9" width="12.0" height="1.1" rx="2"/>
+<rect class="vz-hist2" x="329.5" y="235.7" width="12.0" height="2.3" rx="2"/>
+<rect class="vz-seg vz1" x="343.5" y="233.5" width="12.0" height="4.5" rx="2"/>
+<rect class="vz-hist2" x="343.5" y="233.5" width="12.0" height="4.5" rx="2"/>
+<rect class="vz-seg vz1" x="357.5" y="232.4" width="12.0" height="5.6" rx="2"/>
+<rect class="vz-hist2" x="357.5" y="232.4" width="12.0" height="5.6" rx="2"/>
+<rect class="vz-seg vz1" x="371.6" y="231.2" width="12.0" height="6.8" rx="2"/>
+<rect class="vz-hist2" x="371.6" y="229.0" width="12.0" height="9.0" rx="2"/>
+<rect class="vz-seg vz1" x="385.6" y="226.7" width="12.0" height="11.3" rx="2"/>
+<rect class="vz-hist2" x="385.6" y="229.0" width="12.0" height="9.0" rx="2"/>
+<rect class="vz-seg vz1" x="399.6" y="227.9" width="12.0" height="10.1" rx="2"/>
+<rect class="vz-hist2" x="399.6" y="225.6" width="12.0" height="12.4" rx="2"/>
+<rect class="vz-seg vz1" x="413.7" y="224.5" width="12.0" height="13.5" rx="2"/>
+<rect class="vz-hist2" x="413.7" y="224.5" width="12.0" height="13.5" rx="2"/>
+<rect class="vz-seg vz1" x="427.7" y="218.8" width="12.0" height="19.2" rx="2"/>
+<rect class="vz-hist2" x="427.7" y="217.7" width="12.0" height="20.3" rx="2"/>
+<rect class="vz-seg vz1" x="441.7" y="214.3" width="12.0" height="23.7" rx="2"/>
+<rect class="vz-hist2" x="441.7" y="209.8" width="12.0" height="28.2" rx="2"/>
+<rect class="vz-seg vz1" x="455.8" y="207.6" width="12.0" height="30.4" rx="2"/>
+<rect class="vz-hist2" x="455.8" y="212.1" width="12.0" height="25.9" rx="2"/>
+<rect class="vz-seg vz1" x="469.8" y="216.6" width="12.0" height="21.4" rx="2"/>
+<rect class="vz-hist2" x="469.8" y="212.1" width="12.0" height="25.9" rx="2"/>
+<rect class="vz-seg vz1" x="483.8" y="214.3" width="12.0" height="23.7" rx="2"/>
+<rect class="vz-hist2" x="483.8" y="215.5" width="12.0" height="22.5" rx="2"/>
+<rect class="vz-seg vz1" x="497.9" y="209.8" width="12.0" height="28.2" rx="2"/>
+<rect class="vz-hist2" x="497.9" y="212.1" width="12.0" height="25.9" rx="2"/>
+<rect class="vz-seg vz1" x="511.9" y="207.6" width="12.0" height="30.4" rx="2"/>
+<rect class="vz-hist2" x="511.9" y="208.7" width="12.0" height="29.3" rx="2"/>
+<rect class="vz-seg vz1" x="525.9" y="204.2" width="12.0" height="33.8" rx="2"/>
+<rect class="vz-hist2" x="525.9" y="204.2" width="12.0" height="33.8" rx="2"/>
+<rect class="vz-seg vz1" x="540.0" y="197.4" width="12.0" height="40.6" rx="2"/>
+<rect class="vz-hist2" x="540.0" y="195.2" width="12.0" height="42.8" rx="2"/>
+<rect class="vz-seg vz1" x="554.0" y="180.5" width="12.0" height="57.5" rx="2"/>
+<rect class="vz-hist2" x="554.0" y="176.0" width="12.0" height="62.0" rx="2"/>
+<rect class="vz-seg vz1" x="568.0" y="201.9" width="12.0" height="36.1" rx="2"/>
+<rect class="vz-hist2" x="568.0" y="207.6" width="12.0" height="30.4" rx="2"/>
+<rect class="vz-seg vz1" x="582.1" y="209.8" width="12.0" height="28.2" rx="2"/>
+<rect class="vz-hist2" x="582.1" y="209.8" width="12.0" height="28.2" rx="2"/>
+<rect class="vz-seg vz1" x="596.1" y="217.7" width="12.0" height="20.3" rx="2"/>
+<rect class="vz-hist2" x="596.1" y="220.0" width="12.0" height="18.0" rx="2"/>
+<rect class="vz-seg vz1" x="610.1" y="213.2" width="12.0" height="24.8" rx="2"/>
+<rect class="vz-hist2" x="610.1" y="212.1" width="12.0" height="25.9" rx="2"/>
+<rect class="vz-seg vz1" x="624.2" y="217.7" width="12.0" height="20.3" rx="2"/>
+<rect class="vz-hist2" x="624.2" y="218.8" width="12.0" height="19.2" rx="2"/>
+<rect class="vz-seg vz1" x="638.2" y="213.2" width="12.0" height="24.8" rx="2"/>
+<rect class="vz-hist2" x="638.2" y="212.1" width="12.0" height="25.9" rx="2"/>
+<rect class="vz-seg vz1" x="652.2" y="220.0" width="12.0" height="18.0" rx="2"/>
+<rect class="vz-hist2" x="652.2" y="223.3" width="12.0" height="14.7" rx="2"/>
+<rect class="vz-seg vz1" x="666.3" y="222.2" width="12.0" height="15.8" rx="2"/>
+<rect class="vz-hist2" x="666.3" y="221.1" width="12.0" height="16.9" rx="2"/>
+<rect class="vz-seg vz1" x="680.3" y="229.0" width="12.0" height="9.0" rx="2"/>
+<rect class="vz-hist2" x="680.3" y="229.0" width="12.0" height="9.0" rx="2"/>
+<rect class="vz-seg vz1" x="694.3" y="226.7" width="12.0" height="11.3" rx="2"/>
+<rect class="vz-hist2" x="694.3" y="227.9" width="12.0" height="10.1" rx="2"/>
+<rect class="vz-seg vz1" x="708.4" y="224.5" width="12.0" height="13.5" rx="2"/>
+<rect class="vz-hist2" x="708.4" y="223.3" width="12.0" height="14.7" rx="2"/>
+<rect class="vz-seg vz1" x="722.4" y="233.5" width="12.0" height="4.5" rx="2"/>
+<rect class="vz-hist2" x="722.4" y="234.6" width="12.0" height="3.4" rx="2"/>
+<rect class="vz-seg vz1" x="736.4" y="236.9" width="12.0" height="1.1" rx="2"/>
+<rect class="vz-hist2" x="736.4" y="236.9" width="12.0" height="1.1" rx="2"/>
+<rect class="vz-seg vz1" x="750.5" y="231.2" width="12.0" height="6.8" rx="2"/>
+<rect class="vz-hist2" x="750.5" y="231.2" width="12.0" height="6.8" rx="2"/>
+<rect class="vz-seg vz1" x="764.5" y="234.6" width="12.0" height="3.4" rx="2"/>
+<rect class="vz-hist2" x="764.5" y="234.6" width="12.0" height="3.4" rx="2"/>
+<rect class="vz-seg vz1" x="778.5" y="235.7" width="12.0" height="2.3" rx="2"/>
+<rect class="vz-hist2" x="778.5" y="236.9" width="12.0" height="1.1" rx="2"/>
+<rect class="vz-hist2" x="792.6" y="236.9" width="12.0" height="1.1" rx="2"/>
+<rect class="vz-seg vz1" x="820.6" y="236.9" width="12.0" height="1.1" rx="2"/>
+<rect class="vz-hist2" x="820.6" y="236.9" width="12.0" height="1.1" rx="2"/>
+<line class="vz-axis" x1="132" y1="238" x2="974" y2="238"/>
+<text class="vz-sub" x="132.0" y="253" text-anchor="middle">-2</text>
+<text class="vz-sub" x="342.5" y="253" text-anchor="middle">-1</text>
+<text class="vz-sub" x="553.0" y="253" text-anchor="middle">+0</text>
+<text class="vz-sub" x="763.5" y="253" text-anchor="middle">+1</text>
+<text class="vz-sub" x="974.0" y="253" text-anchor="middle">+2</text>
+<text class="vz-note" x="16" y="290" data-en="The two histograms coincide: the correction rewrites only the wrapped frame and leaves every other delta bit-identical. q99 minus q01 moves 0.985 to 0.997 — one frame in 540 is 0.19%, inside the 1% tail, so the percentiles can never widen to cover it." data-ko="두 히스토그램이 겹친다 — 보정은 wrap 프레임 하나만 다시 쓰고 나머지 델타는 비트 단위로 동일하다. q99−q01 은 0.985→0.997로만 움직인다. 540 중 1프레임은 0.19%로 1% 꼬리 안쪽이라 백분위가 넓어질 수 없다.">The two histograms coincide — the correction rewrites only the wrapped frame. One frame in 540 is 0.19%, inside the 1% tail.</text>
+</svg>

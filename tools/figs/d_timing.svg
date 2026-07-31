@@ -1,0 +1,27 @@
+<svg class="vz" viewBox="0 0 1000 172" role="img" xmlns="http://www.w3.org/2000/svg" aria-label="A 16-step chunk covers exactly one second; inference measured at 86.5 ms on the training server">
+<text class="vz-title" x="16" y="20" data-en="One chunk = one second of robot motion" data-ko="청크 1개 = 로봇 동작 1초">One chunk = one second of robot motion</text>
+<rect class="vz-step" x="17.0" y="46" width="58.5" height="34" rx="3"><title>step 1 · 62.5 ms</title></rect>
+<rect class="vz-step" x="77.5" y="46" width="58.5" height="34" rx="3"><title>step 2 · 62.5 ms</title></rect>
+<rect class="vz-step" x="138.0" y="46" width="58.5" height="34" rx="3"><title>step 3 · 62.5 ms</title></rect>
+<rect class="vz-step" x="198.5" y="46" width="58.5" height="34" rx="3"><title>step 4 · 62.5 ms</title></rect>
+<rect class="vz-step" x="259.0" y="46" width="58.5" height="34" rx="3"><title>step 5 · 62.5 ms</title></rect>
+<rect class="vz-step" x="319.5" y="46" width="58.5" height="34" rx="3"><title>step 6 · 62.5 ms</title></rect>
+<rect class="vz-step" x="380.0" y="46" width="58.5" height="34" rx="3"><title>step 7 · 62.5 ms</title></rect>
+<rect class="vz-step" x="440.5" y="46" width="58.5" height="34" rx="3"><title>step 8 · 62.5 ms</title></rect>
+<rect class="vz-step" x="501.0" y="46" width="58.5" height="34" rx="3"><title>step 9 · 62.5 ms</title></rect>
+<rect class="vz-step" x="561.5" y="46" width="58.5" height="34" rx="3"><title>step 10 · 62.5 ms</title></rect>
+<rect class="vz-step" x="622.0" y="46" width="58.5" height="34" rx="3"><title>step 11 · 62.5 ms</title></rect>
+<rect class="vz-step" x="682.5" y="46" width="58.5" height="34" rx="3"><title>step 12 · 62.5 ms</title></rect>
+<rect class="vz-step" x="743.0" y="46" width="58.5" height="34" rx="3"><title>step 13 · 62.5 ms</title></rect>
+<rect class="vz-step" x="803.5" y="46" width="58.5" height="34" rx="3"><title>step 14 · 62.5 ms</title></rect>
+<rect class="vz-step" x="864.0" y="46" width="58.5" height="34" rx="3"><title>step 15 · 62.5 ms</title></rect>
+<rect class="vz-step" x="924.5" y="46" width="58.5" height="34" rx="3"><title>step 16 · 62.5 ms</title></rect>
+<text class="vz-sub" x="16" y="96">0 ms</text>
+<text class="vz-sub" x="984" y="96" text-anchor="end">1000 ms</text>
+<text class="vz-stepnum" x="46.2" y="68.0" text-anchor="middle">1</text>
+<text class="vz-stepnum" x="953.8" y="68.0" text-anchor="middle">16</text>
+<rect class="vz-seg vz2" x="16" y="110" width="83.7" height="20" rx="4"><title>inference 86.5 ms (p95 87.5) — RTX A5000</title></rect>
+<text class="vz-val" x="109.7" y="125">86.5 ms</text>
+<text class="vz-sub" x="179.7" y="125" data-en="to produce the next chunk — measured on the RTX A5000, not on the robot" data-ko="다음 청크 생성 시간 — RTX A5000 실측, 로봇에서 잰 값 아님">to produce the next chunk — RTX A5000, not the robot</text>
+<text class="vz-note" x="16" y="162" data-en="16 steps at 16 Hz is exactly 1.000 s, so the next chunk must be ready before the current one runs out." data-ko="16Hz × 16스텝 = 정확히 1.000초. 현재 청크가 소진되기 전에 다음 청크가 준비돼야 한다.">16 steps at 16 Hz is exactly 1.000 s.</text>
+</svg>

@@ -1,0 +1,23 @@
+<svg class="vz" viewBox="0 0 1000 208" role="img" xmlns="http://www.w3.org/2000/svg" aria-label="Prompt token cost by style, against the 200-token field">
+<text class="vz-title" x="16" y="20" data-en="Prompt cost against the 200-token field" data-ko="200 토큰 영역 대비 프롬프트 비용">Prompt cost against the 200-token field</text>
+<rect class="vz-track" x="140" y="44" width="770" height="20" rx="4"/>
+<rect class="vz-seg vz1" x="140" y="44" width="46.2" height="20" rx="4"><title>category_only · 12 of 200 tokens</title></rect>
+<text class="vz-rowlbl" x="130" y="58" text-anchor="end">category_only</text>
+<text class="vz-val" x="194.2" y="58">12</text>
+<rect class="vz-track" x="140" y="76" width="770" height="20" rx="4"/>
+<rect class="vz-seg vz1" x="140" y="76" width="69.3" height="20" rx="4"><title>resolved · 18 of 200 tokens</title></rect>
+<text class="vz-rowlbl" x="130" y="90" text-anchor="end">resolved</text>
+<text class="vz-val" x="217.3" y="90">18</text>
+<rect class="vz-track" x="140" y="108" width="770" height="20" rx="4"/>
+<rect class="vz-seg vz1" x="140" y="108" width="100.1" height="20" rx="4"><title>single_rule · 26 of 200 tokens</title></rect>
+<text class="vz-rowlbl" x="130" y="122" text-anchor="end">single_rule</text>
+<text class="vz-val" x="248.1" y="122">26</text>
+<rect class="vz-track" x="140" y="140" width="770" height="20" rx="4"/>
+<rect class="vz-seg vz1" x="140" y="140" width="130.9" height="20" rx="4"><title>rule_table · 34 of 200 tokens</title></rect>
+<text class="vz-rowlbl" x="130" y="154" text-anchor="end">rule_table</text>
+<text class="vz-val" x="278.9" y="154">34</text>
+<line class="vz-axis" x1="140" y1="166" x2="910" y2="166"/>
+<text class="vz-sub" x="140" y="182">0</text>
+<text class="vz-sub" x="910" y="182" text-anchor="end">200</text>
+<text class="vz-note" x="16" y="196" data-en="Worst case over every category and destination. The field is padded to 200, so all four styles give the same 728-token sequence — wording costs nothing." data-ko="카테고리·목적지 전 조합 중 최악값. 영역이 200으로 패딩되므로 네 방식 모두 동일한 728 시퀀스 — 문구 비용은 0.">The field is padded, so all four give the same 728-token sequence — wording costs nothing.</text>
+</svg>
