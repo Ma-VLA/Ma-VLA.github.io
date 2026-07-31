@@ -651,3 +651,41 @@ summary { padding: 1rem 1.15rem; cursor: pointer; font-family: var(--font-displa
 .ln-tick { fill: var(--muted); font-size: 10px; font-family: var(--font-mono); }
 .ln-baseline { stroke: var(--line); stroke-width: 1; }
 @media print { .lineage { border-color: #d4dcd9; } }
+
+/* ── Stage 2B 그림 (projects/e7-xarm6-policy.html) ──
+   OWNER: TRAINING-SERVER · vz1/vz2/vz3 는 dataviz 검증기를 all-pairs 로 통과한
+   3슬롯이다(라이트 aqua 는 대비 WARN → 직접 라벨로 완화하므로 라벨을 지우지 말 것). */
+.vz {
+  --vz1: #2a78d6; --vz2: #eb6834; --vz3: #1baf7a;
+  --vz-track: #eef1f0; --vz-band: #e7efee;
+  width: 100%; height: auto; display: block;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius-sm); padding: .35rem 0;
+  font-family: var(--font-display);
+}
+[data-theme="dark"] .vz {
+  --vz1: #3987e5; --vz2: #d95926; --vz3: #199e70;
+  --vz-track: #202a26; --vz-band: #1c2a27;
+}
+.vz1 { fill: var(--vz1); } .vz2 { fill: var(--vz2); } .vz3 { fill: var(--vz3); }
+.vz-title { fill: var(--text); font-size: 13px; font-weight: 700; }
+.vz-total { fill: var(--muted); font-size: 12px; font-family: var(--font-mono); }
+.vz-in { fill: #fff; font-size: 12px; font-weight: 700; font-family: var(--font-mono); }
+.vz-stepnum { fill: var(--muted); font-size: 11px; font-weight: 700; font-family: var(--font-mono); }
+.vz-out { fill: var(--text); font-size: 11px; font-weight: 700; font-family: var(--font-mono); }
+.vz-lbl { fill: var(--text); font-size: 11.5px; font-weight: 600; }
+.vz-rowlbl { fill: var(--text); font-size: 11.5px; font-weight: 600; }
+.vz-sub, .vz-note { fill: var(--muted); font-size: 10.5px; }
+.vz-note { font-size: 11px; }
+.vz-val { fill: var(--text); font-size: 11px; font-weight: 700; font-family: var(--font-mono); }
+.vz-flag { fill: var(--vz2); font-size: 12px; font-weight: 700; font-family: var(--font-mono); }
+.vz-flag2 { fill: var(--muted); font-size: 10.5px; font-family: var(--font-mono); }
+.vz-track, .vz-usedtrack, .vz-step { fill: var(--vz-track); }
+.vz-okband { fill: var(--vz-band); }
+.vz-used { fill: var(--vz2); }
+.vz-hist2 { fill: none; stroke: var(--vz2); stroke-width: 1.4; }
+.vz-axis { stroke: var(--line); stroke-width: 1; }
+.vz-grid { stroke: var(--line); stroke-width: 1; stroke-dasharray: 2 4; }
+.vz-dot--bad { fill: var(--vz2); stroke: var(--surface); stroke-width: 1.5; }
+.vz-seg { stroke: none; }
+@media print { .vz { border-color: #d4dcd9; } }

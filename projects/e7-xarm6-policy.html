@@ -117,10 +117,59 @@ flowchart LR
       <div class="research-paper">
         <div class="paper-section"><h2 data-en="Sequence budget" data-ko="시퀀스 예산">Sequence budget</h2><div><div class="table-scroll"><table class="flat-table"><thead><tr><th data-en="Component" data-ko="구성">Component</th><th data-en="Tokens" data-ko="토큰">Tokens</th><th data-en="Note" data-ko="비고">Note</th></tr></thead><tbody>
           <tr><td data-en="Two image slots" data-ko="이미지 2슬롯">Two image slots</td><td>512</td><td data-en="224 ÷ 14 = 16, so 16 × 16 = 256 patches per slot" data-ko="224 ÷ 14 = 16이므로 슬롯당 16 × 16 = 256 패치">256 patches per slot</td></tr>
-          <tr><td data-en="Prompt field" data-ko="프롬프트 영역">Prompt field</td><td>200</td><td data-en="Padded; the rendered prompt occupies roughly 15 of these" data-ko="패딩됨. 렌더된 프롬프트는 이 중 약 15개를 사용">Padded; ~15 used</td></tr>
+          <tr><td data-en="Prompt field" data-ko="프롬프트 영역">Prompt field</td><td>200</td><td data-en="Padded; the rendered prompt measures 12–34 tokens depending on style" data-ko="패딩됨. 렌더된 프롬프트는 방식에 따라 12–34 토큰">Padded; 12–34 measured</td></tr>
           <tr><td data-en="Action suffix" data-ko="액션 suffix">Action suffix</td><td>16</td><td data-en="Equal to the action horizon" data-ko="action horizon과 동일">Equal to the action horizon</td></tr>
           <tr><td><strong data-en="Total" data-ko="합계">Total</strong></td><td><strong>728</strong></td><td data-en="Unchanged by prompt wording, since the field is padded" data-ko="프롬프트 문구가 바뀌어도 영역이 패딩되므로 불변">Unchanged by prompt wording</td></tr>
-        </tbody></table></div><p class="protocol-note" data-en="Whether the robot state is also serialised into the prompt is a configuration flag that defaults to off. When it is on, the tokenizer wraps the text with a discretised state block worth roughly thirty-five additional tokens — no error, no visible symptom. The flag is part of the hashed contract for that reason." data-ko="로봇 상태를 프롬프트에 함께 직렬화할지는 기본값이 꺼짐인 설정 플래그입니다. 켜지면 토크나이저가 이산화된 상태 블록으로 텍스트를 감싸 약 35토큰이 추가됩니다 — 오류도, 눈에 보이는 증상도 없이. 이 플래그가 해시 계약에 포함된 이유입니다.">A configuration flag can add a discretised state block worth ~35 tokens with no visible symptom, so it is part of the hash.</p></div></div>
+        </tbody></table></div><p class="protocol-note" data-en="Whether the robot state is also serialised into the prompt is a configuration flag that defaults to off. When it is on, the tokenizer wraps the text with a discretised state block — 30 to 44 additional tokens depending on the values, measured — with no error and no visible symptom. The flag is part of the hashed contract for that reason." data-ko="로봇 상태를 프롬프트에 함께 직렬화할지는 기본값이 꺼짐인 설정 플래그입니다. 켜지면 토크나이저가 이산화된 상태 블록으로 텍스트를 감쌉니다 — 값에 따라 30~44 토큰 추가(실측). 오류도, 눈에 보이는 증상도 없습니다. 이 플래그가 해시 계약에 포함된 이유입니다.">A configuration flag adds a discretised state block worth 30–44 tokens with no visible symptom, so it is part of the hash.</p></div></div>
+      <figure class="lineage-figure" style="margin-top:1.5rem">
+<svg class="vz" viewBox="0 0 1000 190" role="img" xmlns="http://www.w3.org/2000/svg" aria-label="Token budget: 512 image plus 200 prompt plus 16 action equals 728">
+<text class="vz-title" x="16" y="20" data-en="Where the 728 tokens go" data-ko="728 토큰의 배분">Where the 728 tokens go</text>
+<rect class="vz-seg vz1" x="16.0" y="44" width="678.8" height="42" rx="4"><title>image · 512 tokens · 70.3%</title></rect>
+<text class="vz-in" x="355.4" y="70.0" text-anchor="middle">512</text>
+<text class="vz-lbl" x="355.4" y="104.0" text-anchor="middle">image</text>
+<text class="vz-sub" x="355.4" y="119.0" text-anchor="middle">2 slots × 256 patches</text>
+<rect class="vz-seg vz2" x="696.8" y="44" width="263.9" height="42" rx="4"><title>prompt · 200 tokens · 27.5%</title></rect>
+<text class="vz-in" x="828.8" y="70.0" text-anchor="middle">200</text>
+<text class="vz-lbl" x="828.8" y="104.0" text-anchor="middle">prompt</text>
+<text class="vz-sub" x="828.8" y="119.0" text-anchor="middle">padded field</text>
+<rect class="vz-seg vz3" x="962.7" y="44" width="19.3" height="42" rx="4"><title>action · 16 tokens · 2.2%</title></rect>
+<text class="vz-out" x="972.4" y="36.0" text-anchor="middle">16</text>
+<text class="vz-lbl" x="954.0" y="104.0" text-anchor="middle">action</text>
+<text class="vz-sub" x="954.0" y="119.0" text-anchor="middle">= action horizon</text>
+<rect class="vz-used" x="697.8" y="130" width="45.2" height="8" rx="3"/>
+<rect class="vz-usedtrack" x="743.0" y="130" width="218.7" height="8" rx="3"/>
+<text class="vz-note" x="697.8" y="156" data-en="12–34 tokens actually used, measured with the PaliGemma tokenizer — the rest is padding" data-ko="PaliGemma 토크나이저 실측 12–34 토큰 사용, 나머지는 패딩">12–34 tokens actually used — the rest is padding</text>
+<text class="vz-total" x="984" y="20" text-anchor="end">728 total</text>
+</svg>
+        <figcaption><div class="evidence-badges"><span class="evidence-badge code">Config verified</span><span class="evidence-badge">Derived</span></div><span data-en="Two image slots at 256 patches each, a 200-token prompt field, and a 16-token action suffix." data-ko="이미지 2슬롯 × 256 패치, 200 토큰 프롬프트 영역, 16 토큰 액션 suffix.">Two image slots at 256 patches each, a 200-token prompt field, and a 16-token action suffix.</span></figcaption>
+      </figure>
+      <figure class="lineage-figure" style="margin-top:1.5rem">
+<svg class="vz" viewBox="0 0 1000 208" role="img" xmlns="http://www.w3.org/2000/svg" aria-label="Prompt token cost by style, against the 200-token field">
+<text class="vz-title" x="16" y="20" data-en="Prompt cost against the 200-token field" data-ko="200 토큰 영역 대비 프롬프트 비용">Prompt cost against the 200-token field</text>
+<rect class="vz-track" x="140" y="44" width="770" height="20" rx="4"/>
+<rect class="vz-seg vz1" x="140" y="44" width="46.2" height="20" rx="4"><title>category_only · 12 of 200 tokens</title></rect>
+<text class="vz-rowlbl" x="130" y="58" text-anchor="end">category_only</text>
+<text class="vz-val" x="194.2" y="58">12</text>
+<rect class="vz-track" x="140" y="76" width="770" height="20" rx="4"/>
+<rect class="vz-seg vz1" x="140" y="76" width="69.3" height="20" rx="4"><title>resolved · 18 of 200 tokens</title></rect>
+<text class="vz-rowlbl" x="130" y="90" text-anchor="end">resolved</text>
+<text class="vz-val" x="217.3" y="90">18</text>
+<rect class="vz-track" x="140" y="108" width="770" height="20" rx="4"/>
+<rect class="vz-seg vz1" x="140" y="108" width="100.1" height="20" rx="4"><title>single_rule · 26 of 200 tokens</title></rect>
+<text class="vz-rowlbl" x="130" y="122" text-anchor="end">single_rule</text>
+<text class="vz-val" x="248.1" y="122">26</text>
+<rect class="vz-track" x="140" y="140" width="770" height="20" rx="4"/>
+<rect class="vz-seg vz1" x="140" y="140" width="130.9" height="20" rx="4"><title>rule_table · 34 of 200 tokens</title></rect>
+<text class="vz-rowlbl" x="130" y="154" text-anchor="end">rule_table</text>
+<text class="vz-val" x="278.9" y="154">34</text>
+<line class="vz-axis" x1="140" y1="166" x2="910" y2="166"/>
+<text class="vz-sub" x="140" y="182">0</text>
+<text class="vz-sub" x="910" y="182" text-anchor="end">200</text>
+<text class="vz-note" x="16" y="196" data-en="Worst case over every category and destination. The field is padded to 200, so all four styles give the same 728-token sequence — wording costs nothing." data-ko="카테고리·목적지 전 조합 중 최악값. 영역이 200으로 패딩되므로 네 방식 모두 동일한 728 시퀀스 — 문구 비용은 0.">The field is padded, so all four give the same 728-token sequence — wording costs nothing.</text>
+</svg>
+        <figcaption><div class="evidence-badges"><span class="evidence-badge log">Tokenizer measured</span></div><span data-en="Worst case over every category and destination, measured with the PaliGemma tokenizer openpi pins." data-ko="카테고리·목적지 전 조합 최악값. openpi가 고정한 PaliGemma 토크나이저로 실측.">Worst case over every category and destination, measured with the PaliGemma tokenizer openpi pins.</span></figcaption>
+      </figure>
+
         <div class="paper-section"><h2 data-en="What the hash covers" data-ko="해시가 덮는 범위">What the hash covers</h2><div><p data-en="A short digest is computed over everything that can change the token sequence: the prompt template, the category vocabulary, the destination vocabulary, the physical waypoint-to-side layout, and the tokenizer settings. It is written beside the dataset at conversion time and shipped with the checkpoint. The robot recomputes it at startup and refuses to serve on a mismatch, reporting which field moved rather than only that the digests differ." data-ko="토큰 시퀀스를 바꿀 수 있는 모든 것에 대해 짧은 다이제스트를 계산합니다 — 프롬프트 템플릿, 카테고리 어휘, 목적지 어휘, 웨이포인트↔물리 위치 배치, 토크나이저 설정. 변환 시점에 데이터셋 옆에 기록되고 체크포인트와 함께 배포됩니다. 로봇은 기동 시 재계산해 불일치면 서빙을 거부하며, 다이제스트가 다르다는 사실만이 아니라 어느 필드가 어긋났는지를 보고합니다.">A digest over template, vocabularies, rig layout, and tokenizer settings; the robot recomputes it at startup and reports which field moved.</p><p data-en="The category-to-shelf assignment is deliberately excluded, because each episode carries its own recorded destination and pinning one assignment would either churn the digest or describe a layout the data does not have. The waypoint-to-side layout is included, because flipping left and right there is otherwise undetectable: episodes convert, prompts render, loss falls, and every label points at the opposite shelf." data-ko="카테고리↔책장 대응은 의도적으로 제외했습니다. 에피소드마다 자신의 목적지를 기록하고 있어, 하나의 대응을 고정하면 다이제스트가 매번 바뀌거나 데이터에 없는 배치를 기술하게 됩니다. 반면 웨이포인트↔물리 위치 배치는 포함합니다. 거기서 좌우가 뒤집히면 달리 탐지할 방법이 없기 때문입니다 — 에피소드는 변환되고, 프롬프트는 렌더되고, loss는 떨어지는데, 모든 라벨이 반대편 책장을 가리킵니다.">The category-to-shelf assignment is excluded; the waypoint-to-side layout is included, because a left/right flip is otherwise undetectable.</p></div></div>
       </div>
     </div></section>
@@ -134,8 +183,120 @@ flowchart LR
         <tr><td data-en="Schema and vocabulary" data-ko="스키마·어휘 검사">Schema and vocabulary</td><td data-en="Episodes from a superseded taxonomy, and category labels outside the known set" data-ko="폐기된 taxonomy로 기록된 에피소드, 그리고 알려진 집합 밖의 카테고리 라벨">Superseded taxonomy; unknown category labels</td><td data-en="An unmapped label otherwise passes through and is rendered verbatim into the prompt" data-ko="매핑되지 않은 라벨은 그대로 통과해 프롬프트에 문자 그대로 렌더됩니다">An unmapped label renders verbatim into the prompt</td></tr>
       </tbody></table></div>
 
-      <div class="panel narrow" style="margin-top:2rem"><p class="section-label" data-en="Measured case · joint wrap" data-ko="실측 사례 · 관절 wrap">Measured case · joint wrap</p><p data-en="In one 540-frame episode a single frame crossed the wrap boundary. The naive difference recorded +360° for a joint that had physically barely moved. That one frame raised the delta standard deviation for its joint to 15.5, against 0.06–0.45 for the others, and after percentile normalization the frame sat at roughly 4,900 standard deviations. Training loss went from 0.13 to 2,386. With the shortest-path correction — applied only where the absolute difference exceeds 180°, leaving every other frame bit-identical — the standard deviation returned to 0.237 and the loss to its normal range." data-ko="540프레임 에피소드에서 단 한 프레임이 회전 경계를 넘었습니다. 단순 차분은 물리적으로 거의 움직이지 않은 관절에 +360°를 기록했습니다. 그 한 프레임 때문에 해당 관절의 델타 표준편차가 15.5가 되었고(다른 관절은 0.06–0.45), 백분위 정규화 후 그 프레임은 약 4,900 표준편차 지점에 놓였습니다. 학습 loss는 0.13에서 2,386으로 올라갔습니다. 절대 차이가 180°를 넘는 곳에만 적용하고 나머지 프레임은 비트 단위로 보존하는 최단경로 보정을 넣자 표준편차는 0.237로, loss는 정상 범위로 돌아왔습니다.">One wrapped frame in 540 raised that joint's delta standard deviation to 15.5 against 0.06–0.45, sat at ~4,900σ after normalization, and took training loss from 0.13 to 2,386. The shortest-path correction restored 0.237 and normal loss.</p><p class="protocol-note" data-en="The correction is a repair, not a resolution. A wrap means the joint reached its rotational limit during the demonstration, which is a property of the collection setup rather than of the converter." data-ko="이 보정은 수리이지 해결이 아닙니다. wrap이 났다는 것은 시연 중 해당 관절이 회전 한계에 도달했다는 뜻이고, 이는 변환기가 아니라 수집 환경의 성질입니다.">The correction is a repair, not a resolution — a wrap means the joint reached its rotational limit during the demonstration.</p></div>
-    </div></section>
+      <div class="panel narrow" style="margin-top:2rem"><p class="section-label" data-en="Measured case · joint wrap" data-ko="실측 사례 · 관절 wrap">Measured case · joint wrap</p><p data-en="In one 540-frame episode a single frame crossed the wrap boundary. The naive difference recorded a full turn for a joint that had physically barely moved. That one frame raised the delta standard deviation for its joint to 15.5, against 0.06–0.45 for the others. The normalization this model applies is percentile-based, and percentiles cannot absorb it: one frame in 540 is 0.19%, inside the 1% tail, so the span between the first and ninety-ninth percentile barely moves and the frame lands several hundred normalized units outside a training range of ±1. Training loss went from 0.13 to 2,386. The shortest-path correction — applied only where the absolute difference exceeds 180°, leaving every other frame bit-identical — restored a standard deviation of 0.237 and a normal loss." data-ko="540프레임 에피소드에서 단 한 프레임이 회전 경계를 넘었습니다. 단순 차분은 물리적으로 거의 움직이지 않은 관절에 한 바퀴를 기록했습니다. 그 한 프레임 때문에 해당 관절의 델타 표준편차가 15.5가 되었습니다(다른 관절은 0.06–0.45). 이 모델이 적용하는 정규화는 백분위 기반이고, 백분위는 이것을 흡수하지 못합니다 — 540 중 1프레임은 0.19%로 1% 꼬리 안쪽이라 1분위~99분위 span이 거의 움직이지 않고, 그 프레임은 학습 범위 ±1에서 수백 정규화 단위 밖에 놓입니다. 학습 loss는 0.13에서 2,386으로 올라갔습니다. 절대 차이가 180°를 넘는 곳에만 적용하고 나머지 프레임은 비트 단위로 보존하는 최단경로 보정을 넣자 표준편차는 0.237로, loss는 정상 범위로 돌아왔습니다.">One wrapped frame in 540 raised that joint's delta standard deviation to 15.5 against 0.06–0.45 and took training loss from 0.13 to 2,386. Percentiles cannot absorb a 0.19% tail. The shortest-path correction restored 0.237 and normal loss.</p><p class="protocol-note" data-en="The correction is a repair, not a resolution. A wrap means the joint reached its rotational limit during the demonstration, which is a property of the collection setup rather than of the converter." data-ko="이 보정은 수리이지 해결이 아닙니다. wrap이 났다는 것은 시연 중 해당 관절이 회전 한계에 도달했다는 뜻이고, 이는 변환기가 아니라 수집 환경의 성질입니다.">The correction is a repair, not a resolution — a wrap means the joint reached its rotational limit during the demonstration.</p></div>
+    
+      <figure class="lineage-figure" style="margin-top:1.5rem">
+<svg class="vz" viewBox="0 0 1000 300" role="img" xmlns="http://www.w3.org/2000/svg" aria-label="One wrapped frame lands about 722 normalized units outside the training range; the correction moves only that frame">
+<text class="vz-title" x="16" y="20" data-en="What one wrapped frame does after percentile normalization" data-ko="wrap 1프레임이 백분위 정규화 후 어디에 놓이는가">What one wrapped frame does after percentile normalization</text>
+<text class="vz-rowlbl" x="122" y="57" text-anchor="end" data-en="naive difference" data-ko="단순 차분">naive difference</text>
+<line class="vz-axis" x1="132" y1="72" x2="974" y2="72"/>
+<rect class="vz-seg vz1" x="912.3" y="45" width="3.0" height="22" rx="3"><title>539 frames, normalized -1.52 to 1.27</title></rect>
+<text class="vz-flag2" x="910.1" y="41.0" text-anchor="end">539</text>
+<circle class="vz-dot--bad" cx="190.0" cy="56" r="5.5"><title>the wrapped frame</title></circle>
+<text class="vz-flag" x="202.0" y="60">-722</text>
+<text class="vz-rowlbl" x="122" y="103" text-anchor="end" data-en="shortest path" data-ko="최단경로">shortest path</text>
+<line class="vz-axis" x1="132" y1="118" x2="974" y2="118"/>
+<rect class="vz-seg vz1" x="912.3" y="91" width="3.0" height="22" rx="3"><title>540 frames, normalized -1.55 to 1.27</title></rect>
+<text class="vz-flag2" x="910.1" y="87.0" text-anchor="end">540</text>
+<line class="vz-grid" x1="162.1" y1="40" x2="162.1" y2="122"/>
+<text class="vz-sub" x="162.1" y="136" text-anchor="middle">-750</text>
+<line class="vz-grid" x1="412.7" y1="40" x2="412.7" y2="122"/>
+<text class="vz-sub" x="412.7" y="136" text-anchor="middle">-500</text>
+<line class="vz-grid" x1="663.3" y1="40" x2="663.3" y2="122"/>
+<text class="vz-sub" x="663.3" y="136" text-anchor="middle">-250</text>
+<line class="vz-grid" x1="913.9" y1="40" x2="913.9" y2="122"/>
+<text class="vz-sub" x="913.9" y="136" text-anchor="middle">0</text>
+<text class="vz-sub" x="974" y="152" text-anchor="end" data-en="normalized action units" data-ko="정규화 액션 단위">normalized action units</text>
+<text class="vz-rowlbl" x="122" y="207.0" text-anchor="end" data-en="zoom ±2" data-ko="확대 ±2">zoom ±2</text>
+<rect class="vz-okband" x="342.5" y="170" width="421.0" height="74" rx="3"><title>training range ±1</title></rect>
+<rect class="vz-hist2" x="217.2" y="236.9" width="12.0" height="1.1" rx="2"/>
+<rect class="vz-seg vz1" x="231.2" y="236.9" width="12.0" height="1.1" rx="2"/>
+<rect class="vz-hist2" x="259.3" y="236.9" width="12.0" height="1.1" rx="2"/>
+<rect class="vz-seg vz1" x="273.3" y="236.9" width="12.0" height="1.1" rx="2"/>
+<rect class="vz-seg vz1" x="287.4" y="236.9" width="12.0" height="1.1" rx="2"/>
+<rect class="vz-hist2" x="287.4" y="236.9" width="12.0" height="1.1" rx="2"/>
+<rect class="vz-seg vz1" x="301.4" y="236.9" width="12.0" height="1.1" rx="2"/>
+<rect class="vz-hist2" x="301.4" y="236.9" width="12.0" height="1.1" rx="2"/>
+<rect class="vz-seg vz1" x="329.5" y="236.9" width="12.0" height="1.1" rx="2"/>
+<rect class="vz-hist2" x="329.5" y="235.7" width="12.0" height="2.3" rx="2"/>
+<rect class="vz-seg vz1" x="343.5" y="233.5" width="12.0" height="4.5" rx="2"/>
+<rect class="vz-hist2" x="343.5" y="233.5" width="12.0" height="4.5" rx="2"/>
+<rect class="vz-seg vz1" x="357.5" y="232.4" width="12.0" height="5.6" rx="2"/>
+<rect class="vz-hist2" x="357.5" y="232.4" width="12.0" height="5.6" rx="2"/>
+<rect class="vz-seg vz1" x="371.6" y="231.2" width="12.0" height="6.8" rx="2"/>
+<rect class="vz-hist2" x="371.6" y="229.0" width="12.0" height="9.0" rx="2"/>
+<rect class="vz-seg vz1" x="385.6" y="226.7" width="12.0" height="11.3" rx="2"/>
+<rect class="vz-hist2" x="385.6" y="229.0" width="12.0" height="9.0" rx="2"/>
+<rect class="vz-seg vz1" x="399.6" y="227.9" width="12.0" height="10.1" rx="2"/>
+<rect class="vz-hist2" x="399.6" y="225.6" width="12.0" height="12.4" rx="2"/>
+<rect class="vz-seg vz1" x="413.7" y="224.5" width="12.0" height="13.5" rx="2"/>
+<rect class="vz-hist2" x="413.7" y="224.5" width="12.0" height="13.5" rx="2"/>
+<rect class="vz-seg vz1" x="427.7" y="218.8" width="12.0" height="19.2" rx="2"/>
+<rect class="vz-hist2" x="427.7" y="217.7" width="12.0" height="20.3" rx="2"/>
+<rect class="vz-seg vz1" x="441.7" y="214.3" width="12.0" height="23.7" rx="2"/>
+<rect class="vz-hist2" x="441.7" y="209.8" width="12.0" height="28.2" rx="2"/>
+<rect class="vz-seg vz1" x="455.8" y="207.6" width="12.0" height="30.4" rx="2"/>
+<rect class="vz-hist2" x="455.8" y="212.1" width="12.0" height="25.9" rx="2"/>
+<rect class="vz-seg vz1" x="469.8" y="216.6" width="12.0" height="21.4" rx="2"/>
+<rect class="vz-hist2" x="469.8" y="212.1" width="12.0" height="25.9" rx="2"/>
+<rect class="vz-seg vz1" x="483.8" y="214.3" width="12.0" height="23.7" rx="2"/>
+<rect class="vz-hist2" x="483.8" y="215.5" width="12.0" height="22.5" rx="2"/>
+<rect class="vz-seg vz1" x="497.9" y="209.8" width="12.0" height="28.2" rx="2"/>
+<rect class="vz-hist2" x="497.9" y="212.1" width="12.0" height="25.9" rx="2"/>
+<rect class="vz-seg vz1" x="511.9" y="207.6" width="12.0" height="30.4" rx="2"/>
+<rect class="vz-hist2" x="511.9" y="208.7" width="12.0" height="29.3" rx="2"/>
+<rect class="vz-seg vz1" x="525.9" y="204.2" width="12.0" height="33.8" rx="2"/>
+<rect class="vz-hist2" x="525.9" y="204.2" width="12.0" height="33.8" rx="2"/>
+<rect class="vz-seg vz1" x="540.0" y="197.4" width="12.0" height="40.6" rx="2"/>
+<rect class="vz-hist2" x="540.0" y="195.2" width="12.0" height="42.8" rx="2"/>
+<rect class="vz-seg vz1" x="554.0" y="180.5" width="12.0" height="57.5" rx="2"/>
+<rect class="vz-hist2" x="554.0" y="176.0" width="12.0" height="62.0" rx="2"/>
+<rect class="vz-seg vz1" x="568.0" y="201.9" width="12.0" height="36.1" rx="2"/>
+<rect class="vz-hist2" x="568.0" y="207.6" width="12.0" height="30.4" rx="2"/>
+<rect class="vz-seg vz1" x="582.1" y="209.8" width="12.0" height="28.2" rx="2"/>
+<rect class="vz-hist2" x="582.1" y="209.8" width="12.0" height="28.2" rx="2"/>
+<rect class="vz-seg vz1" x="596.1" y="217.7" width="12.0" height="20.3" rx="2"/>
+<rect class="vz-hist2" x="596.1" y="220.0" width="12.0" height="18.0" rx="2"/>
+<rect class="vz-seg vz1" x="610.1" y="213.2" width="12.0" height="24.8" rx="2"/>
+<rect class="vz-hist2" x="610.1" y="212.1" width="12.0" height="25.9" rx="2"/>
+<rect class="vz-seg vz1" x="624.2" y="217.7" width="12.0" height="20.3" rx="2"/>
+<rect class="vz-hist2" x="624.2" y="218.8" width="12.0" height="19.2" rx="2"/>
+<rect class="vz-seg vz1" x="638.2" y="213.2" width="12.0" height="24.8" rx="2"/>
+<rect class="vz-hist2" x="638.2" y="212.1" width="12.0" height="25.9" rx="2"/>
+<rect class="vz-seg vz1" x="652.2" y="220.0" width="12.0" height="18.0" rx="2"/>
+<rect class="vz-hist2" x="652.2" y="223.3" width="12.0" height="14.7" rx="2"/>
+<rect class="vz-seg vz1" x="666.3" y="222.2" width="12.0" height="15.8" rx="2"/>
+<rect class="vz-hist2" x="666.3" y="221.1" width="12.0" height="16.9" rx="2"/>
+<rect class="vz-seg vz1" x="680.3" y="229.0" width="12.0" height="9.0" rx="2"/>
+<rect class="vz-hist2" x="680.3" y="229.0" width="12.0" height="9.0" rx="2"/>
+<rect class="vz-seg vz1" x="694.3" y="226.7" width="12.0" height="11.3" rx="2"/>
+<rect class="vz-hist2" x="694.3" y="227.9" width="12.0" height="10.1" rx="2"/>
+<rect class="vz-seg vz1" x="708.4" y="224.5" width="12.0" height="13.5" rx="2"/>
+<rect class="vz-hist2" x="708.4" y="223.3" width="12.0" height="14.7" rx="2"/>
+<rect class="vz-seg vz1" x="722.4" y="233.5" width="12.0" height="4.5" rx="2"/>
+<rect class="vz-hist2" x="722.4" y="234.6" width="12.0" height="3.4" rx="2"/>
+<rect class="vz-seg vz1" x="736.4" y="236.9" width="12.0" height="1.1" rx="2"/>
+<rect class="vz-hist2" x="736.4" y="236.9" width="12.0" height="1.1" rx="2"/>
+<rect class="vz-seg vz1" x="750.5" y="231.2" width="12.0" height="6.8" rx="2"/>
+<rect class="vz-hist2" x="750.5" y="231.2" width="12.0" height="6.8" rx="2"/>
+<rect class="vz-seg vz1" x="764.5" y="234.6" width="12.0" height="3.4" rx="2"/>
+<rect class="vz-hist2" x="764.5" y="234.6" width="12.0" height="3.4" rx="2"/>
+<rect class="vz-seg vz1" x="778.5" y="235.7" width="12.0" height="2.3" rx="2"/>
+<rect class="vz-hist2" x="778.5" y="236.9" width="12.0" height="1.1" rx="2"/>
+<rect class="vz-hist2" x="792.6" y="236.9" width="12.0" height="1.1" rx="2"/>
+<rect class="vz-seg vz1" x="820.6" y="236.9" width="12.0" height="1.1" rx="2"/>
+<rect class="vz-hist2" x="820.6" y="236.9" width="12.0" height="1.1" rx="2"/>
+<line class="vz-axis" x1="132" y1="238" x2="974" y2="238"/>
+<text class="vz-sub" x="132.0" y="253" text-anchor="middle">-2</text>
+<text class="vz-sub" x="342.5" y="253" text-anchor="middle">-1</text>
+<text class="vz-sub" x="553.0" y="253" text-anchor="middle">+0</text>
+<text class="vz-sub" x="763.5" y="253" text-anchor="middle">+1</text>
+<text class="vz-sub" x="974.0" y="253" text-anchor="middle">+2</text>
+<text class="vz-note" x="16" y="290" data-en="The two histograms coincide: the correction rewrites only the wrapped frame and leaves every other delta bit-identical. q99 minus q01 moves 0.985 to 0.997 — one frame in 540 is 0.19%, inside the 1% tail, so the percentiles can never widen to cover it." data-ko="두 히스토그램이 겹친다 — 보정은 wrap 프레임 하나만 다시 쓰고 나머지 델타는 비트 단위로 동일하다. q99−q01 은 0.985→0.997로만 움직인다. 540 중 1프레임은 0.19%로 1% 꼬리 안쪽이라 백분위가 넓어질 수 없다.">The two histograms coincide — the correction rewrites only the wrapped frame. One frame in 540 is 0.19%, inside the 1% tail.</text>
+</svg>
+        <figcaption><div class="evidence-badges"><span class="evidence-badge">Derived</span><span class="evidence-badge log">Recorded run</span></div><span data-en="Derived from the normalization openpi applies, on a 540-frame distribution matching the recorded per-joint delta scale. The recorded run reached a delta standard deviation of 15.5 against 0.06–0.45 for the other joints; this reproduces 15.478." data-ko="openpi가 적용하는 정규화에서 유도. 실측 관절별 델타 스케일에 맞춘 540프레임 분포를 사용. 기록된 run의 델타 표준편차 15.5(타 관절 0.06–0.45)를 15.478로 재현.">Derived from the normalization openpi applies, on a 540-frame distribution matching the recorded per-joint delta scale. The recorded run reached a delta standard deviation of 15.5 against 0.06–0.45 for the other joints; this reproduces 15.478.</span></figcaption>
+      </figure>
+</div></section>
 
     <section id="measured-on-the-training-server" class="section"><div class="container"><div class="section-head"><div><p class="section-label" data-en="Measured on the training server" data-ko="학습 서버 실측">Measured on the training server</p><h2 data-en="What has actually been run." data-ko="실제로 돌려본 것.">What has actually been run.</h2></div><p data-en="The full path — collection files, conversion, normalization statistics, training, checkpoint conversion, and an inference call — has been executed on real recorded episodes. These are pipeline measurements, not policy results." data-ko="수집 파일, 변환, 정규화 통계, 학습, 체크포인트 변환, 추론 호출까지 전 구간을 실제 기록된 에피소드로 실행했습니다. 이것은 파이프라인 측정치이며 정책 성능 결과가 아닙니다.">The full path has been executed on real recorded episodes. These are pipeline measurements, not policy results.</p></div>
       <div class="metrics four">
@@ -144,6 +305,36 @@ flowchart LR
         <article class="metric"><strong>1.000 s</strong><span data-en="Chunk duration" data-ko="청크 길이">Chunk duration</span><small data-en="16 steps at 16 Hz" data-ko="16Hz에서 16스텝">16 steps at 16 Hz</small></article>
         <article class="metric"><strong>0.0739</strong><span data-en="Loss at 100 steps" data-ko="100 step loss">Loss at 100 steps</span><small data-en="Smoke run · 2 min 12 s" data-ko="스모크 런 · 2분 12초">Smoke run · 2 min 12 s</small></article>
       </div>
+            <figure class="lineage-figure" style="margin-top:1.5rem">
+<svg class="vz" viewBox="0 0 1000 172" role="img" xmlns="http://www.w3.org/2000/svg" aria-label="A 16-step chunk covers exactly one second; inference measured at 86.5 ms on the training server">
+<text class="vz-title" x="16" y="20" data-en="One chunk = one second of robot motion" data-ko="청크 1개 = 로봇 동작 1초">One chunk = one second of robot motion</text>
+<rect class="vz-step" x="17.0" y="46" width="58.5" height="34" rx="3"><title>step 1 · 62.5 ms</title></rect>
+<rect class="vz-step" x="77.5" y="46" width="58.5" height="34" rx="3"><title>step 2 · 62.5 ms</title></rect>
+<rect class="vz-step" x="138.0" y="46" width="58.5" height="34" rx="3"><title>step 3 · 62.5 ms</title></rect>
+<rect class="vz-step" x="198.5" y="46" width="58.5" height="34" rx="3"><title>step 4 · 62.5 ms</title></rect>
+<rect class="vz-step" x="259.0" y="46" width="58.5" height="34" rx="3"><title>step 5 · 62.5 ms</title></rect>
+<rect class="vz-step" x="319.5" y="46" width="58.5" height="34" rx="3"><title>step 6 · 62.5 ms</title></rect>
+<rect class="vz-step" x="380.0" y="46" width="58.5" height="34" rx="3"><title>step 7 · 62.5 ms</title></rect>
+<rect class="vz-step" x="440.5" y="46" width="58.5" height="34" rx="3"><title>step 8 · 62.5 ms</title></rect>
+<rect class="vz-step" x="501.0" y="46" width="58.5" height="34" rx="3"><title>step 9 · 62.5 ms</title></rect>
+<rect class="vz-step" x="561.5" y="46" width="58.5" height="34" rx="3"><title>step 10 · 62.5 ms</title></rect>
+<rect class="vz-step" x="622.0" y="46" width="58.5" height="34" rx="3"><title>step 11 · 62.5 ms</title></rect>
+<rect class="vz-step" x="682.5" y="46" width="58.5" height="34" rx="3"><title>step 12 · 62.5 ms</title></rect>
+<rect class="vz-step" x="743.0" y="46" width="58.5" height="34" rx="3"><title>step 13 · 62.5 ms</title></rect>
+<rect class="vz-step" x="803.5" y="46" width="58.5" height="34" rx="3"><title>step 14 · 62.5 ms</title></rect>
+<rect class="vz-step" x="864.0" y="46" width="58.5" height="34" rx="3"><title>step 15 · 62.5 ms</title></rect>
+<rect class="vz-step" x="924.5" y="46" width="58.5" height="34" rx="3"><title>step 16 · 62.5 ms</title></rect>
+<text class="vz-sub" x="16" y="96">0 ms</text>
+<text class="vz-sub" x="984" y="96" text-anchor="end">1000 ms</text>
+<text class="vz-stepnum" x="46.2" y="68.0" text-anchor="middle">1</text>
+<text class="vz-stepnum" x="953.8" y="68.0" text-anchor="middle">16</text>
+<rect class="vz-seg vz2" x="16" y="110" width="83.7" height="20" rx="4"><title>inference 86.5 ms (p95 87.5) — RTX A5000</title></rect>
+<text class="vz-val" x="109.7" y="125">86.5 ms</text>
+<text class="vz-sub" x="179.7" y="125" data-en="to produce the next chunk — measured on the RTX A5000, not on the robot" data-ko="다음 청크 생성 시간 — RTX A5000 실측, 로봇에서 잰 값 아님">to produce the next chunk — RTX A5000, not the robot</text>
+<text class="vz-note" x="16" y="162" data-en="16 steps at 16 Hz is exactly 1.000 s, so the next chunk must be ready before the current one runs out." data-ko="16Hz × 16스텝 = 정확히 1.000초. 현재 청크가 소진되기 전에 다음 청크가 준비돼야 한다.">16 steps at 16 Hz is exactly 1.000 s.</text>
+</svg>
+        <figcaption><div class="evidence-badges"><span class="evidence-badge log">Recorded run</span></div><span data-en="The chunk length is exact arithmetic; the 86.5 ms is a measurement on the training server." data-ko="청크 길이는 정확한 산술값이고, 86.5ms는 학습 서버 실측치입니다.">The chunk length is exact arithmetic; the 86.5 ms is a measurement on the training server.</span></figcaption>
+      </figure>
       <p class="protocol-note" style="margin-top:1.5rem" data-en="The 86.5 ms figure was measured on the RTX A5000 training server and is not a Jetson measurement. The two machines differ by roughly a factor of four in memory bandwidth, and this workload is bandwidth-bound, so the on-device figure will be substantially higher and has not yet been measured. Warm-up also matters: the first call takes about sixty seconds and compilation residue persists through roughly the fifth call, so timings taken before then are not representative." data-ko="86.5ms는 RTX A5000 학습 서버에서 측정한 값이며 Jetson 측정치가 아닙니다. 두 머신은 메모리 대역폭이 약 4배 차이나고 이 워크로드는 대역폭 제약이므로, 온디바이스 수치는 상당히 높아질 것이고 아직 측정하지 않았습니다. 웜업도 중요합니다 — 첫 호출은 약 60초가 걸리고 컴파일 잔여가 대략 다섯 번째 호출까지 남으므로, 그 이전 측정치는 대표성이 없습니다.">The 86.5 ms figure is an RTX A5000 measurement, not a Jetson one; this workload is bandwidth-bound and the on-device figure has not yet been measured.</p>
 
       <div class="research-paper" style="margin-top:2rem"><div class="paper-section"><h2 data-en="Training configuration" data-ko="학습 설정">Training configuration</h2><div><div class="table-scroll"><table class="flat-table"><tbody>
