@@ -10,6 +10,8 @@ GitHub Pages는 `tools/`를 서빙하지 않는다. 사이트에는 영향 없�
 
 ```bash
 python3 tools/gen_lineage.py     # E6 결정 계보  → tools/figs/lineage.svg
+python3 tools/gen_e6_norm.py     # j5 정규화     → tools/figs/e6_norm.svg
+python3 tools/gen_perdim.py      # 차원별 loss   → tools/figs/perdim.svg
 python3 tools/gen_e7figs.py      # Stage 2B 4장  → tools/figs/*.svg
 python3 tools/embed.py           # 위 결과를 해당 페이지에 밀어넣기
 git diff --stat                  # 뭐가 바뀌었는지 반드시 확인하고
@@ -19,11 +21,13 @@ git diff --stat                  # 뭐가 바뀌었는지 반드시 확인하고
 자리를 옮겨도 연결이 안 끊긴다. 대신 **`aria-label`을 바꾸면 연결이 끊기니**
 바꿀 거면 `embed.py`의 `TARGETS` 도 같이 고칠 것.
 
-## 그림 5장과 그 값의 출처
+## 그림 7장과 그 값의 출처
 
 | 파일 | 페이지 | 값의 출처 |
 |---|---|---|
 | `lineage.svg` | `technical/e6-policy-evolution.html#decision-lineage` | `src/openpi/training/config.py` 의 v1~v26 블록에서 직접 추출한 데이터셋명·LoRA 레이어 범위 |
+| `e6_norm.svg` | `technical/e6-policy-evolution.html#normalization` | v16 `norm_stats.json` 원문. j5 state span 2.042° / action range 0.2448, 13.4배는 3.293/0.2448 |
+| `perdim.svg` | 〃 (같은 섹션) | v23 체크포인트 실측. `scripts/perdim_loss.py`(학습 repo) — 6배치×8, horizon 16, bf16 |
 | `a_budget.svg` | `projects/e7-xarm6-policy.html#prompt-contract` | E7 config 의 `image_keys`/`max_token_len`/`action_horizon` + `So400m/14` 에서 나오는 슬롯당 256 패치 |
 | `b_prompt.svg` | 〃 | PaliGemma 토크나이저 직접 인코딩 (전 카테고리·목적지 최악값, BOS·개행 포함) |
 | `c_wrap.svg` | `…#dataset-integrity-guards` | openpi 가 적용하는 백분위 정규화에서 유도. 기록된 std 15.5 를 15.478 로 재현 |

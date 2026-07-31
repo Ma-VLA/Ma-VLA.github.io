@@ -25,6 +25,7 @@ FIGS = pathlib.Path(__file__).resolve().parent / "figs"
 TARGETS = [
     ("lineage.svg", "technical/e6-policy-evolution.html", "E6 v1-v26"),
     ("e6_norm.svg", "technical/e6-policy-evolution.html", "E6 joint j5 spans"),
+    ("perdim.svg", "technical/e6-policy-evolution.html", "Per-dimension training loss"),
     ("a_budget.svg", "projects/e7-xarm6-policy.html", "Token budget"),
     ("b_prompt.svg", "projects/e7-xarm6-policy.html", "Prompt token cost"),
     ("c_wrap.svg", "projects/e7-xarm6-policy.html", "One wrapped frame"),

@@ -1,0 +1,48 @@
+<svg class="vz" viewBox="0 0 1000 320" role="img" xmlns="http://www.w3.org/2000/svg" aria-label="Per-dimension training loss on the representative checkpoint: j5 is the largest single share and the 25 padding dimensions are under one percent">
+<text class="vz-title" x="16" y="20" data-en="Where the training loss goes, dimension by dimension" data-ko="학습 loss가 차원별로 어디로 가는가">Where the training loss goes, dimension by dimension</text>
+<text class="vz-sub" x="16" y="38" data-en="mean squared error per dimension · v23 checkpoint · 6 batches of 8 · horizon 16" data-ko="차원별 평균제곱오차 · v23 체크포인트 · 6배치×8 · horizon 16">mean squared error per dimension · v23 checkpoint · 6 batches of 8</text>
+<text class="vz-rowlbl" x="82" y="68" text-anchor="end">j1</text>
+<rect class="vz-track" x="92" y="56" width="756.0" height="16" rx="3"/>
+<rect class="vz-seg vz1 vz-dim" x="92" y="56" width="206.8" height="16" rx="3"><title>j1 · 0.03603 · 7.0% of the real-dimension loss</title></rect>
+<text class="vz-sub" x="306.8" y="68">0.03603</text>
+<text class="vz-sub" x="910" y="68" text-anchor="end">7.0%</text>
+<text class="vz-rowlbl" x="82" y="93" text-anchor="end">j2</text>
+<rect class="vz-track" x="92" y="81" width="756.0" height="16" rx="3"/>
+<rect class="vz-seg vz1 vz-dim" x="92" y="81" width="408.3" height="16" rx="3"><title>j2 · 0.07115 · 13.9% of the real-dimension loss</title></rect>
+<text class="vz-sub" x="508.3" y="93">0.07115</text>
+<text class="vz-sub" x="910" y="93" text-anchor="end">13.9%</text>
+<text class="vz-rowlbl" x="82" y="118" text-anchor="end">j3</text>
+<rect class="vz-track" x="92" y="106" width="756.0" height="16" rx="3"/>
+<rect class="vz-seg vz1 vz-dim" x="92" y="106" width="473.9" height="16" rx="3"><title>j3 · 0.08259 · 16.1% of the real-dimension loss</title></rect>
+<text class="vz-sub" x="573.9" y="118">0.08259</text>
+<text class="vz-sub" x="910" y="118" text-anchor="end">16.1%</text>
+<text class="vz-rowlbl" x="82" y="143" text-anchor="end">j4</text>
+<rect class="vz-track" x="92" y="131" width="756.0" height="16" rx="3"/>
+<rect class="vz-seg vz1 vz-dim" x="92" y="131" width="562.2" height="16" rx="3"><title>j4 · 0.09796 · 19.1% of the real-dimension loss</title></rect>
+<text class="vz-sub" x="662.2" y="143">0.09796</text>
+<text class="vz-sub" x="910" y="143" text-anchor="end">19.1%</text>
+<text class="vz-val" x="82" y="168" text-anchor="end">j5</text>
+<rect class="vz-track" x="92" y="156" width="756.0" height="16" rx="3"/>
+<rect class="vz-seg vz1" x="92" y="156" width="756.0" height="16" rx="3"><title>j5 · 0.13174 · 25.7% of the real-dimension loss</title></rect>
+<text class="vz-in" x="840.0" y="168" text-anchor="end">0.13174</text>
+<text class="vz-flag" x="910" y="168" text-anchor="end">25.7%</text>
+<text class="vz-rowlbl" x="82" y="193" text-anchor="end">j6</text>
+<rect class="vz-track" x="92" y="181" width="756.0" height="16" rx="3"/>
+<rect class="vz-seg vz1 vz-dim" x="92" y="181" width="250.1" height="16" rx="3"><title>j6 · 0.04359 · 8.5% of the real-dimension loss</title></rect>
+<text class="vz-sub" x="350.1" y="193">0.04359</text>
+<text class="vz-sub" x="910" y="193" text-anchor="end">8.5%</text>
+<text class="vz-rowlbl" x="82" y="218" text-anchor="end">gripper</text>
+<rect class="vz-track" x="92" y="206" width="756.0" height="16" rx="3"/>
+<rect class="vz-seg vz1 vz-dim" x="92" y="206" width="284.6" height="16" rx="3"><title>gripper · 0.04960 · 9.7% of the real-dimension loss</title></rect>
+<text class="vz-sub" x="384.6" y="218">0.04960</text>
+<text class="vz-sub" x="910" y="218" text-anchor="end">9.7%</text>
+<text class="vz-sub" x="910" y="48" text-anchor="end" data-en="share of real-dim loss" data-ko="실제 차원 loss 중 비중">share of real-dim loss</text>
+<line class="vz-grid" x1="46" y1="238" x2="910" y2="238"/>
+<text class="vz-rowlbl" x="82" y="257" text-anchor="end" data-en="25 pad" data-ko="패딩 25">25 pad</text>
+<rect class="vz-track" x="92" y="245" width="756.0" height="16" rx="3"/>
+<rect class="vz-seg vz2" x="92" y="245" width="1.5" height="16" rx="3"><title>25 padding dimensions · mean 0.00019 each · 0.00478 in total</title></rect>
+<text class="vz-sub" x="101.5" y="257">0.00019 each</text>
+<text class="vz-flag" x="910" y="257" text-anchor="end">0.92% of all</text>
+<text class="vz-note" x="16" y="290" data-en="The action space is 32 wide and the robot has 7 dimensions. The 25 padding dimensions carry 0.92% of the reported loss — the real dimensions average 383 times more — so the padding is close to free and replacing the head with a native 7-dimensional one has almost nothing to recover." data-ko="액션 공간은 32차원이고 로봇은 7차원이다. 패딩 25차원이 보고된 loss의 0.92%를 차지하고 실제 차원은 평균 383배 크다 — 즉 패딩은 사실상 공짜이고, 헤드를 native 7차원으로 교체해도 되찾을 게 거의 없다.">The 25 padding dimensions carry 0.92% of the loss; the real dimensions average 383× more.</text>
+<text class="vz-note" x="16" y="308" data-en="j5 is the largest single share at 25.7%, and it is the joint the arm holds mechanically fixed — the normalizer divides it by a range 13.4 times narrower than the other joints." data-ko="j5가 25.7%로 단독 최대인데, 이 관절은 팔이 기계적으로 고정하고 있는 관절이다 — 정규화가 다른 관절보다 13.4배 좁은 범위로 나눈다.">j5 is the largest single share at 25.7% — and it is the joint held mechanically fixed.</text>
+</svg>
