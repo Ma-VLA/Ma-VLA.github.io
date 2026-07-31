@@ -6,13 +6,13 @@
   <meta name="description" content="Ma-VLA is a progressive research program for adaptive vision-language-action robot control, from validated Dobot E6 adaptation to xArm6 demonstration collection.">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" crossorigin>
-  <link rel="stylesheet" href="/style.css?v=20260724g"><script src="/script.js?v=20260724g" defer></script>
+  <link rel="stylesheet" href="/style.css?v=20260731a"><script src="/script.js?v=20260731a" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main" data-en="Skip to content" data-ko="본문으로 건너뛰기">Skip to content</a>
   <header class="site-header"><div class="container nav-shell"><a class="brand" href="/"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 16c3.5 0 3.5-8 7-8s3.5 8 7 8"/><path d="M4 8c3.5 0 3.5 8 7 8s3.5-8 7-8"/></svg></span><span>Ma-VLA</span></a><nav class="primary-nav"></nav></div></header>
   <main id="main">
-    <section class="program-hero"><div class="container hero-grid">
+    <section id="top" class="program-hero"><div class="container hero-grid">
       <div>
         <p class="eyebrow" data-en="Robotics · Vision-Language-Action · Physical AI" data-ko="로보틱스 · Vision-Language-Action · Physical AI">Robotics · Vision-Language-Action · Physical AI</p>
         <h1 data-en="Adaptive VLA control, developed as one continuous research program." data-ko="하나의 연속된 연구 프로그램으로 발전하는 적응형 VLA 제어.">Adaptive VLA control, developed as one continuous research program.</h1>
@@ -31,7 +31,7 @@
       <div class="hero-media"><video autoplay muted loop playsinline preload="metadata"><source src="/assets/videos/left-to-right.mp4" type="video/mp4"></video><div class="media-note"><span data-en="Researcher-observed v23 demonstration" data-ko="연구자가 확인한 v23 시연">Researcher-observed v23 demonstration</span><span>Dobot E6 · Public demo</span></div></div>
     </div></section>
 
-    <section class="section alt"><div class="container"><div class="section-head"><div><p class="section-label" data-en="Core research thesis" data-ko="핵심 연구 논지">Core research thesis</p><h2 data-en="Adapt the policy, define the contract, validate the physical system." data-ko="정책을 적응하고, 계약을 정의하고, 물리 시스템으로 검증합니다.">Adapt the policy, define the contract, validate the physical system.</h2></div><p data-en="The program treats model adaptation, robot action semantics, real-time execution, and demonstration collection as connected research problems—not disconnected engineering projects." data-ko="이 프로그램은 모델 적응, 로봇 액션 의미, 실시간 실행, 시연 수집을 분리된 개발 프로젝트가 아닌 연결된 연구 문제로 다룹니다.">The program treats model adaptation, robot action semantics, real-time execution, and demonstration collection as connected research problems.</p></div>
+    <section id="core-research-thesis" class="section alt"><div class="container"><div class="section-head"><div><p class="section-label" data-en="Core research thesis" data-ko="핵심 연구 논지">Core research thesis</p><h2 data-en="Adapt the policy, define the contract, validate the physical system." data-ko="정책을 적응하고, 계약을 정의하고, 물리 시스템으로 검증합니다.">Adapt the policy, define the contract, validate the physical system.</h2></div><p data-en="The program treats model adaptation, robot action semantics, real-time execution, and demonstration collection as connected research problems—not disconnected engineering projects." data-ko="이 프로그램은 모델 적응, 로봇 액션 의미, 실시간 실행, 시연 수집을 분리된 개발 프로젝트가 아닌 연결된 연구 문제로 다룹니다.">The program treats model adaptation, robot action semantics, real-time execution, and demonstration collection as connected research problems.</p></div>
       <div class="architecture-chain">
         <div class="architecture-step"><span>01 · Observation</span><strong>Dual RGB + robot state + prompt</strong><small>HIK · ZED · 7D state</small></div>
         <div class="architecture-step"><span>02 · Policy</span><strong>π0.5 flow-matched VLA</strong><small>Pi-Zero research lineage</small></div>
@@ -42,17 +42,23 @@
       </div>
     </div></section>
 
-    <section class="section"><div class="container"><div class="section-head"><div><p class="section-label" data-en="Research evolution" data-ko="연구 발전 과정">Research evolution</p><h2 data-en="Evidence moves forward from one stage to the next." data-ko="한 단계의 검증이 다음 단계의 근거가 됩니다.">Evidence moves forward from one stage to the next.</h2></div><a class="text-link" href="/research.html" data-en="Open research program →" data-ko="연구 프로그램 보기 →">Open research program →</a></div>
+    <section id="research-evolution" class="section"><div class="container"><div class="section-head"><div><p class="section-label" data-en="Research evolution" data-ko="연구 발전 과정">Research evolution</p><h2 data-en="Evidence moves forward from one stage to the next." data-ko="한 단계의 검증이 다음 단계의 근거가 됩니다.">Evidence moves forward from one stage to the next.</h2></div><a class="text-link" href="/research.html" data-en="Open research program →" data-ko="연구 프로그램 보기 →">Open research program →</a></div>
       <div class="research-flow">
         <article class="research-node"><span class="stage-state" data-en="Stage 1 · Validated" data-ko="Stage 1 · 검증 완료">Stage 1 · Validated</span><h3>E6 VLA Adaptation</h3><p data-en="π0.5/v23 adaptation, explicit 7D action contract, physical evaluation, and ROS2 execution on the Dobot E6." data-ko="Dobot E6에서 π0.5/v23 적응, 명시적 7D 액션 계약, 물리 평가, ROS2 실행을 검증했습니다.">π0.5/v23 adaptation, explicit 7D action contract, physical evaluation, and ROS2 execution.</p><a class="text-link" href="/projects/flowbridge.html" data-en="View Stage 1 →" data-ko="Stage 1 보기 →">View Stage 1 →</a></article>
         <div class="research-arrow">→</div>
         <article class="research-node transition"><span class="stage-state" data-en="Transition · Evidence" data-ko="Transition · 전이 근거">Transition · Evidence</span><h3>E6 Validation → xArm6 Rationale</h3><p data-en="Twenty-six policy versions establish which model, dataset, action, and runtime decisions should transfer—and which must change." data-ko="26개 정책 버전을 통해 어떤 모델·데이터·액션·실행 결정이 전이되고 무엇을 다시 정의해야 하는지 정리합니다.">Twenty-six policy versions establish which decisions should transfer and which must change.</p><a class="text-link" href="/transitions/e6-to-xarm6.html" data-en="View transition →" data-ko="전이 연구 보기 →">View transition →</a></article>
         <div class="research-arrow">→</div>
         <article class="research-node operational"><span class="stage-state" data-en="Stage 2A · Pipeline validated" data-ko="Stage 2A · 파이프라인 검증">Stage 2A · Pipeline validated</span><h3>xArm6 Demonstration Collection</h3><p data-en="Quest 3 teleoperation, bounded ROS2 command bridges, dual-camera observations, and temporary synchronized validation captures." data-ko="Quest 3 텔레옵, 제한된 ROS2 명령 브릿지, 듀얼 카메라 관측, 임시 동기화 검증 수집을 확인했습니다.">Quest 3 teleoperation and temporary synchronized validation capture.</p><a class="text-link" href="/projects/quest3-xarm6.html" data-en="View Stage 2A →" data-ko="Stage 2A 보기 →">View Stage 2A →</a></article>
+        <div class="research-arrow">→</div>
+        <!-- ═══ OWNER: TRAINING-SERVER (RTX A5000) · DO NOT EDIT · 2026-07-31 ═══
+     규약: /OWNERSHIP.md
+     홈 화면의 Stage 2B 노드. -->
+      <article class="research-node operational"><span class="stage-state" data-en="Stage 2B · Contract executed" data-ko="Stage 2B · 계약 실행 완료">Stage 2B · Contract executed</span><h3>xArm6 Policy Training Contract</h3><p data-en="A book-classification and shelf-insertion task, a three-machine topology that keeps the language model off the control loop, and a collection-to-inference path executed end to end." data-ko="책 분류·책장 삽입 태스크, 언어 모델을 제어 루프 밖에 두는 3-머신 구조, 그리고 전 구간 실행한 수집→추론 경로입니다.">A semantic task, a three-machine topology, and an end-to-end executed contract.</p><a class="text-link" href="/projects/e7-xarm6-policy.html" data-en="View Stage 2B →" data-ko="Stage 2B 보기 →">View Stage 2B →</a></article>
+<!-- ═══ END OWNER: TRAINING-SERVER ═══ -->
       </div>
     </div></section>
 
-    <section class="section alt"><div class="container"><div class="section-head"><div><p class="section-label" data-en="Representative findings" data-ko="대표 연구 결과">Representative findings</p><h2 data-en="What the current evidence supports." data-ko="현재 근거로 확인된 내용.">What the current evidence supports.</h2></div><a class="text-link" href="/results.html" data-en="Open experiments →" data-ko="실험 보기 →">Open experiments →</a></div>
+    <section id="representative-findings" class="section alt"><div class="container"><div class="section-head"><div><p class="section-label" data-en="Representative findings" data-ko="대표 연구 결과">Representative findings</p><h2 data-en="What the current evidence supports." data-ko="현재 근거로 확인된 내용.">What the current evidence supports.</h2></div><a class="text-link" href="/results.html" data-en="Open experiments →" data-ko="실험 보기 →">Open experiments →</a></div>
       <div class="research-paper">
         <div class="paper-section"><h3 data-en="Policy adaptation" data-ko="정책 적응">Policy adaptation</h3><div><p data-en="The representative v23 checkpoint starts from π0.5 and adapts the complete late-stage SigLIP range, blocks 18–26, together with the action expert." data-ko="대표 v23 체크포인트는 π0.5에서 시작해 SigLIP 후반 전체 범위인 18–26 블록과 action expert를 함께 적응합니다.">The representative v23 checkpoint adapts SigLIP blocks 18–26 together with the action expert.</p></div></div>
         <div class="paper-section"><h3 data-en="Action semantics" data-ko="액션 의미">Action semantics</h3><div><p data-en="The six arm values are frame-to-frame joint-position deltas in degrees. The seventh value is an absolute binary suction state." data-ko="6개 로봇팔 값은 degree 단위의 프레임 간 관절 위치 변화량이며, 7번째 값은 절대 이진 흡착 상태입니다.">The six arm values are frame-to-frame joint-position deltas in degrees; the seventh is an absolute binary suction state.</p></div></div>
@@ -60,7 +66,7 @@
       </div>
     </div></section>
 
-    <section class="section alt"><div class="container"><div class="contact-strip"><div><h2 data-en="Read the complete evidence trail." data-ko="전체 검증 과정을 확인하세요.">Read the complete evidence trail.</h2><p data-en="The policy-evolution report separates code-verified, dataset-verified, quantitative, and qualitative evidence across v1–v26." data-ko="정책 발전 보고서는 v1–v26의 코드 검증, 데이터 검증, 정량·정성 근거를 구분합니다.">The policy-evolution report separates code, dataset, quantitative, and qualitative evidence across v1–v26.</p></div><a class="button" href="/technical/e6-policy-evolution.html" data-en="Open technical report →" data-ko="기술 보고서 보기 →">Open technical report →</a></div></div></section>
+    <section id="read-the-complete-evidence-trail" class="section alt"><div class="container"><div class="contact-strip"><div><h2 data-en="Read the complete evidence trail." data-ko="전체 검증 과정을 확인하세요.">Read the complete evidence trail.</h2><p data-en="The policy-evolution report separates code-verified, dataset-verified, quantitative, and qualitative evidence across v1–v26." data-ko="정책 발전 보고서는 v1–v26의 코드 검증, 데이터 검증, 정량·정성 근거를 구분합니다.">The policy-evolution report separates code, dataset, quantitative, and qualitative evidence across v1–v26.</p></div><a class="button" href="/technical/e6-policy-evolution.html" data-en="Open technical report →" data-ko="기술 보고서 보기 →">Open technical report →</a></div></div></section>
   </main>
   <footer class="site-footer"><div class="container footer-grid"><p>© 2026 Ma-VLA Research Program</p><div class="footer-links"><a href="/research.html">Research Program</a><a href="/publications.html">Publications</a><a href="mailto:gkdbqls889@kangnam.ac.kr">Contact</a></div></div></footer>
 </body></html>

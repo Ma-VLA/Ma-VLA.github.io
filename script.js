@@ -10,6 +10,7 @@
     ['/system/dobot-e6.html', 'Systems', '시스템'],
     ['/results.html', 'Experiments', '실험'],
     ['/publications.html', 'Publications', '논문'],
+    ['/contents.html', 'Contents', '전체 목차'],
   ];
 
   if (nav) {

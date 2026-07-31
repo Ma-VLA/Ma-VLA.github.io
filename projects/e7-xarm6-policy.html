@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stage 2B · xArm6 Policy Training and Deployment Contract — Ma-VLA</title>
+  <meta name="description" content="The training-server side of the xArm6 stage: task definition, three-machine topology, the verified collection-to-inference contract, prompt-contract hashing, and dataset integrity guards.">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" crossorigin>
+  <link rel="stylesheet" href="/style.css?v=20260731a"><script src="/script.js?v=20260731a" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-en="Skip to content" data-ko="본문으로 건너뛰기">Skip to content</a>
+  <header class="site-header"><div class="container nav-shell"><a class="brand" href="/"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 16c3.5 0 3.5-8 7-8s3.5 8 7 8"/><path d="M4 8c3.5 0 3.5 8 7 8s3.5-8 7-8"/></svg></span><span>Ma-VLA</span></a><nav class="primary-nav"></nav></div></header>
+
+  <main id="main">
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     OWNER: TRAINING-SERVER (RTX A5000) · DO NOT EDIT · 2026-07-31
+     이 파일은 전체가 학습서버 세션 소유다. 규약은 /OWNERSHIP.md 참조.
+
+     여기 실린 내용의 근거:
+       · 액션/상태 계약, 토큰 수, 시퀀스 728 — 로컬 openpi config와 변환기 코드 대조
+       · 레이어 범위 (18,26) — E6 학습 config에서 직접 추출
+       · 가드 5종 — 주입 결함으로 각각 검증
+       · J4 wrap 실측 (loss 0.13 → 2386) — 실제 학습 run
+       · 86.5 ms/chunk — RTX A5000 실측. Jetson 아님. 본문에 그렇게 명시돼 있음
+
+     ★ Jetson 세션에게: 이 블록을 고치지 말 것.
+       온디바이스 추론 지연을 재고 나면 이 수치를 덮어쓰지 말고,
+       #measured-on-the-training-server 섹션 뒤에 OWNER: JETSON 블록을
+       새로 열어 나란히 붙일 것. 두 수치는 서로 다른 머신의 값이라 둘 다 맞다.
+       ROS2 실행 경로·수집 실측은 /projects/quest3-xarm6.html 쪽에 쓸 것.
+═══════════════════════════════════════════════════════════════════════════ -->
+    <section id="top" class="page-hero"><div class="container"><p class="breadcrumb"><a href="/">Ma-VLA</a> / <a href="/research.html">Research Program</a> / Stage 2B</p><p class="eyebrow" data-en="Stage 2B · Policy training and deployment" data-ko="Stage 2B · 정책 학습 및 배포">Stage 2B · Policy training and deployment</p><h1 data-en="The contract between the training server and the robot." data-ko="학습 서버와 로봇 사이의 계약.">The contract between the training server and the robot.</h1><p data-en="Stage 2A produced a collection pipeline. Stage 2B defines what that data becomes: a book-classification and shelf-insertion task, a three-machine topology that keeps the language model off the control loop, and an executed collection-to-inference path in which every interface that can silently disagree is pinned and checked." data-ko="Stage 2A는 수집 파이프라인을 만들었습니다. Stage 2B는 그 데이터가 무엇이 되는지를 정의합니다 — 책 분류·책장 삽입 태스크, 언어 모델을 제어 루프 밖에 두는 3-머신 구조, 그리고 조용히 어긋날 수 있는 모든 인터페이스를 고정하고 검사하는 수집→추론 경로입니다.">Stage 2A produced a collection pipeline. Stage 2B defines what that data becomes, and pins every interface that can silently disagree.</p><div class="status-row"><span class="status-pill"><span class="status-dot"></span><span data-en="Pipeline executed end to end" data-ko="파이프라인 전 구간 실행">Pipeline executed end to end</span></span><span class="status-pill">π0.5 · xArm6</span><span class="status-pill">7D · horizon 16</span><span class="status-pill" data-en="No trained policy yet" data-ko="학습된 정책 없음">No trained policy yet</span></div></div></section>
+
+    <section id="task-definition" class="section alt"><div class="container"><div class="section-head"><div><p class="section-label" data-en="Task definition" data-ko="태스크 정의">Task definition</p><h2 data-en="Read the cover, insert into the matching shelf." data-ko="표지를 읽고, 해당하는 책장에 꽂는다.">Read the cover, insert into the matching shelf.</h2></div><p data-en="The Stage 1 task was pick-and-place selected by object and colour. The Stage 2B task replaces that selector with a semantic one: a book belongs to a category, and the category determines the destination shelf. Colour is deliberately not the signal." data-ko="Stage 1의 태스크는 객체와 색상으로 대상을 고르는 픽앤플레이스였습니다. Stage 2B는 그 선택자를 의미 기반으로 바꿉니다 — 책은 카테고리에 속하고, 카테고리가 목적지 책장을 결정합니다. 색상은 의도적으로 신호에서 제외했습니다.">The Stage 1 selector was object and colour; the Stage 2B selector is semantic category.</p></div><div class="research-paper">
+      <div class="paper-section"><h2 data-en="Categories and destinations" data-ko="카테고리와 목적지">Categories and destinations</h2><div><div class="table-scroll"><table class="flat-table"><thead><tr><th data-en="Category" data-ko="카테고리">Category</th><th data-en="Canonical token" data-ko="정규 토큰">Canonical token</th><th data-en="Shelf waypoint" data-ko="책장 웨이포인트">Shelf waypoint</th><th data-en="Physical side" data-ko="물리적 위치">Physical side</th></tr></thead><tbody>
+        <tr><td>과학</td><td><code>science</code></td><td>2</td><td><code>right</code></td></tr>
+        <tr><td>교양</td><td><code>liberal_arts</code></td><td>3</td><td><code>center</code></td></tr>
+        <tr><td>인문학</td><td><code>humanities</code></td><td>4</td><td><code>left</code></td></tr>
+      </tbody></table></div><p class="protocol-note" data-en="Destinations are named by position rather than by shelf colour. A white shelf has no hue and collides in feature space with the white robot arm and with clipped pixels; position is the stable label at 224 × 224." data-ko="목적지는 책장 색이 아니라 위치로 지정합니다. 흰색 책장은 hue가 없어 흰색 로봇팔·과노출 픽셀과 특징 공간에서 겹칩니다. 224 × 224에서는 위치가 안정적인 라벨입니다.">Destinations are named by position, not shelf colour.</p></div></div>
+      <div class="paper-section"><h2 data-en="Why the taxonomy is versioned" data-ko="taxonomy에 버전이 붙는 이유">Why the taxonomy is versioned</h2><div><p data-en="An earlier taxonomy used a different three-class split in which the Korean word 교양 mapped to humanities. Under the current split it maps to liberal_arts. The same collector label therefore denotes a different class depending on when the episode was recorded, and such episodes can be relabelled but not reinterpreted. The converter refuses episodes below a minimum schema version for exactly this reason." data-ko="이전 taxonomy는 다른 3분류를 사용했고 거기서 한국어 '교양'은 humanities에 대응했습니다. 현재 분류에서는 liberal_arts입니다. 따라서 같은 수집 라벨이 기록 시점에 따라 다른 클래스를 가리키며, 이런 에피소드는 재라벨은 가능하지만 재해석은 불가능합니다. 변환기가 최소 schema version 미만을 거부하는 이유가 정확히 이것입니다.">The same Korean label denotes a different class across taxonomy versions, so old episodes can be relabelled but not reinterpreted; the converter refuses them by schema version.</p></div></div>
+    </div></div></section>
+
+    <section id="machine-topology" class="section"><div class="container"><div class="section-head"><div><p class="section-label" data-en="Machine topology" data-ko="머신 구조">Machine topology</p><h2 data-en="Three machines, and only one of them is in the control loop." data-ko="세 대의 머신, 그리고 제어 루프에 들어가는 것은 하나뿐.">Three machines, and only one of them is in the control loop.</h2></div><p data-en="Cover classification is a language-model call and is far slower than the control period. It is therefore placed outside the loop: the classifier is consulted once when an episode begins, and the resulting category is held fixed for the whole episode. The 16 Hz path never crosses a machine boundary." data-ko="표지 분류는 언어 모델 호출이고 제어 주기보다 훨씬 느립니다. 그래서 루프 밖에 둡니다 — 에피소드 시작 시 한 번만 분류기를 호출하고, 얻은 카테고리를 에피소드 내내 고정합니다. 16Hz 경로는 머신 경계를 한 번도 넘지 않습니다.">Classification is one call per episode, outside the loop; the 16 Hz path never crosses a machine boundary.</p></div>
+      <div class="architecture-legend" aria-label="Diagram legend"><span><i class="legend-line"></i><b data-en="Per-episode call" data-ko="에피소드 단위 호출">Per-episode call</b></span><span><i class="legend-line dashed"></i><b data-en="Offline transfer" data-ko="오프라인 전달">Offline transfer</b></span><span><i class="legend-node"></i><b data-en="Process" data-ko="프로세스">Process</b></span><span><i class="legend-hardware"></i><b data-en="Hardware / operator" data-ko="하드웨어 / 조작자">Hardware / operator</b></span><span><i class="legend-store"></i><b data-en="Stored artifact" data-ko="저장 산출물">Stored artifact</b></span></div>
+      <div class="diagram-shell">
+<pre class="mermaid" aria-label="Three-machine topology for the xArm6 stage">
+flowchart LR
+    subgraph MB["MacBook — off-loop"]
+        mcp["MCP server"]
+        vlm["Cover-classification VLM"]
+    end
+    subgraph JT["Jetson AGX Orin 64 GB — on-device"]
+        orch["Episode orchestrator<br/>MCP client"]
+        pol["&#960;0.5 policy server"]
+        ros["ROS2 executor"]
+        col["Episode collector"]
+    end
+    subgraph TS["RTX A5000 — offline"]
+        conv["Converter + guards"]
+        train["LoRA training"]
+        exp["Bundle export"]
+    end
+
+    robot((xArm6 + gripper))
+    cams((HIK + ZED))
+    disk[("Episodes")]
+    bundle[("Checkpoint bundle<br/>params + norm_stats + contract")]
+
+    orch -- "classify_book_cover(image)" --> mcp
+    mcp --> vlm
+    vlm -- "category" --> orch
+
+    cams --> col
+    cams --> pol
+    orch -- "category, prompt" --> pol
+    pol -- "16 x 7 chunk" --> ros
+    ros -. "servo commands" .-> robot
+    robot -- "joint states" --> pol
+    robot -- "joint states" --> col
+    col --> disk
+
+    disk -. "offline copy" .-> conv
+    conv --> train
+    train --> exp
+    exp -.-> bundle
+    bundle -. "offline copy" .-> pol
+
+    classDef hardware fill:#f7ead6,stroke:#a8611c,color:#16211d,stroke-width:2px;
+    classDef store fill:#e4f2f0,stroke:#1f7a72,color:#16211d,stroke-width:2px;
+    class robot,cams hardware;
+    class disk,bundle store;
+</pre>
+      </div><p class="caption" data-en="The training server appears only at the two dashed boundaries. It never participates in an online path, so no inference latency, network condition, or model-serving failure on the robot can originate from it. The diagram is horizontally scrollable on narrow screens." data-ko="학습 서버는 두 개의 점선 경계에만 등장합니다. 온라인 경로에는 전혀 참여하지 않으므로, 로봇 쪽의 추론 지연·네트워크 상태·서빙 실패가 학습 서버에서 비롯될 수 없습니다. 좁은 화면에서는 다이어그램을 가로로 스크롤할 수 있습니다.">The training server appears only at the two dashed boundaries and never participates in an online path.</p></div></section>
+
+    <section id="collection-to-inference-contract" class="section alt"><div class="container"><div class="section-head"><div><p class="section-label" data-en="Collection-to-inference contract" data-ko="수집→추론 계약">Collection-to-inference contract</p><h2 data-en="Four hand-offs, each one a place where two sides can silently disagree." data-ko="네 번의 인계, 각각이 양쪽이 조용히 어긋날 수 있는 지점.">Four hand-offs, each one a place where two sides can silently disagree.</h2></div><p data-en="A mismatch at any of these boundaries does not raise an error. The robot still moves; it moves wrongly, and the regression is attributed to the policy. Each boundary is therefore written down rather than inferred from code." data-ko="이 경계 중 어디서 불일치가 나도 오류가 발생하지 않습니다. 로봇은 그대로 움직이고, 다만 잘못 움직이며, 그 회귀는 정책 탓으로 돌아갑니다. 그래서 각 경계를 코드에서 유추하지 않고 문서로 고정합니다.">A mismatch at these boundaries raises no error — the robot still moves, just wrongly.</p></div>
+      <div class="table-scroll"><table class="flat-table"><thead><tr><th data-en="Stage" data-ko="단계">Stage</th><th data-en="Transformation" data-ko="변환">Transformation</th><th data-en="Pinned by" data-ko="고정 수단">Pinned by</th></tr></thead><tbody>
+        <tr><td data-en="1 · CSV → LeRobot parquet" data-ko="1 · CSV → LeRobot parquet">1 · CSV → LeRobot parquet</td><td data-en="N recorded frames become N−1 rows. State is absolute; action is the forward difference." data-ko="기록된 N 프레임이 N−1 행이 됩니다. state는 절대값, action은 전방 차분입니다.">N frames become N−1 rows; state absolute, action forward difference.</td><td data-en="Converter, with integrity guards" data-ko="변환기 + 무결성 가드">Converter, with integrity guards</td></tr>
+        <tr><td data-en="2 · parquet → model input" data-ko="2 · parquet → 모델 입력">2 · parquet → model input</td><td data-en="Two camera slots, percentile normalization, 7D padded to the model's 32D action space." data-ko="카메라 2슬롯, 백분위 정규화, 7D를 모델 내부 32D 액션 공간으로 패딩.">Two camera slots, percentile normalization, 7D padded to 32D.</td><td><code>norm_stats.json</code></td></tr>
+        <tr><td data-en="3 · training" data-ko="3 · 학습">3 · training</td><td data-en="Flow matching. SigLIP LoRA on blocks 18–26, action-expert LoRA, and the action head are trained; the language model stays frozen." data-ko="Flow matching. SigLIP 18–26 블록 LoRA, action expert LoRA, action head만 학습하고 언어 모델은 동결합니다.">Flow matching; SigLIP 18–26 LoRA, action-expert LoRA, action head. Language model frozen.</td><td data-en="Training config, carried in the bundle" data-ko="학습 config, 번들에 동봉">Training config, carried in the bundle</td></tr>
+        <tr><td data-en="4 · inference" data-ko="4 · 추론">4 · inference</td><td data-en="Raw observation in, a 16 × 7 chunk of joint deltas out, already de-normalized." data-ko="원시 관측이 들어가고, 이미 역정규화된 16 × 7 관절 델타 청크가 나옵니다.">Raw observation in; a de-normalized 16 × 7 chunk out.</td><td data-en="Manifest, verified at startup" data-ko="manifest, 기동 시 검증">Manifest, verified at startup</td></tr>
+      </tbody></table></div>
+
+      <div class="contract" style="margin-top:2rem"><div class="contract-box"><h3 data-en="Policy observation" data-ko="정책 관측">Policy observation</h3><p class="muted" data-en="Two RGB images, seven raw state values, and the rendered prompt string." data-ko="RGB 이미지 2장, 원시 상태 7개, 렌더된 프롬프트 문자열.">Two RGB images, seven raw state values, and the rendered prompt string.</p><code class="code-line">HIK RGB + ZED RGB + [j1…j6 deg, gripper] + prompt</code></div><div class="contract-arrow">→</div><div class="contract-box"><h3 data-en="16 × 7 action chunk" data-ko="16 × 7 액션 청크">16 × 7 action chunk</h3><p class="muted" data-en="Six per-frame joint deltas in degrees, and the gripper command as an absolute value at index 6." data-ko="degree 단위의 프레임당 관절 델타 6개, 그리고 index 6에 절대값으로 놓인 그리퍼 명령.">Six per-frame joint deltas in degrees; gripper absolute at index 6.</p><code class="code-line">[Δj1, Δj2, Δj3, Δj4, Δj5, Δj6, gripper_abs]</code></div></div>
+
+      <div class="research-paper" style="margin-top:2rem">
+        <div class="paper-section"><h2 data-en="Three failure modes that produce motion instead of errors" data-ko="오류 대신 동작을 만드는 실패 3가지">Three failure modes that produce motion instead of errors</h2><div><ul class="plain-list">
+          <li data-en="Normalizing the state before handing it to the policy. The policy applies norm_stats internally; doing it twice halves the effective scale." data-ko="상태를 정책에 넘기기 전에 정규화하는 것. 정책이 내부에서 norm_stats를 적용하므로 두 번 하면 실효 스케일이 어긋납니다.">Pre-normalizing the state — the policy already applies norm_stats internally.</li>
+          <li data-en="Rescaling the output. The returned chunk is already de-normalized." data-ko="출력을 다시 스케일링하는 것. 반환된 청크는 이미 역정규화되어 있습니다.">Rescaling the output — the returned chunk is already de-normalized.</li>
+          <li data-en="Reading the gripper from the wrong index. This stage does not align to an eight-dimensional layout, so there is no dummy seventh joint and the gripper is at index 6." data-ko="그리퍼를 잘못된 인덱스에서 읽는 것. 이 단계는 8차원 레이아웃에 정렬하지 않으므로 더미 j7이 없고 그리퍼는 index 6입니다.">Reading the gripper from the wrong index — there is no dummy seventh joint here.</li>
+        </ul></div></div>
+        <div class="paper-section"><h2 data-en="Chunk integration" data-ko="청크 적분">Chunk integration</h2><div><p data-en="The executor anchors on the measured joint vector once per chunk, accumulates the sixteen deltas open-loop, and re-anchors only at the next chunk boundary. Re-anchoring every step under-travels, because each delta is then applied to a position that already absorbed the previous one; never re-anchoring accumulates drift. At 16 Hz a sixteen-step chunk is exactly one second." data-ko="executor는 청크당 한 번 측정 관절 벡터에 앵커를 잡고, 16개 델타를 개루프로 누적한 뒤 다음 청크 경계에서만 재앵커합니다. 매 스텝 재앵커하면 각 델타가 이미 이전 델타를 반영한 위치에 적용되어 미달주행하고, 전혀 재앵커하지 않으면 드리프트가 누적됩니다. 16Hz에서 16스텝 청크는 정확히 1초입니다.">Anchor once per chunk, accumulate open-loop, re-anchor at the boundary. At 16 Hz a chunk is exactly one second.</p></div></div>
+      </div>
+    </div></section>
+
+    <section id="prompt-contract" class="section"><div class="container"><div class="section-head"><div><p class="section-label" data-en="Prompt contract" data-ko="프롬프트 계약">Prompt contract</p><h2 data-en="The prompt string is an interface, so it is hashed." data-ko="프롬프트 문자열은 인터페이스이므로 해시합니다.">The prompt string is an interface, so it is hashed.</h2></div><p data-en="Training and inference must produce byte-identical prompt text. A single differing character changes the token sequence, and the policy is then answering a question it was never trained on — silently. Both sides therefore import the same renderer rather than keeping parallel copies." data-ko="학습과 추론이 바이트 단위로 동일한 프롬프트 텍스트를 만들어야 합니다. 한 글자만 달라도 토큰 시퀀스가 달라지고, 정책은 학습한 적 없는 질문에 답하게 됩니다 — 조용히. 그래서 양쪽이 사본을 각자 두지 않고 같은 렌더러를 import합니다.">Training and inference import the same renderer; a single differing character changes the token sequence.</p></div>
+      <div class="research-paper">
+        <div class="paper-section"><h2 data-en="Sequence budget" data-ko="시퀀스 예산">Sequence budget</h2><div><div class="table-scroll"><table class="flat-table"><thead><tr><th data-en="Component" data-ko="구성">Component</th><th data-en="Tokens" data-ko="토큰">Tokens</th><th data-en="Note" data-ko="비고">Note</th></tr></thead><tbody>
+          <tr><td data-en="Two image slots" data-ko="이미지 2슬롯">Two image slots</td><td>512</td><td data-en="224 ÷ 14 = 16, so 16 × 16 = 256 patches per slot" data-ko="224 ÷ 14 = 16이므로 슬롯당 16 × 16 = 256 패치">256 patches per slot</td></tr>
+          <tr><td data-en="Prompt field" data-ko="프롬프트 영역">Prompt field</td><td>200</td><td data-en="Padded; the rendered prompt occupies roughly 15 of these" data-ko="패딩됨. 렌더된 프롬프트는 이 중 약 15개를 사용">Padded; ~15 used</td></tr>
+          <tr><td data-en="Action suffix" data-ko="액션 suffix">Action suffix</td><td>16</td><td data-en="Equal to the action horizon" data-ko="action horizon과 동일">Equal to the action horizon</td></tr>
+          <tr><td><strong data-en="Total" data-ko="합계">Total</strong></td><td><strong>728</strong></td><td data-en="Unchanged by prompt wording, since the field is padded" data-ko="프롬프트 문구가 바뀌어도 영역이 패딩되므로 불변">Unchanged by prompt wording</td></tr>
+        </tbody></table></div><p class="protocol-note" data-en="Whether the robot state is also serialised into the prompt is a configuration flag that defaults to off. When it is on, the tokenizer wraps the text with a discretised state block worth roughly thirty-five additional tokens — no error, no visible symptom. The flag is part of the hashed contract for that reason." data-ko="로봇 상태를 프롬프트에 함께 직렬화할지는 기본값이 꺼짐인 설정 플래그입니다. 켜지면 토크나이저가 이산화된 상태 블록으로 텍스트를 감싸 약 35토큰이 추가됩니다 — 오류도, 눈에 보이는 증상도 없이. 이 플래그가 해시 계약에 포함된 이유입니다.">A configuration flag can add a discretised state block worth ~35 tokens with no visible symptom, so it is part of the hash.</p></div></div>
+        <div class="paper-section"><h2 data-en="What the hash covers" data-ko="해시가 덮는 범위">What the hash covers</h2><div><p data-en="A short digest is computed over everything that can change the token sequence: the prompt template, the category vocabulary, the destination vocabulary, the physical waypoint-to-side layout, and the tokenizer settings. It is written beside the dataset at conversion time and shipped with the checkpoint. The robot recomputes it at startup and refuses to serve on a mismatch, reporting which field moved rather than only that the digests differ." data-ko="토큰 시퀀스를 바꿀 수 있는 모든 것에 대해 짧은 다이제스트를 계산합니다 — 프롬프트 템플릿, 카테고리 어휘, 목적지 어휘, 웨이포인트↔물리 위치 배치, 토크나이저 설정. 변환 시점에 데이터셋 옆에 기록되고 체크포인트와 함께 배포됩니다. 로봇은 기동 시 재계산해 불일치면 서빙을 거부하며, 다이제스트가 다르다는 사실만이 아니라 어느 필드가 어긋났는지를 보고합니다.">A digest over template, vocabularies, rig layout, and tokenizer settings; the robot recomputes it at startup and reports which field moved.</p><p data-en="The category-to-shelf assignment is deliberately excluded, because each episode carries its own recorded destination and pinning one assignment would either churn the digest or describe a layout the data does not have. The waypoint-to-side layout is included, because flipping left and right there is otherwise undetectable: episodes convert, prompts render, loss falls, and every label points at the opposite shelf." data-ko="카테고리↔책장 대응은 의도적으로 제외했습니다. 에피소드마다 자신의 목적지를 기록하고 있어, 하나의 대응을 고정하면 다이제스트가 매번 바뀌거나 데이터에 없는 배치를 기술하게 됩니다. 반면 웨이포인트↔물리 위치 배치는 포함합니다. 거기서 좌우가 뒤집히면 달리 탐지할 방법이 없기 때문입니다 — 에피소드는 변환되고, 프롬프트는 렌더되고, loss는 떨어지는데, 모든 라벨이 반대편 책장을 가리킵니다.">The category-to-shelf assignment is excluded; the waypoint-to-side layout is included, because a left/right flip is otherwise undetectable.</p></div></div>
+      </div>
+    </div></section>
+
+    <section id="dataset-integrity-guards" class="section alt"><div class="container"><div class="section-head"><div><p class="section-label" data-en="Dataset integrity guards" data-ko="데이터셋 무결성 가드">Dataset integrity guards</p><h2 data-en="Defects that survive every obvious check." data-ko="눈에 띄는 검사를 모두 통과하는 결함들.">Defects that survive every obvious check.</h2></div><p data-en="Each guard exists because the corresponding defect passed inspection: the episode converted, the statistics looked ordinary, and the damage appeared only in training or only on the robot." data-ko="각 가드는 해당 결함이 검사를 통과했기 때문에 존재합니다 — 에피소드는 변환됐고, 통계는 평범해 보였으며, 피해는 학습에서만 또는 로봇에서만 드러났습니다.">Each guard exists because the corresponding defect passed inspection.</p></div>
+      <div class="table-scroll"><table class="flat-table"><thead><tr><th data-en="Guard" data-ko="가드">Guard</th><th data-en="Defect it catches" data-ko="탐지 대상">Defect it catches</th><th data-en="Why it is not obvious" data-ko="눈에 띄지 않는 이유">Why it is not obvious</th></tr></thead><tbody>
+        <tr><td data-en="Shortest-path joint delta" data-ko="최단경로 관절 델타">Shortest-path joint delta</td><td data-en="A joint crossing its angular wrap boundary, producing a 360° step where the physical motion was near zero" data-ko="관절이 회전 경계를 넘어, 물리적으로 거의 0인 이동이 360° 스텝으로 기록되는 것">A wrap-boundary crossing recorded as a 360° step</td><td data-en="Percentile normalization does not widen for a single outlier" data-ko="백분위 정규화는 이상치 하나로 넓어지지 않습니다">Percentile normalization does not widen for one outlier</td></tr>
+        <tr><td data-en="Label vs. demonstration" data-ko="라벨 대 시연">Label vs. demonstration</td><td data-en="The prompt names one shelf while the recorded trajectory ends at another" data-ko="프롬프트는 한 책장을 지목하는데 기록된 궤적은 다른 책장에서 끝나는 것">Prompt names one shelf, trajectory ends at another</td><td data-en="Both fields are individually valid; only their relation is wrong, and it teaches the policy that the prompt is noise" data-ko="두 필드 각각은 유효합니다. 관계만 틀렸고, 그것이 정책에게 프롬프트는 노이즈라고 가르칩니다">Both fields are individually valid; only their relation is wrong</td></tr>
+        <tr><td data-en="Relative stall detection" data-ko="상대 기준 스톨 탐지">Relative stall detection</td><td data-en="Operator input present while the tool is not actually moving" data-ko="조작 입력은 있는데 툴이 실제로는 움직이지 않는 구간">Operator input with no tool motion</td><td data-en="An absolute millimetre threshold flags every slow insertion, so the threshold has to scale with the episode" data-ko="절대 mm 임계값은 느린 삽입을 전부 오탐하므로, 임계값이 에피소드에 비례해야 합니다">An absolute threshold flags every slow insertion</td></tr>
+        <tr><td data-en="Feedback-rate check" data-ko="피드백 주기 검사">Feedback-rate check</td><td data-en="Repeated identical joint vectors, meaning state feedback is slower than the recording tick" data-ko="동일한 관절 벡터의 반복 — 상태 피드백이 기록 주기보다 느리다는 뜻">Repeated joint vectors: feedback slower than the recording tick</td><td data-en="The file still has one row per tick, so the frame count looks correct" data-ko="파일에는 여전히 tick당 한 행이 있어 프레임 수는 정상으로 보입니다">The frame count still looks correct</td></tr>
+        <tr><td data-en="Schema and vocabulary" data-ko="스키마·어휘 검사">Schema and vocabulary</td><td data-en="Episodes from a superseded taxonomy, and category labels outside the known set" data-ko="폐기된 taxonomy로 기록된 에피소드, 그리고 알려진 집합 밖의 카테고리 라벨">Superseded taxonomy; unknown category labels</td><td data-en="An unmapped label otherwise passes through and is rendered verbatim into the prompt" data-ko="매핑되지 않은 라벨은 그대로 통과해 프롬프트에 문자 그대로 렌더됩니다">An unmapped label renders verbatim into the prompt</td></tr>
+      </tbody></table></div>
+
+      <div class="panel narrow" style="margin-top:2rem"><p class="section-label" data-en="Measured case · joint wrap" data-ko="실측 사례 · 관절 wrap">Measured case · joint wrap</p><p data-en="In one 540-frame episode a single frame crossed the wrap boundary. The naive difference recorded +360° for a joint that had physically barely moved. That one frame raised the delta standard deviation for its joint to 15.5, against 0.06–0.45 for the others, and after percentile normalization the frame sat at roughly 4,900 standard deviations. Training loss went from 0.13 to 2,386. With the shortest-path correction — applied only where the absolute difference exceeds 180°, leaving every other frame bit-identical — the standard deviation returned to 0.237 and the loss to its normal range." data-ko="540프레임 에피소드에서 단 한 프레임이 회전 경계를 넘었습니다. 단순 차분은 물리적으로 거의 움직이지 않은 관절에 +360°를 기록했습니다. 그 한 프레임 때문에 해당 관절의 델타 표준편차가 15.5가 되었고(다른 관절은 0.06–0.45), 백분위 정규화 후 그 프레임은 약 4,900 표준편차 지점에 놓였습니다. 학습 loss는 0.13에서 2,386으로 올라갔습니다. 절대 차이가 180°를 넘는 곳에만 적용하고 나머지 프레임은 비트 단위로 보존하는 최단경로 보정을 넣자 표준편차는 0.237로, loss는 정상 범위로 돌아왔습니다.">One wrapped frame in 540 raised that joint's delta standard deviation to 15.5 against 0.06–0.45, sat at ~4,900σ after normalization, and took training loss from 0.13 to 2,386. The shortest-path correction restored 0.237 and normal loss.</p><p class="protocol-note" data-en="The correction is a repair, not a resolution. A wrap means the joint reached its rotational limit during the demonstration, which is a property of the collection setup rather than of the converter." data-ko="이 보정은 수리이지 해결이 아닙니다. wrap이 났다는 것은 시연 중 해당 관절이 회전 한계에 도달했다는 뜻이고, 이는 변환기가 아니라 수집 환경의 성질입니다.">The correction is a repair, not a resolution — a wrap means the joint reached its rotational limit during the demonstration.</p></div>
+    </div></section>
+
+    <section id="measured-on-the-training-server" class="section"><div class="container"><div class="section-head"><div><p class="section-label" data-en="Measured on the training server" data-ko="학습 서버 실측">Measured on the training server</p><h2 data-en="What has actually been run." data-ko="실제로 돌려본 것.">What has actually been run.</h2></div><p data-en="The full path — collection files, conversion, normalization statistics, training, checkpoint conversion, and an inference call — has been executed on real recorded episodes. These are pipeline measurements, not policy results." data-ko="수집 파일, 변환, 정규화 통계, 학습, 체크포인트 변환, 추론 호출까지 전 구간을 실제 기록된 에피소드로 실행했습니다. 이것은 파이프라인 측정치이며 정책 성능 결과가 아닙니다.">The full path has been executed on real recorded episodes. These are pipeline measurements, not policy results.</p></div>
+      <div class="metrics four">
+        <article class="metric"><strong>728</strong><span data-en="Sequence length" data-ko="시퀀스 길이">Sequence length</span><small>512 + 200 + 16</small></article>
+        <article class="metric"><strong>86.5 ms</strong><span data-en="Inference per chunk" data-ko="청크당 추론">Inference per chunk</span><small data-en="p95 87.5 ms · RTX A5000" data-ko="p95 87.5ms · RTX A5000">p95 87.5 ms · RTX A5000</small></article>
+        <article class="metric"><strong>1.000 s</strong><span data-en="Chunk duration" data-ko="청크 길이">Chunk duration</span><small data-en="16 steps at 16 Hz" data-ko="16Hz에서 16스텝">16 steps at 16 Hz</small></article>
+        <article class="metric"><strong>0.0739</strong><span data-en="Loss at 100 steps" data-ko="100 step loss">Loss at 100 steps</span><small data-en="Smoke run · 2 min 12 s" data-ko="스모크 런 · 2분 12초">Smoke run · 2 min 12 s</small></article>
+      </div>
+      <p class="protocol-note" style="margin-top:1.5rem" data-en="The 86.5 ms figure was measured on the RTX A5000 training server and is not a Jetson measurement. The two machines differ by roughly a factor of four in memory bandwidth, and this workload is bandwidth-bound, so the on-device figure will be substantially higher and has not yet been measured. Warm-up also matters: the first call takes about sixty seconds and compilation residue persists through roughly the fifth call, so timings taken before then are not representative." data-ko="86.5ms는 RTX A5000 학습 서버에서 측정한 값이며 Jetson 측정치가 아닙니다. 두 머신은 메모리 대역폭이 약 4배 차이나고 이 워크로드는 대역폭 제약이므로, 온디바이스 수치는 상당히 높아질 것이고 아직 측정하지 않았습니다. 웜업도 중요합니다 — 첫 호출은 약 60초가 걸리고 컴파일 잔여가 대략 다섯 번째 호출까지 남으므로, 그 이전 측정치는 대표성이 없습니다.">The 86.5 ms figure is an RTX A5000 measurement, not a Jetson one; this workload is bandwidth-bound and the on-device figure has not yet been measured.</p>
+
+      <div class="research-paper" style="margin-top:2rem"><div class="paper-section"><h2 data-en="Training configuration" data-ko="학습 설정">Training configuration</h2><div><div class="table-scroll"><table class="flat-table"><tbody>
+        <tr><td data-en="Base model" data-ko="기반 모델">Base model</td><td>π0.5</td></tr>
+        <tr><td data-en="Vision LoRA" data-ko="Vision LoRA">Vision LoRA</td><td data-en="SigLIP blocks 18–26 · rank 16 — inherited from the E6 ablation" data-ko="SigLIP 18–26 블록 · rank 16 — E6 ablation에서 계승">SigLIP blocks 18–26 · rank 16 · inherited from E6</td></tr>
+        <tr><td data-en="Action expert" data-ko="Action expert">Action expert</td><td>LoRA · rank 16</td></tr>
+        <tr><td data-en="Language model" data-ko="언어 모델">Language model</td><td data-en="Frozen" data-ko="동결">Frozen</td></tr>
+        <tr><td data-en="Image slots" data-ko="이미지 슬롯">Image slots</td><td data-en="Two — HIK and ZED" data-ko="2개 — HIK, ZED">Two — HIK and ZED</td></tr>
+        <tr><td data-en="Action horizon" data-ko="Action horizon">Action horizon</td><td>16</td></tr>
+        <tr><td data-en="Internal action dimension" data-ko="내부 액션 차원">Internal action dimension</td><td data-en="32, padded from 7" data-ko="32 (7D에서 패딩)">32, padded from 7</td></tr>
+        <tr><td data-en="Dataset" data-ko="데이터셋">Dataset</td><td data-en="In collection — size not yet determined" data-ko="수집 중 — 규모 미확정">In collection — size not yet determined</td></tr>
+        <tr><td data-en="Step count" data-ko="Step 수">Step count</td><td data-en="Not fixed; depends on the final dataset size" data-ko="미확정 — 최종 데이터셋 규모에 따라 결정">Not fixed; depends on final dataset size</td></tr>
+      </tbody></table></div></div></div></div>
+    </div></section>
+
+    <section id="current-scope" class="section alt"><div class="container"><div class="panel narrow project-scope"><p class="section-label" data-en="Current scope" data-ko="현재 범위">Current scope</p><p data-en="This page documents a task definition, a machine topology, and a collection-to-inference contract that has been executed end to end on recorded episodes. It does not claim a trained xArm6 policy, any task-success rate, any on-device inference measurement, or any cross-embodiment transfer result. Dataset collection is in progress; the reported quantities are pipeline and training-loss measurements only." data-ko="이 페이지는 태스크 정의, 머신 구조, 그리고 기록된 에피소드로 전 구간 실행한 수집→추론 계약을 기록합니다. 학습된 xArm6 정책, 태스크 성공률, 온디바이스 추론 측정치, embodiment 간 전이 결과는 주장하지 않습니다. 데이터셋 수집이 진행 중이며, 보고된 수치는 파이프라인 및 학습 loss 측정치에 한정됩니다.">This page documents a task definition, a machine topology, and an end-to-end executed contract. It does not claim a trained xArm6 policy, task-success rates, on-device inference measurements, or transfer results.</p></div>
+      <div class="contact-strip" style="margin-top:2rem"><div><h2 data-en="Where the 18–26 choice comes from." data-ko="18–26 선택의 출처.">Where the 18–26 choice comes from.</h2><p data-en="The vision-LoRA range used here was not chosen for this stage. It is the outcome of a ten-version ablation on the Dobot E6, reported with its own evidence grading." data-ko="여기서 사용하는 vision LoRA 범위는 이 단계에서 고른 것이 아닙니다. Dobot E6에서 수행한 10개 버전 ablation의 결과이며, 자체 증거 등급과 함께 보고됩니다.">The vision-LoRA range is the outcome of a ten-version ablation on the Dobot E6.</p></div><a class="button" href="/technical/e6-policy-evolution.html" data-en="Open the E6 ablation →" data-ko="E6 ablation 보기 →">Open the E6 ablation →</a></div>
+    </div></section>
+<!-- ═══ END OWNER: TRAINING-SERVER ═══════════════════════════════════════════
+     Jetson 소유 섹션을 추가한다면 이 줄 아래에, 자체 OWNER 마커와 함께.
+═══════════════════════════════════════════════════════════════════════════ -->
+  </main>
+
+  <footer class="site-footer"><div class="container footer-grid"><p>© 2026 Ma-VLA Research Program · Stage 2B</p><div class="footer-links"><a href="/research.html" data-en="Research Program" data-ko="연구 프로그램">Research Program</a><a href="/projects/quest3-xarm6.html">Stage 2A</a><a href="/transitions/e6-to-xarm6.html">Transition 1</a></div></div></footer>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      securityLevel: "loose",
+      theme: "base",
+      flowchart: { curve: "basis", htmlLabels: true },
+      themeVariables: {
+        primaryColor: "#eef3f1",
+        primaryTextColor: "#17211f",
+        primaryBorderColor: "#64716d",
+        lineColor: "#64716d",
+        secondaryColor: "#ffffff",
+        tertiaryColor: "#f4f0e8",
+        clusterBkg: "#f7f8f6",
+        clusterBorder: "#dce4e1",
+        fontFamily: "Pretendard Variable, Pretendard, system-ui, sans-serif"
+      }
+    });
+  </script>
+</body>
+</html>
