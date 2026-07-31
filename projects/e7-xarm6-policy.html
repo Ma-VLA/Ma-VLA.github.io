@@ -6,7 +6,7 @@
   <meta name="description" content="The training-server side of the xArm6 stage: task definition, three-machine topology, the verified collection-to-inference contract, prompt-contract hashing, and dataset integrity guards.">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" crossorigin>
-  <link rel="stylesheet" href="/style.css?v=20260731d"><script src="/script.js?v=20260731d" defer></script>
+  <link rel="stylesheet" href="/style.css?v=20260801a"><script src="/script.js?v=20260801a" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main" data-en="Skip to content" data-ko="본문으로 건너뛰기">Skip to content</a>
@@ -29,6 +29,11 @@
        #measured-on-the-training-server 섹션 뒤에 OWNER: JETSON 블록을
        새로 열어 나란히 붙일 것. 두 수치는 서로 다른 머신의 값이라 둘 다 맞다.
        ROS2 실행 경로·수집 실측은 /projects/quest3-xarm6.html 쪽에 쓸 것.
+
+     ★ 2026-08-01 구조 정정: 분류 VLM 도 Jetson 에서 돈다(PyTorch safetensors 변환).
+       이전 기록의 "MacBook 이 분류기를 실행" 은 오기였다. 온라인 경로는 Jetson 하나로
+       완결되고, MacBook 에는 MCP 서버만 올릴 예정이며 아직 만들지 않았다 —
+       그래서 다이어그램에서 점선이다. 있는 것처럼 그리지 말 것.
 ═══════════════════════════════════════════════════════════════════════════ -->
     <section id="top" class="page-hero"><div class="container"><p class="breadcrumb"><a href="/">Ma-VLA</a> / <a href="/research.html">Research Program</a> / Stage 2B</p><p class="eyebrow" data-en="Stage 2B · Policy training and deployment" data-ko="Stage 2B · 정책 학습 및 배포">Stage 2B · Policy training and deployment</p><h1 data-en="The contract between the training server and the robot." data-ko="학습 서버와 로봇 사이의 계약.">The contract between the training server and the robot.</h1><p data-en="Stage 2A produced a collection pipeline. Stage 2B defines what that data becomes: a book-classification and shelf-insertion task, a three-machine topology that keeps the language model off the control loop, and an executed collection-to-inference path in which every interface that can silently disagree is pinned and checked." data-ko="Stage 2A는 수집 파이프라인을 만들었습니다. Stage 2B는 그 데이터가 무엇이 되는지를 정의합니다 — 책 분류·책장 삽입 태스크, 언어 모델을 제어 루프 밖에 두는 3-머신 구조, 그리고 조용히 어긋날 수 있는 모든 인터페이스를 고정하고 검사하는 수집→추론 경로입니다.">Stage 2A produced a collection pipeline. Stage 2B defines what that data becomes, and pins every interface that can silently disagree.</p><div class="status-row"><span class="status-pill"><span class="status-dot"></span><span data-en="Pipeline executed end to end" data-ko="파이프라인 전 구간 실행">Pipeline executed end to end</span></span><span class="status-pill">π0.5 · xArm6</span><span class="status-pill">7D · horizon 16</span><span class="status-pill" data-en="No trained policy yet" data-ko="학습된 정책 없음">No trained policy yet</span></div></div></section>
 
@@ -41,20 +46,20 @@
       <div class="paper-section"><h2 data-en="Why the taxonomy is versioned" data-ko="taxonomy에 버전이 붙는 이유">Why the taxonomy is versioned</h2><div><p data-en="An earlier taxonomy used a different three-class split in which the Korean word 교양 mapped to humanities. Under the current split it maps to liberal_arts. The same collector label therefore denotes a different class depending on when the episode was recorded, and such episodes can be relabelled but not reinterpreted. The converter refuses episodes below a minimum schema version for exactly this reason." data-ko="이전 taxonomy는 다른 3분류를 사용했고 거기서 한국어 '교양'은 humanities에 대응했습니다. 현재 분류에서는 liberal_arts입니다. 따라서 같은 수집 라벨이 기록 시점에 따라 다른 클래스를 가리키며, 이런 에피소드는 재라벨은 가능하지만 재해석은 불가능합니다. 변환기가 최소 schema version 미만을 거부하는 이유가 정확히 이것입니다.">The same Korean label denotes a different class across taxonomy versions, so old episodes can be relabelled but not reinterpreted; the converter refuses them by schema version.</p></div></div>
     </div></div></section>
 
-    <section id="machine-topology" class="section"><div class="container"><div class="section-head"><div><p class="section-label" data-en="Machine topology" data-ko="머신 구조">Machine topology</p><h2 data-en="Three machines, and only one of them is in the control loop." data-ko="세 대의 머신, 그리고 제어 루프에 들어가는 것은 하나뿐.">Three machines, and only one of them is in the control loop.</h2></div><p data-en="Cover classification is a language-model call and is far slower than the control period. It is therefore placed outside the loop: the classifier is consulted once when an episode begins, and the resulting category is held fixed for the whole episode. The 16 Hz path never crosses a machine boundary." data-ko="표지 분류는 언어 모델 호출이고 제어 주기보다 훨씬 느립니다. 그래서 루프 밖에 둡니다 — 에피소드 시작 시 한 번만 분류기를 호출하고, 얻은 카테고리를 에피소드 내내 고정합니다. 16Hz 경로는 머신 경계를 한 번도 넘지 않습니다.">Classification is one call per episode, outside the loop; the 16 Hz path never crosses a machine boundary.</p></div>
-      <div class="architecture-legend" aria-label="Diagram legend"><span><i class="legend-line"></i><b data-en="Per-episode call" data-ko="에피소드 단위 호출">Per-episode call</b></span><span><i class="legend-line dashed"></i><b data-en="Offline transfer" data-ko="오프라인 전달">Offline transfer</b></span><span><i class="legend-node"></i><b data-en="Process" data-ko="프로세스">Process</b></span><span><i class="legend-hardware"></i><b data-en="Hardware / operator" data-ko="하드웨어 / 조작자">Hardware / operator</b></span><span><i class="legend-store"></i><b data-en="Stored artifact" data-ko="저장 산출물">Stored artifact</b></span></div>
+    <section id="machine-topology" class="section"><div class="container"><div class="section-head"><div><p class="section-label" data-en="Machine topology" data-ko="머신 구조">Machine topology</p><h2 data-en="Three machines, and only one of them is in the control loop." data-ko="세 대의 머신, 그리고 제어 루프에 들어가는 것은 하나뿐.">Three machines, and only one of them is in the control loop.</h2></div><p data-en="Cover classification is a language-model call and is far slower than the control period, so it runs once when an episode begins and the resulting category is held fixed for the rest of it. Both that classifier and the policy execute on the robot\u2019s own compute — the classifier converted to PyTorch weights alongside the policy — so the entire online path, from the cover frame to the servo command, stays inside one machine." data-ko="표지 분류는 언어 모델 호출이고 제어 주기보다 훨씬 느립니다. 그래서 에피소드 시작 시 한 번만 실행하고, 얻은 카테고리를 나머지 구간 내내 고정합니다. 그 분류기와 정책 모두 로봇 자체 연산 장치에서 실행됩니다 — 분류기는 정책과 함께 PyTorch 가중치로 변환해 올립니다. 따라서 표지 프레임부터 서보 명령까지 온라인 경로 전체가 머신 하나 안에 있습니다.">Classification runs once per episode, and both it and the policy execute on the robot\u2019s own compute \u2014 the whole online path stays inside one machine.</p></div>
+      <div class="architecture-legend" aria-label="Diagram legend"><span><i class="legend-line"></i><b data-en="Per-episode call" data-ko="에피소드 단위 호출">Per-episode call</b></span><span><i class="legend-line dashed"></i><b data-en="Offline transfer" data-ko="오프라인 전달">Offline transfer</b></span><span><i class="legend-node"></i><b data-en="Process" data-ko="프로세스">Process</b></span><span><i class="legend-hardware"></i><b data-en="Hardware / operator" data-ko="하드웨어 / 조작자">Hardware / operator</b></span><span><i class="legend-store"></i><b data-en="Stored artifact" data-ko="저장 산출물">Stored artifact</b></span><span><i class="legend-line dashed"></i><b data-en="Not built yet" data-ko="미구현">Not built yet</b></span></div>
       <div class="diagram-shell">
 <pre class="mermaid" aria-label="Three-machine topology for the xArm6 stage">
 flowchart LR
-    subgraph MB["MacBook — off-loop"]
-        mcp["MCP server"]
-        vlm["Cover-classification VLM"]
-    end
     subgraph JT["Jetson AGX Orin 64 GB — on-device"]
-        orch["Episode orchestrator<br/>MCP client"]
+        vlm["Cover-classification VLM<br/>PyTorch safetensors"]
+        orch["Episode orchestrator"]
         pol["&#960;0.5 policy server"]
         ros["ROS2 executor"]
         col["Episode collector"]
+    end
+    subgraph MB["MacBook — not built yet"]
+        mcp["MCP server<br/>category rules"]
     end
     subgraph TS["RTX A5000 — offline"]
         conv["Converter + guards"]
@@ -67,13 +72,13 @@ flowchart LR
     disk[("Episodes")]
     bundle[("Checkpoint bundle<br/>params + norm_stats + contract")]
 
-    orch -- "classify_book_cover(image)" --> mcp
-    mcp --> vlm
+    cams -- "cover frame" --> vlm
     vlm -- "category" --> orch
+    orch -. "resolve category -&gt; shelf" .-> mcp
+    orch -- "prompt" --> pol
 
     cams --> col
     cams --> pol
-    orch -- "category, prompt" --> pol
     pol -- "16 x 7 chunk" --> ros
     ros -. "servo commands" .-> robot
     robot -- "joint states" --> pol
@@ -88,10 +93,12 @@ flowchart LR
 
     classDef hardware fill:#f7ead6,stroke:#a8611c,color:#16211d,stroke-width:2px;
     classDef store fill:#e4f2f0,stroke:#1f7a72,color:#16211d,stroke-width:2px;
+    classDef planned fill:#f7f8f6,stroke:#a0aca8,color:#5b6763,stroke-width:2px,stroke-dasharray:5 4;
     class robot,cams hardware;
     class disk,bundle store;
+    class mcp planned;
 </pre>
-      </div><p class="caption" data-en="The training server appears only at the two dashed boundaries. It never participates in an online path, so no inference latency, network condition, or model-serving failure on the robot can originate from it. The diagram is horizontally scrollable on narrow screens." data-ko="학습 서버는 두 개의 점선 경계에만 등장합니다. 온라인 경로에는 전혀 참여하지 않으므로, 로봇 쪽의 추론 지연·네트워크 상태·서빙 실패가 학습 서버에서 비롯될 수 없습니다. 좁은 화면에서는 다이어그램을 가로로 스크롤할 수 있습니다.">The training server appears only at the two dashed boundaries and never participates in an online path.</p></div></section>
+      </div><p class="caption" data-en="The training server appears only where checkpoints and episodes cross between machines. It never participates in an online path, so no inference latency, network condition, or serving failure on the robot can originate from it. The MCP server is drawn dashed because it does not exist yet: the category-to-shelf rule is currently read from a table that ships with the checkpoint, and moving that lookup to a tool call is the planned change. The diagram is horizontally scrollable on narrow screens." data-ko="학습 서버는 체크포인트와 에피소드가 머신 사이를 오가는 지점에만 등장합니다. 온라인 경로에는 전혀 참여하지 않으므로 로봇 쪽의 추론 지연·네트워크 상태·서빙 실패가 학습 서버에서 비롯될 수 없습니다. MCP 서버가 점선인 것은 아직 존재하지 않기 때문입니다 — 카테고리↔책장 규칙은 현재 체크포인트와 함께 배포되는 표에서 읽고 있고, 그 조회를 툴 호출로 옮기는 것이 계획된 변경입니다. 좁은 화면에서는 다이어그램을 가로로 스크롤할 수 있습니다.">The training server never participates in an online path. The MCP server is dashed because it does not exist yet \u2014 the rule is currently read from a table shipped with the checkpoint.</p></div></section>
 
     <section id="collection-to-inference-contract" class="section alt"><div class="container"><div class="section-head"><div><p class="section-label" data-en="Collection-to-inference contract" data-ko="수집→추론 계약">Collection-to-inference contract</p><h2 data-en="Four hand-offs, each one a place where two sides can silently disagree." data-ko="네 번의 인계, 각각이 양쪽이 조용히 어긋날 수 있는 지점.">Four hand-offs, each one a place where two sides can silently disagree.</h2></div><p data-en="A mismatch at any of these boundaries does not raise an error. The robot still moves; it moves wrongly, and the regression is attributed to the policy. Each boundary is therefore written down rather than inferred from code." data-ko="이 경계 중 어디서 불일치가 나도 오류가 발생하지 않습니다. 로봇은 그대로 움직이고, 다만 잘못 움직이며, 그 회귀는 정책 탓으로 돌아갑니다. 그래서 각 경계를 코드에서 유추하지 않고 문서로 고정합니다.">A mismatch at these boundaries raises no error — the robot still moves, just wrongly.</p></div>
       <div class="table-scroll"><table class="flat-table"><thead><tr><th data-en="Stage" data-ko="단계">Stage</th><th data-en="Transformation" data-ko="변환">Transformation</th><th data-en="Pinned by" data-ko="고정 수단">Pinned by</th></tr></thead><tbody>
@@ -362,7 +369,7 @@ flowchart LR
       <div class="paper-section"><h3 data-en="Prompt-sensitivity discriminator" data-ko="프롬프트 민감도 판별기">Prompt-sensitivity discriminator</h3><div><p data-en="The claim this stage rests on is that the policy acts on the category it is given. Training loss cannot distinguish a policy that reads the instruction from one that has memorised a single route, because both fit the demonstrations. The discriminator holds the observation fixed, varies only the category in the prompt, and compares the spread between prompts against the sampling noise within a single prompt. A ratio near one means the prompt did nothing." data-ko="이 단계가 기대는 주장은 정책이 주어진 카테고리에 따라 행동한다는 것입니다. 학습 loss로는 지시를 읽는 정책과 하나의 경로를 외운 정책을 구분할 수 없습니다 — 둘 다 시연에 맞기 때문입니다. 판별기는 관측을 고정한 채 프롬프트의 카테고리만 바꾸고, 프롬프트 간 분산을 하나의 프롬프트 안의 샘플링 노이즈와 비교합니다. 비율이 1에 가까우면 프롬프트가 아무 일도 하지 않은 것입니다.">Loss cannot separate a policy that reads the instruction from one that memorised a route. The discriminator fixes the observation, varies only the category, and compares between-prompt spread against within-prompt sampling noise.</p><p class="protocol-note" data-en="This has not been run against a trained policy — there is not one yet. It has only been exercised as a negative control, on a checkpoint trained far too briefly to have learned anything, where it returned the low ratio it should. No sensitivity result is claimed." data-ko="학습된 정책으로는 아직 돌린 적이 없습니다 — 아직 그런 정책이 없습니다. 아무것도 배웠을 리 없는 극히 짧게 학습한 체크포인트로 음성 대조만 수행했고, 나와야 할 낮은 비율이 나왔습니다. 민감도 결과는 주장하지 않습니다.">Only exercised as a negative control on an untrained checkpoint. No sensitivity result is claimed.</p></div></div>
     </div></div></section>
 
-    <section id="current-scope" class="section alt"><div class="container"><div class="panel narrow project-scope"><p class="section-label" data-en="Current scope" data-ko="현재 범위">Current scope</p><p data-en="This page documents a task definition, a machine topology, and a collection-to-inference contract that has been executed end to end on recorded episodes. It does not claim a trained xArm6 policy, any task-success rate, any on-device inference measurement, or any cross-embodiment transfer result. Dataset collection is in progress; the reported quantities are pipeline and training-loss measurements only." data-ko="이 페이지는 태스크 정의, 머신 구조, 그리고 기록된 에피소드로 전 구간 실행한 수집→추론 계약을 기록합니다. 학습된 xArm6 정책, 태스크 성공률, 온디바이스 추론 측정치, embodiment 간 전이 결과는 주장하지 않습니다. 데이터셋 수집이 진행 중이며, 보고된 수치는 파이프라인 및 학습 loss 측정치에 한정됩니다.">This page documents a task definition, a machine topology, and an end-to-end executed contract. It does not claim a trained xArm6 policy, task-success rates, on-device inference measurements, or transfer results.</p></div>
+    <section id="current-scope" class="section alt"><div class="container"><div class="panel narrow project-scope"><p class="section-label" data-en="Current scope" data-ko="현재 범위">Current scope</p><p data-en="This page documents a task definition, a machine topology, and a collection-to-inference contract that has been executed end to end on recorded episodes. It does not claim a trained xArm6 policy, any task-success rate, any on-device inference measurement, or any cross-embodiment transfer result. The MCP server shown in the topology has not been built; the category-to-shelf rule is currently a table that travels with the checkpoint. Dataset collection is in progress, and the reported quantities are pipeline and training-loss measurements only." data-ko="이 페이지는 태스크 정의, 머신 구조, 그리고 기록된 에피소드로 전 구간 실행한 수집→추론 계약을 기록합니다. 학습된 xArm6 정책, 태스크 성공률, 온디바이스 추론 측정치, embodiment 간 전이 결과는 주장하지 않습니다. 구조도의 MCP 서버는 아직 구현되지 않았고, 카테고리↔책장 규칙은 현재 체크포인트와 함께 이동하는 표입니다. 데이터셋 수집이 진행 중이며, 보고된 수치는 파이프라인 및 학습 loss 측정치에 한정됩니다.">This page documents a task definition, a machine topology, and an end-to-end executed contract. It does not claim a trained xArm6 policy, task-success rates, or on-device inference measurements, and the MCP server it shows has not been built.</p></div>
       <div class="contact-strip" style="margin-top:2rem"><div><h2 data-en="Where the 18–26 choice comes from." data-ko="18–26 선택의 출처.">Where the 18–26 choice comes from.</h2><p data-en="The vision-LoRA range used here was not chosen for this stage. It is the outcome of a ten-version ablation on the Dobot E6, reported with its own evidence grading." data-ko="여기서 사용하는 vision LoRA 범위는 이 단계에서 고른 것이 아닙니다. Dobot E6에서 수행한 10개 버전 ablation의 결과이며, 자체 증거 등급과 함께 보고됩니다.">The vision-LoRA range is the outcome of a ten-version ablation on the Dobot E6.</p></div><a class="button" href="/technical/e6-policy-evolution.html" data-en="Open the E6 ablation →" data-ko="E6 ablation 보기 →">Open the E6 ablation →</a></div>
     </div></section>
 <!-- ═══ END OWNER: TRAINING-SERVER ═══════════════════════════════════════════
