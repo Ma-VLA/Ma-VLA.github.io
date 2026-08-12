@@ -13,6 +13,7 @@
   --green: #438841;
   --amber: #a66d17;
   --purple: #7552a3;
+  --red: #b4574a;
   --shadow-sm: 0 8px 28px rgba(29, 50, 46, .07);
   --shadow-lg: 0 22px 70px rgba(29, 50, 46, .13);
   --radius-sm: .75rem;
@@ -700,3 +701,18 @@ summary { padding: 1rem 1.15rem; cursor: pointer; font-family: var(--font-displa
 .vz-seg { stroke: none; }
 @media print { .vz { border-color: #d4dcd9; } }
 .vz-dim { opacity: .38; }
+
+/* Verdict cells in the Stage 2 research-log test index. A verdict is the one thing a
+   reader scans for down a long table, so it carries weight and colour rather than only
+   sitting in a column of prose. */
+.verdict-pass      { color: var(--green);  font-weight: 700; }
+.verdict-partial   { color: var(--amber);  font-weight: 700; }
+.verdict-fail      { color: var(--red, #b4574a); font-weight: 700; }
+.verdict-withdrawn { color: var(--muted);  font-weight: 700; text-decoration: line-through; text-decoration-thickness: 1px; }
+
+/* The accent tokens are not redefined for dark mode elsewhere on the site, and at these
+   weights the verdict text needs the lift. Scoped to the verdict cells so nothing else
+   changes. */
+[data-theme="dark"] .verdict-pass    { color: #7bc178; }
+[data-theme="dark"] .verdict-partial { color: #d9a94e; }
+[data-theme="dark"] .verdict-fail    { color: #e0897b; }

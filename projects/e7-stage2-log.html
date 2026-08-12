@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stage 2 · Research Log — Ma-VLA</title>
+  <meta name="description" content="A dated, test-case-indexed record of the xArm6 grounding stage: what was collected, what each experiment measured, what it returned, and what was withdrawn.">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" crossorigin>
+  <link rel="stylesheet" href="/style.css?v=20260812a"><script src="/script.js?v=20260812a" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-en="Skip to content" data-ko="본문으로 건너뛰기">Skip to content</a>
+  <header class="site-header"><div class="container nav-shell"><a class="brand" href="/"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 16c3.5 0 3.5-8 7-8s3.5 8 7 8"/><path d="M4 8c3.5 0 3.5 8 7 8s3.5-8 7-8"/></svg></span><span>Ma-VLA</span></a><nav class="primary-nav"></nav></div></header>
+
+  <main id="main">
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     OWNER: TRAINING-SERVER (RTX A5000) · 2026-08-12
+     이 파일은 연구일지다. 규약은 /OWNERSHIP.md 참조.
+
+     성격이 다른 페이지다. e7-xarm6-policy.html 은 "계약이 무엇인가"를 쓰고,
+     이 파일은 "무엇을 언제 재서 무엇이 나왔는가"를 시간순으로 쓴다.
+     결과가 나쁘게 나온 것과 철회한 주장도 같이 쓴다 — 그게 왜 지금 설계가
+     이 모양인지의 절반이다.
+
+     ★ 추가 규칙: 새 측정은 §timeline 에 날짜 블록으로 append 하고,
+       §test-index 표에 한 줄 추가한다. 기존 줄의 수치는 고치지 말 것.
+       틀린 것으로 판명되면 §withdrawn 에 옮기고 사유를 적는다.
+═══════════════════════════════════════════════════════════════════════════ -->
+
+    <section id="top" class="page-hero"><div class="container">
+      <p class="breadcrumb"><a href="/">Ma-VLA</a> / <a href="/research.html">Research Program</a> / <a href="/projects/e7-xarm6-policy.html">Stage 2B</a> / Research Log</p>
+      <p class="eyebrow" data-en="Stage 2 · Running research log" data-ko="Stage 2 · 연구일지">Stage 2 · Running research log</p>
+      <h1 data-en="Everything measured, in the order it was measured." data-ko="잰 순서 그대로, 잰 것 전부.">Everything measured, in the order it was measured.</h1>
+      <p data-en="The contract page states what the system is. This one states what happened: three collection batches, six converter defects, a policy that transports correctly and never reads the sign, the shortcut that explains why, and a deployment backend that is not running the model that was trained. Negative results and withdrawn claims are kept, because the design only makes sense next to them." data-ko="계약 페이지는 시스템이 무엇인지를 씁니다. 이 페이지는 무슨 일이 있었는지를 씁니다 — 세 번의 수집 배치, 변환기 결함 6건, 이송은 정확한데 간판은 읽지 않는 정책, 그 이유를 설명하는 지름길, 그리고 학습된 모델을 그대로 돌리지 않는 배포 백엔드. 부정적 결과와 철회한 주장도 남깁니다. 그것들과 나란히 놓아야 지금 설계가 말이 되기 때문입니다.">The contract page states what the system is. This one states what happened — including the negative results and the withdrawn claims.</p>
+      <div class="status-row">
+        <span class="status-pill"><span class="status-dot"></span><span data-en="Log open · last entry 2026-08-12" data-ko="기록 진행 중 · 최종 2026-08-12">Log open · 2026-08-12</span></span>
+        <span class="status-pill" data-en="117 episodes · 59,419 pairs" data-ko="117 에피소드 · 59,419 pairs">117 ep · 59,419 pairs</span>
+        <span class="status-pill" data-en="2 training runs" data-ko="학습 2회">2 training runs</span>
+        <span class="status-pill" data-en="No physical rollout yet" data-ko="실기 롤아웃 없음">No physical rollout yet</span>
+      </div>
+    </div></section>
+
+    <!-- ─────────────────────────────────────────────────── the question -->
+    <section id="the-question" class="section alt"><div class="container">
+      <div class="section-head"><div>
+        <p class="section-label" data-en="What is being measured" data-ko="무엇을 재는가">What is being measured</p>
+        <h2 data-en="Can a symbol be attached to a scene?" data-ko="기호를 장면에 붙일 수 있는가?">Can a symbol be attached to a scene?</h2>
+      </div><p data-en="Given the word “science”, does the arm find the sign that says Science and go there — or does it memorise that science lives on the right? Every design choice in this stage exists to keep that one question answerable." data-ko="“science”라는 단어를 받았을 때, 팔은 Science라고 적힌 간판을 찾아 거기로 가는가 — 아니면 science는 오른쪽이라고 외우는가? 이 단계의 모든 설계 선택은 그 하나의 질문이 답변 가능하게 남도록 존재합니다.">Given a category word, does the arm find the matching sign — or memorise a position?</p></div>
+
+      <div class="research-paper">
+        <div class="paper-section"><h2 data-en="Removing the destination is the whole experiment" data-ko="목적지를 빼는 것이 실험의 전부">Removing the destination is the whole experiment</h2><div>
+          <div class="table-scroll"><table class="flat-table"><thead><tr>
+            <th data-en="Prompt" data-ko="프롬프트">Prompt</th>
+            <th data-en="What satisfies it" data-ko="무엇으로 충족되나">What satisfies it</th>
+            <th data-en="What success proves" data-ko="성공이 증명하는 것">What success proves</th>
+          </tr></thead><tbody>
+            <tr><td><code>insert the book into the <b>right</b> shelf</code></td><td data-en="Going right. The sign is decoration; shuffling the layout also shuffles the sentence." data-ko="오른쪽으로 가기. 간판은 장식이고, 배치를 섞으면 문장도 따라 바뀝니다.">Going right — the sentence follows the layout</td><td data-en="Nothing." data-ko="아무것도 없음.">Nothing</td></tr>
+            <tr><td><code>insert the <b>science</b> book into the appropriate shelf</code></td><td data-en="Only the sign says where science is. Shuffle the layout and a memorised position is wrong." data-ko="science가 어디인지는 간판에만 있습니다. 배치를 섞으면 외운 위치는 틀립니다.">Only the sign carries the destination</td><td data-en="It read." data-ko="읽었다는 것.">That it read</td></tr>
+          </tbody></table></div>
+          <p class="protocol-note" data-en="Holders never move and only the cards are swapped; one physical book rotates through all three categories; the label crop is fixed during collection. All of it protects this single measurement." data-ko="홀더는 절대 안 움직이고 카드만 바꿉니다. 물리 책 한 권이 세 카테고리를 돕니다. 라벨 크롭은 수집 중 고정입니다. 전부 이 하나의 측정을 지키기 위한 것입니다.">Fixed holders, one book across three categories, a fixed label crop — all of it protects this one measurement.</p>
+        </div></div>
+
+        <div class="paper-section"><h2 data-en="Two readers, split on purpose" data-ko="읽는 주체를 일부러 둘로 나눔">Two readers, split on purpose</h2><div>
+          <div class="diagram-shell">
+<pre class="mermaid" aria-label="MCP reads the book, the policy reads the shelf">
+flowchart LR
+    book["Book cover"] -->|OCR, once per episode| mcp["MCP server"]
+    mcp -->|"category word only"| pr["Prompt<br/>carry the <b>science</b> book<br/>to the appropriate shelf"]
+    signs["Shelf signs<br/>Humanities · Science · Liberal Arts"] --> cam["Label camera"]
+    cam --> pol["&#960;0.5 policy"]
+    pr --> pol
+    pol --> act["16 &#215; 7 joint deltas"]
+    act --> dest{"which shelf?"}
+    classDef m fill:#f4f0e8,stroke:#b8ab8f
+    classDef p fill:#eef3f1,stroke:#64716d
+    class mcp,book m
+    class pol,cam,signs p
+</pre>
+          </div>
+          <p data-en="MCP reads the book and answers “what”. The policy reads the shelf and answers “where”. If MCP also decided the destination, the policy would have no reason to look at a sign — which is exactly the failure mode the collector’s own renderer would have introduced, and the reason the converter now refuses any prompt containing a shelf word." data-ko="MCP는 책을 읽고 “무엇을”에 답합니다. 정책은 책장을 읽고 “어디로”에 답합니다. MCP가 목적지까지 정하면 정책이 간판을 볼 이유가 없어지는데, 그것이 정확히 수집기 자체 렌더러가 만들 뻔한 실패 모드였고, 변환기가 이제 책장 이름이 든 프롬프트를 거부하는 이유입니다.">MCP answers “what”, the policy answers “where”.</p>
+        </div></div>
+      </div>
+    </div></section>
+
+    <!-- ─────────────────────────────────────────────────── test index -->
+    <section id="test-index" class="section"><div class="container">
+      <div class="section-head"><div>
+        <p class="section-label" data-en="Test case index" data-ko="테스트 케이스 색인">Test case index</p>
+        <h2 data-en="Every experiment, its verdict, and whether it survived." data-ko="모든 실험과 그 판정, 그리고 살아남았는지.">Every experiment, its verdict, and whether it survived.</h2>
+      </div><p data-en="Sorted by the date it was run. A verdict of “withdrawn” means the measurement was wrong, not that the result was unwelcome; the reason is in the last column." data-ko="실행 날짜순입니다. “철회”는 결과가 마음에 안 들었다는 뜻이 아니라 측정 자체가 틀렸다는 뜻이고, 사유는 마지막 열에 있습니다.">Sorted by run date. “Withdrawn” means the measurement was wrong, not unwelcome.</p></div>
+
+      <div class="table-scroll"><table class="flat-table"><thead><tr>
+        <th>ID</th><th data-en="Date" data-ko="날짜">Date</th>
+        <th data-en="What it asked" data-ko="무엇을 물었나">What it asked</th>
+        <th data-en="Result" data-ko="결과">Result</th>
+        <th data-en="Verdict" data-ko="판정">Verdict</th>
+      </tr></thead><tbody>
+        <tr><td><code>T01</code></td><td>08-06</td><td data-en="Pilot batch 1 — does the format convert?" data-ko="파일럿 1차 — 형식이 변환되는가">Pilot 1 — does the format convert?</td><td data-en="5 ep converted; re-grasp 5/5, stall 2, one layout" data-ko="5 ep 변환; 재파지 5/5, stall 2건, 레이아웃 1개">5 ep; re-grasp 5/5, stall 2</td><td data-en="Format OK, batch discarded" data-ko="형식 통과, 배치 폐기">Format OK</td></tr>
+        <tr><td><code>T02</code></td><td>08-11</td><td data-en="Pilot batch 2 — did the operating instructions take?" data-ko="파일럿 2차 — 조작 지시가 반영됐는가">Pilot 2 — did the instructions take?</td><td data-en="14 ep; re-grasp 0/14, stall 0, retention 85.3%" data-ko="14 ep; 재파지 0/14, stall 0, 유지율 85.3%">14 ep; re-grasp 0, stall 0</td><td data-en="Quality OK, still one layout" data-ko="품질 통과, 여전히 레이아웃 1개">Quality OK</td></tr>
+        <tr><td><code>T03</code></td><td>08-12</td><td data-en="Main batch — do all nine (category × shelf) cells fill?" data-ko="본 수집 — 9칸이 전부 차는가">Main batch — do all nine cells fill?</td><td data-en="117 ep, four layouts, every category reaches every shelf" data-ko="117 ep, 레이아웃 4개, 모든 카테고리가 세 책장 모두 도달">117 ep, 9/9 cells</td><td data-en="Trainable" data-ko="학습 가능">Trainable</td></tr>
+        <tr><td><code>T04</code></td><td>08-12</td><td data-en="Dataset integrity — does the action reconstruct the trajectory?" data-ko="데이터 무결성 — 액션이 궤적을 복원하는가">Integrity — does action reconstruct the trajectory?</td><td data-en="max |cumsum(action) − Δstate| = 3.6e-07 deg over all 117" data-ko="117개 전수 max |cumsum(action) − Δstate| = 3.6e-07 도">3.6e-07 deg, all 117</td><td class="verdict-pass" data-en="Pass" data-ko="통과">Pass</td></tr>
+        <tr><td><code>T05</code></td><td>08-12</td><td data-en="v1 counterfactual — does the category word steer?" data-ko="v1 반사실 — 카테고리 단어가 조향하는가">v1 counterfactual — does the word steer?</td><td data-en="cos −0.005 ± 0.036" data-ko="cos −0.005 ± 0.036">cos −0.005 ± 0.036</td><td class="verdict-withdrawn" data-en="Withdrawn — sampling noise" data-ko="철회 — 샘플링 노이즈">Withdrawn</td></tr>
+        <tr><td><code>T06</code></td><td>08-12</td><td data-en="Noise floor — is inference deterministic?" data-ko="노이즈 바닥 — 추론이 결정적인가">Noise floor — is inference deterministic?</td><td data-en="Same observation twice: 3.78 apart (free noise), 0.000000 (pinned)" data-ko="같은 관측 두 번: 노이즈 자유 3.78, 고정 0.000000">3.78 free · 0.000000 pinned</td><td class="verdict-fail" data-en="Invalidated T05" data-ko="T05 무효화">Invalidated T05</td></tr>
+        <tr><td><code>T07</code></td><td>08-12</td><td data-en="v1 counterfactual, noise pinned" data-ko="v1 반사실, 노이즈 고정">v1 counterfactual, noise pinned</td><td data-en="cos +0.108 ± 0.046 · projection 0.72% of what a shelf change needs" data-ko="cos +0.108 ± 0.046 · 책장 변경 필요량의 0.72%">cos +0.108 · 0.72%</td><td class="verdict-partial" data-en="Signal exists, far too weak" data-ko="신호 존재, 크게 부족">Signal, too weak</td></tr>
+        <tr><td><code>T08</code></td><td>08-12</td><td data-en="Pose leakage — does the arm pose give the destination away?" data-ko="자세 누출 — 팔 자세가 목적지를 흘리는가">Pose leakage — does the pose give it away?</td><td data-en="1-NN on six joint angles: 29.9% approach, 39.4% lift, 90.4% carry, 100% insert" data-ko="관절 6개 1-NN: approach 29.9%, lift 39.4%, carry 90.4%, insert 100%">carry 90.4% · insert 100%</td><td class="verdict-fail" data-en="Root cause of T07" data-ko="T07 의 원인">Root cause</td></tr>
+        <tr><td><code>T09</code></td><td>08-12</td><td data-en="Acquisition confound — is layout correlated with time?" data-ko="수집 교란 — 레이아웃이 시각과 상관되는가">Acquisition confound — layout vs time</td><td data-en="Four layout blocks, mean run 29.2, 97.4% of neighbours share a layout" data-ko="레이아웃 블록 4개, 평균 29.2, 인접 동일 97.4%">97.4% neighbour identity</td><td class="verdict-fail" data-en="Second shortcut" data-ko="두 번째 지름길">Second shortcut</td></tr>
+        <tr><td><code>T10</code></td><td>08-12</td><td data-en="Label swap — signs versus lighting" data-ko="라벨 교체 — 간판 대 조명">Label swap — signs vs lighting</td><td data-en="carry D_content 0.479 vs D_light 0.488; blanking the slot 2.495" data-ko="carry D_내용 0.479 대 D_조명 0.488; 슬롯 비우면 2.495">content ≈ lighting</td><td class="verdict-fail" data-en="Reads the channel, not the glyphs" data-ko="채널은 쓰되 글자는 안 봄">Not the glyphs</td></tr>
+        <tr><td><code>T11</code></td><td>08-12</td><td data-en="v2 @5k — did the intervention move the steering gain?" data-ko="v2 @5k — 개입이 조향 gain 을 올렸는가">v2 @5k — did the intervention work?</td><td data-en="cos 0.197, projection 1.49%, content−light +0.165" data-ko="cos 0.197, projection 1.49%, 내용−조명 +0.165">cos 0.197 · 1.49%</td><td class="verdict-partial" data-en="Monotone improvement, running" data-ko="단조 개선, 진행 중">Improving</td></tr>
+        <tr><td><code>T12</code></td><td>08-12</td><td data-en="Backend parity — does the deployed bundle run the trained model?" data-ko="백엔드 일치 — 배포 번들이 학습된 모델을 돌리는가">Backend parity — deployed vs trained</td><td data-en="JAX amplitude 0.86, PyTorch 0.36; noise floor 2.1 vs 4.0" data-ko="JAX 진폭 0.86, PyTorch 0.36; 노이즈 바닥 2.1 대 4.0">0.86 vs 0.36</td><td class="verdict-fail" data-en="Deployment is degraded" data-ko="배포본 열화">Degraded</td></tr>
+        <tr><td><code>T13</code></td><td>08-12</td><td data-en="Is it an E7 feature? (E6 v23 control)" data-ko="E7 고유 문제인가? (E6 v23 대조군)">Is it an E7 feature? (E6 control)</td><td data-en="E6 rel 2.010 at 10 steps, worse than E7’s 1.602" data-ko="E6 10스텝 rel 2.010, E7 1.602 보다 심함">E6 worse than E7</td><td class="verdict-fail" data-en="Common runtime, not Stage 2" data-ko="공통 런타임, Stage 2 무관">Common runtime</td></tr>
+        <tr><td><code>T14</code></td><td>08-12</td><td data-en="RoPE frequency table precision" data-ko="RoPE 주파수 테이블 정밀도">RoPE frequency table precision</td><td data-en="inv_freq stored bfloat16; key error 0.2% at position 0 rising to 11.7% at 967" data-ko="inv_freq 가 bfloat16; K 오차 위치 0 에서 0.2%, 967 에서 11.7%">bf16 buffer, 11.7% at pos 967</td><td class="verdict-pass" data-en="Real defect · fixed 6bacb94" data-ko="실제 결함 · 수정 6bacb94">Fixed</td></tr>
+      </tbody></table></div>
+      <p class="protocol-note" data-en="T05 and T06 are kept adjacent on purpose. A metric that cannot reproduce itself on identical input is not a weak result — it is not a result, and every number derived from it had to go." data-ko="T05 와 T06 을 일부러 붙여 놓았습니다. 같은 입력에서 자기 자신을 재현하지 못하는 지표는 약한 결과가 아니라 결과가 아니며, 거기서 나온 수치는 전부 폐기해야 합니다.">T05 and T06 sit adjacent on purpose: a metric that cannot reproduce itself is not a weak result, it is not a result.</p>
+    </div></section>
+
+    <!-- ─────────────────────────────────────────────────── timeline -->
+    <section id="timeline" class="section alt"><div class="container">
+      <div class="section-head"><div>
+        <p class="section-label" data-en="Timeline" data-ko="타임라인">Timeline</p>
+        <h2 data-en="What was learned, in order." data-ko="알게 된 것을 순서대로.">What was learned, in order.</h2>
+      </div><p data-en="Each entry records the finding and, where one existed, the belief it replaced." data-ko="각 항목은 발견과, 그것이 대체한 이전 믿음이 있다면 그것도 함께 기록합니다.">Each entry records the finding and the belief it replaced.</p></div>
+
+      <div class="research-paper">
+
+        <div class="paper-section"><h2>2026-08-06 &nbsp;·&nbsp; <span data-en="Pilot 1 — the format works, the operating habits do not" data-ko="파일럿 1 — 형식은 되고 조작 습관은 안 된다">Pilot 1 — the format works, the habits do not</span></h2><div>
+          <p data-en="Five episodes converted cleanly into a three-slot dataset with 2,566 frame pairs and nineteen task strings, none naming a shelf. The blockers were not schema: all five re-grasped two or three times, two lost their whole approach phase because the trim window opens after the last abandoned grasp, and two contained stalls where the arm was commanded but did not move." data-ko="5개 에피소드가 3슬롯 데이터셋으로 깨끗하게 변환됐습니다 — 2,566 frame pairs, 태스크 문자열 19개, 책장 이름 0개. 막은 것은 스키마가 아니었습니다: 5개 전부 2~3회 재파지했고, 트림 창이 마지막 실패 파지 뒤로 열리는 탓에 둘은 approach 가 통째로 사라졌으며, 둘에는 명령은 나가는데 팔이 안 움직이는 stall 이 있었습니다.">Five episodes converted cleanly. The blockers were operating habits, not schema.</p>
+          <span class="code-line">re-grasp 5/5 · stall 2 runs 38 frames · operator pauses 3.9% · retention 64.9%</span>
+        </div></div>
+
+        <div class="paper-section"><h2>2026-08-11 &nbsp;·&nbsp; <span data-en="Pilot 2 — the instructions took, the composition did not" data-ko="파일럿 2 — 지시는 반영됐고 구성은 안 됐다">Pilot 2 — instructions took, composition did not</span></h2><div>
+          <div class="table-scroll"><table class="flat-table"><thead><tr>
+            <th></th><th data-en="Re-grasp" data-ko="재파지">Re-grasp</th><th>Stall</th><th data-en="Pauses" data-ko="정지">Pauses</th><th data-en="Retention" data-ko="유지율">Retention</th><th data-en="Layouts" data-ko="레이아웃">Layouts</th>
+          </tr></thead><tbody>
+            <tr><td data-en="Pilot 1 (5)" data-ko="파일럿 1 (5)">Pilot 1 (5)</td><td>5/5</td><td>2 · 38f</td><td>3.9%</td><td>64.9%</td><td>P1</td></tr>
+            <tr><td data-en="Pilot 2 (14)" data-ko="파일럿 2 (14)">Pilot 2 (14)</td><td>0/14</td><td>0</td><td>1.6%</td><td>85.3%</td><td>P1</td></tr>
+            <tr><td data-en="Main (117)" data-ko="본 수집 (117)">Main (117)</td><td>1/117</td><td>2 · 28f</td><td>1.5%</td><td>86.1%</td><td>P1 P2 P4 P5</td></tr>
+          </tbody></table></div>
+          <p data-en="Every operating problem from Pilot 1 closed with a single round of instructions. Clamping went the other way — 12.4% to 27.8% — and the demand to lower the gain was withdrawn instead: the action label is a measured joint delta, so clamping means the robot moved slower than the operator asked, not that the label is wrong." data-ko="파일럿 1 의 조작 문제가 지시 한 번으로 전부 닫혔습니다. 클램핑만 반대로 갔는데(12.4% → 27.8%), gain 을 낮추라는 요구를 철회했습니다 — action 라벨이 측정 관절 델타이므로 클램핑은 조작자 의도보다 로봇이 느리게 갔다는 뜻이지 라벨이 틀렸다는 뜻이 아닙니다.">Every operating problem closed in one round. The clamping demand was withdrawn instead.</p>
+        </div></div>
+
+        <div class="paper-section"><h2>2026-08-12 &nbsp;·&nbsp; <span data-en="Main batch — nine cells, and why four layouts" data-ko="본 수집 — 9칸, 그리고 왜 레이아웃 4개인가">Main batch — nine cells, and why four layouts</span></h2><div>
+          <div class="table-scroll"><table class="flat-table"><thead><tr>
+            <th data-en="Category" data-ko="카테고리">Category</th><th>left</th><th>center</th><th>right</th><th data-en="Distinct" data-ko="도달 수">Distinct</th>
+          </tr></thead><tbody>
+            <tr><td><code>science</code></td><td>10</td><td>9</td><td>21</td><td>3</td></tr>
+            <tr><td><code>liberal_arts</code></td><td>20</td><td>10</td><td>9</td><td>3</td></tr>
+            <tr><td><code>humanities</code></td><td>10</td><td>18</td><td>10</td><td>3</td></tr>
+          </tbody></table></div>
+          <p data-en="Three categories over three positions gives six permutations, and they split by cyclic order into two sets of three. A balanced three-layout split is therefore forced to be one whole cyclic set, which pins the order class. Four breaks that. The collected four fill all nine cells, so the category word alone cannot determine the destination — the sign has to be read." data-ko="카테고리 3개를 자리 3개에 놓는 순열은 6개이고, 순환 순서로 3개씩 두 집합으로 갈립니다. 균형 잡힌 3-레이아웃 분할은 필연적으로 한 순환 집합 전체가 되어 순서 클래스가 고정됩니다. 4개면 그게 깨집니다. 수집된 4개가 9칸을 전부 채워서, 카테고리 단어만으로는 목적지를 정할 수 없습니다 — 간판을 읽어야 합니다.">Six permutations split into two cyclic sets of three, so a balanced three-layout split pins the order class. Four breaks it, and the collected four fill all nine cells.</p>
+          <p class="protocol-note" data-en="The two remaining permutations (P3, P6) are the evaluation layouts and were never built. Every (category, shelf) pair they require appears in training, so the test is “seen combination, unseen arrangement”." data-ko="남은 두 순열(P3, P6)이 평가용이고 실제로 세운 적이 없습니다. 그들이 요구하는 (카테고리, 책장) 조합은 전부 학습에 있으므로, 시험은 “본 적 있는 조합, 처음 보는 배치”가 됩니다.">P3 and P6 are held out. Every pair they require appears in training.</p>
+        </div></div>
+
+        <div class="paper-section"><h2>2026-08-12 &nbsp;·&nbsp; <span data-en="v1 result — transports correctly, never reads the sign" data-ko="v1 결과 — 이송은 정확하고 간판은 안 읽는다">v1 — transports correctly, never reads the sign</span></h2><div>
+          <div class="metrics four">
+            <div class="metric"><strong>68.3%</strong><span data-en="with the true category" data-ko="진짜 카테고리로 물으면">true category</span><small data-en="ceiling 80%" data-ko="천장 80%">ceiling 80%</small></div>
+            <div class="metric"><strong>16.7%</strong><span data-en="with a swapped category" data-ko="바뀐 카테고리로 물으면">swapped category</span><small data-en="chance is 33.3%" data-ko="우연은 33.3%">below chance</small></div>
+            <div class="metric"><strong>0.72%</strong><span data-en="of the steering a shelf change needs" data-ko="책장 변경 필요량 대비">of required steering</span><small>0.044° / 6.085°</small></div>
+            <div class="metric"><strong>2</strong><span data-en="checkpoints, same answer" data-ko="체크포인트, 같은 결과">checkpoints agree</span><small>10k ≈ 20k</small></div>
+          </div>
+          <p style="margin-top:1.5rem" data-en="The transport itself is learned, which also clears the data, the labels, the normalisation, the three image slots and the prompt wiring. What is not learned is the word: swap it and the arm keeps going where it was already going. Step 10,000 and step 19,999 return the same numbers, so this is not undertraining." data-ko="이송 자체는 학습됐고, 그 사실이 데이터·라벨·정규화·3슬롯·프롬프트 배선까지 함께 검증합니다. 학습되지 않은 것은 단어입니다 — 바꿔도 팔은 원래 가던 데로 계속 갑니다. step 10,000 과 19,999 가 같은 값을 내므로 학습 부족이 아닙니다.">The transport is learned. The word is not — and 10k matches 20k, so it is not undertraining.</p>
+        </div></div>
+
+        <div class="paper-section"><h2>2026-08-12 &nbsp;·&nbsp; <span data-en="Why — two shortcuts, neither of them the prompt" data-ko="원인 — 지름길 두 개, 둘 다 프롬프트가 아님">Why — two shortcuts</span></h2><div>
+          <div class="diagram-shell">
+<pre class="mermaid" aria-label="Two shortcuts that make reading unnecessary">
+flowchart TD
+    obj["Objective:<br/>predict the next 16 joint deltas"]
+    obj --> q{"Where can the<br/>destination come from?"}
+    q -->|"the hard way"| read["Read the sign<br/>for the category word"]
+    q -->|"shortcut 1"| pose["Arm pose<br/>1-NN on 6 joints:<br/>carry 90.4% · insert 100%"]
+    q -->|"shortcut 2"| light["Label-view exposure<br/>1-NN on pixels: lift 93.5%<br/>(collection ran one layout at a time)"]
+    pose --> cheap["Loss falls without reading"]
+    light --> cheap
+    read -.->|"worth only 0.72%<br/>of the needed steering"| cheap
+    classDef bad fill:#f7ece9,stroke:#c08b7d
+    classDef good fill:#eef3f1,stroke:#64716d
+    class pose,light,cheap bad
+    class read good
+</pre>
+          </div>
+          <div class="table-scroll" style="margin-top:1.5rem"><table class="flat-table"><thead><tr>
+            <th data-en="Phase" data-ko="구간">Phase</th>
+            <th data-en="Joints only → shelf" data-ko="관절만 → 책장">6 joints → shelf</th>
+            <th data-en="ZED pixels → shelf" data-ko="ZED 픽셀 → 책장">ZED pixels → shelf</th>
+            <th data-en="Label pixels → shelf" data-ko="라벨 픽셀 → 책장">Label pixels → shelf</th>
+          </tr></thead><tbody>
+            <tr><td><code>approach</code></td><td>29.9%</td><td>—</td><td>—</td></tr>
+            <tr><td><code>grasp</code></td><td>32.3%</td><td>—</td><td>—</td></tr>
+            <tr><td><code>lift</code></td><td>39.4%</td><td>41.6%</td><td><b>93.5%</b></td></tr>
+            <tr><td><code>carry</code></td><td><b>90.4%</b></td><td><b>87.3%</b></td><td>92.9%</td></tr>
+            <tr><td><code>insert</code></td><td><b>100%</b></td><td>—</td><td>—</td></tr>
+          </tbody></table></div>
+          <p style="margin-top:1rem" data-en="Chance is 33.3% and every column uses leave-one-episode-out. From a quarter of the way into the carry, the pose alone answers the question, so four frames in five never required reading anything. The label column is the second shortcut: the camera ran on auto-exposure while collection proceeded one layout at a time, so exposure drift and layout are the same variable — the signs cannot explain 93.5% during lift, but the layout epoch can." data-ko="우연은 33.3%이고 모든 열이 leave-one-episode-out 입니다. carry 1/4 지점부터 자세만으로 답이 나오므로, 다섯 프레임 중 넷은 읽을 필요가 없었습니다. 라벨 열이 두 번째 지름길입니다 — 카메라가 auto-exposure 로 도는 동안 수집이 레이아웃 단위로 진행돼서 노출 드리프트와 레이아웃이 같은 변수입니다. lift 에서 93.5%는 간판으로 설명되지 않지만 레이아웃 시각대로는 설명됩니다.">Chance is 33.3%. From a quarter into the carry the pose alone answers the question.</p>
+          <p class="protocol-note" data-en="Turning discrete_state_input back off was the first proposed remedy and was retired by this same table: ZED pixels leak the destination at 87.3% during carry, so removing the state tokens does not close the pose shortcut." data-ko="discrete_state_input 을 되돌려 끄는 것이 첫 대책이었는데 바로 이 표로 접었습니다 — ZED 픽셀이 carry 에서 87.3%를 흘리므로 state 토큰을 빼도 자세 지름길은 닫히지 않습니다.">Turning the state tokens back off was retired by this same table.</p>
+        </div></div>
+
+        <div class="paper-section"><h2>2026-08-12 &nbsp;·&nbsp; <span data-en="v2 — weight the frames that can only be solved by reading" data-ko="v2 — 읽어야만 풀리는 프레임에 가중">v2 — weight the frames that require reading</span></h2><div>
+          <div class="table-scroll"><table class="flat-table"><thead><tr>
+            <th></th><th>v1 @19,999</th><th>v2 @2,500</th><th>v2 @5,000</th>
+          </tr></thead><tbody>
+            <tr><td data-en="steering cosine" data-ko="조향 코사인">steering cos</td><td>0.108</td><td>0.166</td><td><b>0.197</b></td></tr>
+            <tr><td data-en="correct-direction component" data-ko="올바른 방향 성분">projection</td><td>0.044°</td><td>0.086°</td><td><b>0.096°</b></td></tr>
+            <tr><td data-en="fraction of what is needed" data-ko="필요량 대비">of 6.085° needed</td><td>0.72%</td><td>1.32%</td><td><b>1.49%</b></td></tr>
+            <tr><td data-en="carry: content − lighting" data-ko="carry: 내용 − 조명">carry content − light</td><td>−0.009</td><td>+0.165</td><td>—</td></tr>
+            <tr><td data-en="carry: content ÷ blanking" data-ko="carry: 내용 ÷ 공백">carry content ÷ blank</td><td>0.19</td><td><b>0.48</b></td><td>—</td></tr>
+          </tbody></table></div>
+          <p style="margin-top:1rem" data-en="Two changes, both aimed at what v1 failed at. lift is oversampled three times — the one phase where the pose is uninformative and the one where label content outweighs label exposure — taking it from 18.8% to 38.1% of sampled frames. And the label slot gets brightness, contrast and gamma re-rolled every step, which makes exposure stop identifying which episode a frame came from. Everything else is held, so the comparison is two variables." data-ko="v1 이 실패한 지점만 겨냥한 두 가지 변경입니다. lift 를 3배 오버샘플 — 자세가 목적지를 안 흘리는 유일한 구간이자 라벨 내용이 노출을 앞서는 유일한 구간 — 해서 샘플 프레임의 18.8%를 38.1%로 올렸습니다. 그리고 라벨 슬롯에 밝기·대비·감마를 매 스텝 재추출해서, 노출이 “이 프레임이 어느 에피소드에서 왔는가”를 말해주지 못하게 만듭니다. 나머지는 전부 고정이라 비교 변수는 둘입니다.">lift ×3 and per-step photometric jitter on the label slot. Everything else held.</p>
+          <p class="protocol-note" data-en="This is salvage, not proof. The jitter re-rolls brightness, contrast and gamma; collection order also carries shadow, white balance, sensor noise, initial book placement, operator posture and return error. The 97.4% layout blocking cannot be removed retroactively — the paper corpus has to be collected with layout and category randomised and the exposure fixed." data-ko="이것은 구제이지 증명이 아닙니다. 지터가 흔드는 것은 밝기·대비·감마뿐이고, 수집 순서에는 그림자·화이트밸런스·센서 노이즈·책 초기 위치·조작자 자세·복귀 오차도 같이 묶여 있습니다. 97.4% 레이아웃 블록은 소급해서 지울 수 없습니다 — 논문 코퍼스는 레이아웃·카테고리를 무작위화하고 노출을 고정해서 수집해야 합니다.">This is salvage, not proof. The 97.4% layout blocking cannot be removed retroactively.</p>
+        </div></div>
+
+      </div>
+    </div></section>
+
+    <!-- ─────────────────────────────────────────────────── measurement design -->
+    <section id="measurement" class="section"><div class="container">
+      <div class="section-head"><div>
+        <p class="section-label" data-en="Measurement design" data-ko="측정 설계">Measurement design</p>
+        <h2 data-en="The harness had to be measured before the policy was." data-ko="정책을 재기 전에 하네스부터 재야 했다.">The harness had to be measured before the policy was.</h2>
+      </div><p data-en="Hold the observation fixed, change only the category word, and ask where the arm would go. Three separate things had to be settled before that number meant anything." data-ko="관측을 고정하고 카테고리 단어만 바꿔서 팔이 어디로 갈지 묻습니다. 그 숫자가 의미를 갖기 전에 세 가지를 먼저 정해야 했습니다.">Hold the observation fixed, change only the word. Three things had to be settled first.</p></div>
+
+      <div class="research-paper">
+        <div class="paper-section"><h2 data-en="No forward kinematics" data-ko="FK 를 쓰지 않음">No forward kinematics</h2><div>
+          <p data-en="The pybullet xArm6 URDF disagrees with the controller’s own TCP by 70 mm rms — a different joint-zero convention — so a task-space direction computed from it would be measuring the URDF. The reference for “what heading for the left shelf looks like from here” comes from the demonstrations instead: recorded chunks of episodes at a similar arm pose, in the same layout, that did go there. The comparison stays in the space the policy actually outputs." data-ko="pybullet xArm6 URDF 는 컨트롤러 자체 TCP 와 70 mm rms 어긋납니다 — 관절 영점 규약이 다릅니다 — 그래서 그것으로 작업공간 방향을 계산하면 URDF 를 재는 셈이 됩니다. “여기서 왼쪽 책장으로 가는 것이 어떻게 생겼나”의 기준은 시연에서 가져옵니다: 같은 배치, 비슷한 관절 자세에서 실제로 거기로 간 에피소드의 기록 청크. 비교가 정책의 출력 공간 안에서 끝납니다.">The URDF disagrees with the controller by 70 mm rms, so the reference comes from the demonstrations instead.</p>
+        </div></div>
+
+        <div class="paper-section"><h2 data-en="Two phases had to be excluded, both for measured reasons" data-ko="두 구간을 배제했고, 둘 다 실측 근거">Two exclusions, both measured</h2><div>
+          <div class="table-scroll"><table class="flat-table"><thead><tr>
+            <th></th><th data-en="Reference separation" data-ko="기준 분리도">Reference separation</th><th data-en="Oracle (recorded chunk)" data-ko="오라클 (기록 궤적)">Oracle</th>
+          </tr></thead><tbody>
+            <tr><td><code>carry</code></td><td>3.24°</td><td>73.0%</td></tr>
+            <tr><td><code>insert</code></td><td>0.82°</td><td>49.3% <span class="muted" data-en="— chance is 33.3%" data-ko="— 우연 33.3%">— chance 33.3%</span></td></tr>
+          </tbody></table></div>
+          <p data-en="By the time the arm is inserting it has arrived, and every destination is “push forward”; the recorded chunk itself barely classifies. Within carry, frames before the arm commits have coincident references too — requiring 4° of separation moves the oracle from 64.5% to 84.5%. The oracle is printed on every run, because 60% means one thing under an 80% ceiling and something else under a 55% one." data-ko="삽입 시점이면 이미 도착했고 어느 목적지든 “앞으로 밀기”라서, 기록 궤적조차 거의 분류가 안 됩니다. carry 안에서도 팔이 방향을 정하기 전 프레임은 기준이 겹칩니다 — 4° 분리를 요구하면 오라클이 64.5%에서 84.5%로 올라갑니다. 오라클은 매 실행마다 함께 출력합니다. 60%는 천장이 80%일 때와 55%일 때 뜻이 완전히 다르기 때문입니다.">Insert is unaskable; within carry, uncommitted frames have coincident references. The oracle prints on every run.</p>
+        </div></div>
+
+        <div class="paper-section"><h2 data-en="The metric could not reproduce itself" data-ko="지표가 자기 자신을 재현하지 못했다">The metric could not reproduce itself</h2><div>
+          <p data-en="The first steering numbers were noise. Policy.infer splits its rng on every call, so the three category words each started from a different point on the flow. The same observation run twice lands 3.78 apart — larger than every effect being reported. Pinned, it reproduces exactly, and the signal appears." data-ko="첫 조향 수치는 노이즈였습니다. Policy.infer 는 호출마다 rng 를 split 하므로 세 카테고리 단어가 각각 다른 지점에서 출발합니다. 같은 관측을 두 번 돌리면 3.78 만큼 벌어지는데, 보고하던 모든 효과보다 큽니다. 고정하면 정확히 재현되고 신호가 나타납니다.">The first steering numbers were sampling noise. Pinned, the signal appears.</p>
+          <div class="table-scroll"><table class="flat-table"><thead><tr>
+            <th></th><th data-en="Free noise (invalid)" data-ko="노이즈 자유 (무효)">Free noise</th><th data-en="Pinned noise" data-ko="노이즈 고정">Pinned</th>
+          </tr></thead><tbody>
+            <tr><td data-en="same observation, twice" data-ko="같은 관측 두 번">same observation twice</td><td>3.780</td><td><b>0.000000</b></td></tr>
+            <tr><td data-en="chunk divergence from the word" data-ko="단어가 만드는 청크 차이">divergence from the word</td><td>4.00</td><td>0.409</td></tr>
+            <tr><td data-en="steering cosine" data-ko="조향 코사인">steering cosine</td><td>−0.005 ± 0.036</td><td><b>+0.108 ± 0.046</b></td></tr>
+          </tbody></table></div>
+          <p class="protocol-note" data-en="The wiring conclusion survives on other evidence — 71.7% with the true word against 16.7% with a swapped one, and 2.495 when the label slot is blanked — but the divergence figure that had been cited for it does not." data-ko="배선이 정상이라는 결론 자체는 다른 근거로 유지됩니다 — 진짜 단어 71.7% 대 바뀐 단어 16.7%, 라벨 슬롯을 비웠을 때 2.495 — 그러나 그 근거로 인용했던 divergence 수치는 유지되지 않습니다.">The wiring conclusion survives on other evidence; the divergence figure cited for it does not.</p>
+        </div></div>
+
+        <div class="paper-section"><h2 data-en="And then the metric ran out of room" data-ko="그리고 지표가 물을 곳을 잃었다">And then the metric ran out of room</h2><div>
+          <div class="table-scroll"><table class="flat-table"><thead><tr>
+            <th></th><th data-en="Does the pose leak?" data-ko="자세가 흘리는가">Pose leaks?</th><th data-en="Have the demos diverged?" data-ko="시연이 갈라졌는가">Demos diverged?</th><th data-en="Askable?" data-ko="물을 수 있는가">Askable?</th>
+          </tr></thead><tbody>
+            <tr><td><code>approach · grasp</code></td><td data-en="no (30%)" data-ko="아니오 (30%)">no (30%)</td><td data-en="no" data-ko="아니오">no</td><td data-en="nothing to ask" data-ko="물을 게 없음">nothing to ask</td></tr>
+            <tr><td><code>lift</code></td><td data-en="barely (39%)" data-ko="거의 아니오 (39%)">barely (39%)</td><td data-en="no — oracle 40%" data-ko="아니오 — 오라클 40%">no — oracle 40%</td><td data-en="references collapse" data-ko="기준이 무너짐">references collapse</td></tr>
+            <tr><td><code>carry (late) · insert</code></td><td data-en="yes (94–100%)" data-ko="예 (94~100%)">yes (94–100%)</td><td data-en="yes" data-ko="예">yes</td><td data-en="the word is unnecessary" data-ko="단어가 불필요">word unnecessary</td></tr>
+          </tbody></table></div>
+          <p style="margin-top:1rem" data-en="The two conditions never hold together, which is a property of the task and the data rather than a defect to patch. The offline harness cannot settle whether the policy could read signs. The rollout from the pick pose — where the pose leaks 30%, chance — is the only remaining test." data-ko="두 조건이 동시에 성립하는 창이 없고, 이것은 패치할 결함이 아니라 태스크와 데이터의 성질입니다. 오프라인 하네스는 정책이 간판을 읽을 수 있는지를 판정할 수 없습니다. 자세가 30%(=우연)만 흘리는 픽 자세에서 출발하는 롤아웃이 유일하게 남은 시험입니다.">The two conditions never hold together. The rollout from the pick pose is the only remaining test.</p>
+        </div></div>
+      </div>
+    </div></section>
+
+    <!-- ─────────────────────────────────────────────────── converter defects -->
+    <section id="converter-defects" class="section alt"><div class="container">
+      <div class="section-head"><div>
+        <p class="section-label" data-en="Converter defects" data-ko="변환기 결함">Converter defects</p>
+        <h2 data-en="Six faults, every one of them silent." data-ko="결함 여섯 개, 전부 조용한 종류.">Six faults, every one of them silent.</h2>
+      </div><p data-en="None of these raised an error. Each was found by a measurement that had no reason to exist until the previous one failed." data-ko="어느 것도 에러를 내지 않았습니다. 각각은 앞의 것이 실패하기 전까지는 존재할 이유가 없던 측정으로 발견됐습니다.">None raised an error.</p></div>
+
+      <div class="table-scroll"><table class="flat-table"><thead><tr>
+        <th data-en="Defect" data-ko="결함">Defect</th>
+        <th data-en="Symptom" data-ko="증상">Symptom</th>
+        <th data-en="Why it was invisible" data-ko="왜 안 보였나">Why invisible</th>
+      </tr></thead><tbody>
+        <tr><td data-en="Destination leaked by default" data-ko="기본값에서 목적지 누출"><b>Destination leak</b></td><td><code>insert the science book into the <b>right</b> shelf</code></td><td data-en="Default flags render it; the collector writes the same string into every episode’s metadata. Today’s corpus is clean only because the run passed the grounding flags." data-ko="기본 플래그가 그렇게 렌더하고, 수집기가 같은 문자열을 모든 에피소드 메타에 씁니다. 오늘 코퍼스가 깨끗한 것은 실행할 때 그라운딩 플래그를 줬기 때문일 뿐입니다.">Default flags render it; the collector writes it into every episode</td></tr>
+        <tr><td><code>INSERT_ENTER_MM = 300</code></td><td data-en="insert collapsed to zero frames on the only left-shelf episode" data-ko="유일한 왼쪽 책장 에피소드에서 insert 가 0프레임">insert = 0 frames</td><td data-en="Pooled distribution read 33.6%; four other episodes covered it" data-ko="합산 분포는 33.6% 정상. 다른 4개가 가림">Pooled distribution read 33.6%</td></tr>
+        <tr><td data-en="Post-release button press" data-ko="릴리즈 후 버튼 재누름">Post-release press</td><td data-en="insert and retract both zero on 4 of 14" data-ko="14개 중 4개에서 insert·retract 둘 다 0">insert and retract zero, 4 of 14</td><td data-en="“Last press wins” is right for which shelf, wrong for when — the axis fell back to 9 mm of settling wiggle against 341 mm of travel" data-ko="“마지막 누름이 이긴다”는 어느 책장인지에는 맞고 언제인지에는 틀립니다 — 축이 341 mm 이동 대신 9 mm 정착 흔들림으로 폴백">Right for which shelf, wrong for when</td></tr>
+        <tr><td data-en="Arrival frame coordinate system" data-ko="arrival 프레임 좌표계">Arrival coordinates</td><td data-en="insertion axis pointed downward" data-ko="삽입축이 아래를 향함">axis pointed down</td><td data-en="Events are numbered from recording, the frame is trimmed — offset 195" data-ko="이벤트는 녹화 기준, 프레임은 트림 기준 — 오프셋 195">Events raw, frames trimmed</td></tr>
+        <tr><td data-en="Stall detector read the raw stick" data-ko="stall 검출이 raw 스틱 사용">Stall detector source</td><td data-en="an operator releasing the clutch was reported as a hardware fault" data-ko="조작자가 클러치를 놓은 것을 하드웨어 고장으로 보고">operator pause read as fault</td><td data-en="The raw stick is not clutch-gated, so it never goes quiet" data-ko="raw 스틱은 클러치 게이팅이 안 돼서 조용해지지 않습니다">The raw stick never goes quiet</td></tr>
+        <tr><td data-en="Empty-phase guard was aggregate" data-ko="빈 phase 가드가 합산 기준">Aggregate phase guard</td><td data-en="an episode missing a phase entirely was not reported" data-ko="phase 가 통째로 빠진 에피소드가 보고되지 않음">a missing phase went unreported</td><td data-en="Four episodes covering a phase hide a fifth at zero — made per-episode, it immediately found two" data-ko="4개가 채우면 5번째가 0이어도 안 보입니다 — 에피소드 단위로 바꾸자 바로 2건을 찾았습니다">Four covering hide a fifth</td></tr>
+      </tbody></table></div>
+
+      <div class="diagram-shell" style="margin-top:2rem">
+<pre class="mermaid" aria-label="Why the destination leak is the dangerous one">
+flowchart LR
+    A["Someone reads<br/>meta.instruction"] --> B["No error"]
+    B --> C["Loss falls normally"]
+    C --> D["Training succeeds"]
+    D --> E["Held-out layout fails"]
+    E --> F["Conclusion:<br/>the policy cannot read signs"]
+    F -.->|"the truth was:<br/>it was never asked to"| G["Backwards, and the data<br/>cannot overturn it"]
+    classDef bad fill:#f7ece9,stroke:#c08b7d
+    class E,F,G bad
+</pre>
+      </div>
+      <p class="protocol-note" data-en="So the destination check is not a note in a README. Every finished prompt string is matched against a shelf-word pattern and the conversion stops; the deliberate E6-comparable arm has to say so with a flag. Jetson runs the same pattern in its start-up gate, which makes it fail-closed in both directions." data-ko="그래서 목적지 검사는 README 의 주석이 아닙니다. 완성된 프롬프트 문자열 전부를 책장 단어 패턴으로 검사하고 걸리면 변환을 중단합니다. 의도적인 E6 비교용 arm 은 플래그로 명시해야 합니다. 젯슨이 기동 게이트에 같은 패턴을 넣어서 양방향 fail-closed 가 됐습니다.">The check is fail-closed on both machines, not a note in a README.</p>
+    </div></section>
+
+    <!-- ─────────────────────────────────────────────────── parity -->
+    <section id="backend-parity" class="section"><div class="container">
+      <div class="section-head"><div>
+        <p class="section-label" data-en="Backend parity" data-ko="백엔드 일치">Backend parity</p>
+        <h2 data-en="The robot is not running the model that was trained." data-ko="로봇은 학습된 모델을 돌리고 있지 않다.">The robot is not running the model that was trained.</h2>
+      </div><p data-en="Training is JAX; serving is PyTorch, because JAX GPU initialisation fails on this Jetson under JetPack 6 and falls back to CPU. Given the same observation and the same pinned noise, the two graphs do not agree." data-ko="학습은 JAX 이고 서빙은 PyTorch 입니다 — 이 젯슨의 JetPack 6 에서 JAX GPU 초기화가 실패해 CPU 로 떨어지기 때문입니다. 같은 관측과 같은 고정 노이즈를 주면 두 그래프가 일치하지 않습니다.">Training is JAX, serving is PyTorch, and given identical input the two graphs disagree.</p></div>
+
+      <div class="metrics">
+        <div class="metric"><strong>0.86</strong><span data-en="JAX chunk amplitude vs demonstration" data-ko="JAX 청크 진폭 (시연 대비)">JAX amplitude</span><small data-en="stable across 1–10 denoise steps" data-ko="1~10 스텝에서 안정">stable 1–10 steps</small></div>
+        <div class="metric"><strong>0.36</strong><span data-en="PyTorch, same checkpoint" data-ko="PyTorch, 같은 체크포인트">PyTorch amplitude</span><small data-en="collapses as steps increase" data-ko="스텝 늘수록 붕괴">collapses with steps</small></div>
+        <div class="metric"><strong>2×</strong><span data-en="PyTorch sampling noise floor" data-ko="PyTorch 샘플링 노이즈 바닥">noise floor</span><small>2.1 → 4.0</small></div>
+      </div>
+
+      <div class="research-paper" style="margin-top:2rem">
+        <div class="paper-section"><h2 data-en="The bisection" data-ko="이분 탐색">The bisection</h2><div>
+          <div class="diagram-shell">
+<pre class="mermaid" aria-label="Bisection of the JAX versus PyTorch divergence">
+flowchart TD
+    S["Same observation, same pinned noise<br/>JAX 0.86 · PyTorch 0.36"] --> W{"Weights?"}
+    W -->|"bitwise match:<br/>adaRMS Dense, RMSNorm scale,<br/>LoRA merge, strict load"| P{"Precision?"}
+    P -->|"float32 conversion:<br/>identical to 3 decimals"| I{"Integration?"}
+    I -->|"same dt, same Euler,<br/>gap already 54% at one step"| E{"Inputs to the<br/>transformer?"}
+    E -->|"prefix 0.6% · suffix 0.04%<br/>adaRMS cond 0.0000"| L{"LLM forward?"}
+    L -->|"inject JAX embeddings:<br/>5.5% still remains"| K["Per-layer KV cache"]
+    K --> R["K diverges 5.9% at layer 0<br/>V stays at the bfloat16 floor<br/>&#8594; the difference is the rotation"]
+    R --> FIX["inv_freq stored bfloat16<br/><b>fixed</b> &#183; K error 5.9% &#8594; 0.3%"]
+    FIX --> REM["Action output unchanged<br/>&#8594; residue is in the action expert"]
+    classDef ok fill:#eef3f1,stroke:#64716d
+    classDef bad fill:#f7ece9,stroke:#c08b7d
+    class R,FIX ok
+    class REM bad
+</pre>
+          </div>
+        </div></div>
+
+        <div class="paper-section"><h2 data-en="What the RoPE defect looks like" data-ko="RoPE 결함의 모양">What the RoPE defect looks like</h2><div>
+          <p data-en="Casting the module to bfloat16 casts buffers as well as parameters, and the RoPE frequency table is a buffer. It is not a learned quantity — it is the arithmetic that defines the rotation angle — and in bfloat16 it carries a 0.15% relative error that the angle multiplies by the token position." data-ko="모듈을 bfloat16 으로 캐스팅하면 파라미터뿐 아니라 버퍼까지 캐스팅되고, RoPE 주파수 테이블은 버퍼입니다. 학습값이 아니라 회전각을 정의하는 산술값인데, bfloat16 에서 0.15% 상대오차를 갖고 각도가 그것을 토큰 위치로 곱합니다.">The bfloat16 cast reaches buffers, and the RoPE frequency table is a buffer.</p>
+          <div class="table-scroll"><table class="flat-table"><thead><tr>
+            <th data-en="Token position" data-ko="토큰 위치">Position</th>
+            <th data-en="Predicted angle error" data-ko="예측 각도 오차">Predicted angle error</th>
+            <th data-en="Measured K divergence" data-ko="실측 K 오차">Measured K</th>
+            <th data-en="V (same projection, no rotation)" data-ko="V (같은 투영, 회전 없음)">V</th>
+          </tr></thead><tbody>
+            <tr><td>0</td><td>0.0000 rad</td><td>0.0015</td><td>0.0012</td></tr>
+            <tr><td>64</td><td>0.0077</td><td>0.0103</td><td>0.0011</td></tr>
+            <tr><td>512</td><td>0.0614</td><td>0.0737</td><td>0.0011</td></tr>
+            <tr><td>967</td><td>0.1159</td><td><b>0.1167</b></td><td>0.0025</td></tr>
+          </tbody></table></div>
+          <p style="margin-top:1rem" data-en="V uses the same projection weights and receives no rotation; it sits at the bfloat16 floor the whole way. That is what identifies the rotation rather than the projection. Restoring float32 takes the layer-0 key error from 5.9% to 0.3%. It has to be recomputed rather than upcast — casting the damaged copy back keeps the damage — and the attribute the rope-update decorator restores from has to move with it, which silently undid the first attempt." data-ko="V 는 같은 투영 가중치를 쓰고 회전을 받지 않으며, 전 구간 bfloat16 바닥에 머뭅니다. 그것이 투영이 아니라 회전을 지목하는 근거입니다. float32 복원으로 layer 0 K 오차가 5.9%에서 0.3%가 됩니다. 업캐스트가 아니라 재계산해야 하고 — 손상된 사본을 되돌려도 손상이 남습니다 — rope-update 데코레이터가 복원해오는 속성도 같이 옮겨야 하는데, 그것을 놓쳐서 첫 시도가 조용히 무효가 됐습니다.">V receives no rotation and stays at the bfloat16 floor throughout — that is what identifies the rotation rather than the projection.</p>
+          <p class="protocol-note" data-en="Weight comparison could never have found this: a buffer is not a checkpoint parameter. It also grows with sequence length, so it was invisible until this stage put 984 tokens through the model. The E6 control diverges more than E7 (2.01 against 1.60), so this is a common runtime issue and not a Stage 2 feature." data-ko="가중치 대조로는 절대 못 찾습니다 — 버퍼는 체크포인트 파라미터가 아닙니다. 그리고 시퀀스 길이에 따라 커지므로, 이 단계에서 984 토큰을 넣기 전까지 보이지 않았습니다. E6 대조군이 E7 보다 더 심하게 갈라지므로(2.01 대 1.60) 공통 런타임 문제이지 Stage 2 고유 문제가 아닙니다.">A buffer is not a checkpoint parameter, and the error grows with sequence length.</p>
+        </div></div>
+
+        <div class="paper-section"><h2 data-en="Ruled out, with the evidence" data-ko="배제된 것과 근거">Ruled out</h2><div>
+          <div class="table-scroll"><table class="flat-table"><thead><tr>
+            <th data-en="Candidate" data-ko="후보">Candidate</th><th data-en="How it was closed" data-ko="어떻게 닫혔나">How it was closed</th>
+          </tr></thead><tbody>
+            <tr><td data-en="LoRA dropped by strict=False" data-ko="strict=False 로 LoRA 유실">LoRA dropped on load</td><td data-en="missing 1 (tied embedding), unexpected 0; merge shown mathematically equivalent" data-ko="missing 1(tied), unexpected 0; 병합 수학적 등가 확인">missing 1 (tied), unexpected 0</td></tr>
+            <tr><td data-en="adaRMS Dense mis-converted" data-ko="adaRMS Dense 변환 오류">adaRMS Dense conversion</td><td data-en="18 layers × 2 × (kernel + bias), all rel 0.00e+00" data-ko="18층 × 2 × (kernel + bias), 전부 rel 0.00e+00">all rel 0.00e+00</td></tr>
+            <tr><td data-en="RMSNorm left at its 1.0 default" data-ko="RMSNorm 이 기본값 1.0 으로 남음">RMSNorm default</td><td data-en="none exactly 1.0; scales match bitwise; adaRMS norms have no weight at all" data-ko="정확히 1.0 인 것 0개; scale 비트 일치; adaRMS norm 은 weight 자체가 없음">none exactly 1.0</td></tr>
+            <tr><td data-en="Execution precision" data-ko="실행 정밀도">Execution precision</td><td data-en="float32 conversion identical to three decimals" data-ko="float32 변환이 소수점 셋째 자리까지 동일">float32 identical</td></tr>
+            <tr><td data-en="Integration loop" data-ko="적분 루프">Integration</td><td data-en="same dt and Euler step; the gap is 54% after one forward" data-ko="dt·Euler 동일; 1 forward 만에 54%">54% after one forward</td></tr>
+            <tr><td data-en="Model amplifies small input drift" data-ko="모델이 작은 입력 드리프트를 증폭">Input-drift amplification</td><td data-en="1.2% image noise produces 1.9% output change" data-ko="이미지 1.2% 노이즈 → 출력 1.9% 변화">1.2% in → 1.9% out</td></tr>
+          </tbody></table></div>
+        </div></div>
+      </div>
+    </div></section>
+
+    <!-- ─────────────────────────────────────────────────── withdrawn -->
+    <section id="withdrawn" class="section alt"><div class="container">
+      <div class="section-head"><div>
+        <p class="section-label" data-en="Withdrawn" data-ko="철회">Withdrawn</p>
+        <h2 data-en="Claims that did not survive their own check." data-ko="자기 검증을 통과하지 못한 주장들.">Claims that did not survive their own check.</h2>
+      </div><p data-en="Kept because several of them are the reason a guard exists, and because the pattern in them is the same one." data-ko="여기 남기는 이유는 이 중 몇 개가 어떤 가드가 존재하는 이유이기 때문이고, 그리고 이들에 공통된 패턴이 하나이기 때문입니다.">Kept, because several are the reason a guard exists.</p></div>
+
+      <div class="table-scroll"><table class="flat-table"><thead><tr>
+        <th data-en="Claim" data-ko="주장">Claim</th><th data-en="Actually" data-ko="실제">Actually</th><th data-en="How it surfaced" data-ko="어떻게 드러났나">How it surfaced</th>
+      </tr></thead><tbody>
+        <tr><td data-en="A stall means a hardware fault" data-ko="stall 은 하드웨어 고장">Stall means hardware fault</td><td data-en="The operator had released the clutch" data-ko="조작자가 클러치를 놓은 것">Operator released the clutch</td><td data-en="The raw stick is not clutch-gated" data-ko="raw 스틱은 클러치 게이팅이 안 됨">Raw stick is not gated</td></tr>
+        <tr><td data-en="Clamping corrupts the action label" data-ko="클램핑이 액션 라벨을 오염">Clamping corrupts the label</td><td data-en="The label is a measured joint delta and is unaffected" data-ko="라벨은 측정 관절 델타라 무관">Label is a measured joint delta</td><td data-en="Asked for the evidence and there was none" data-ko="근거를 요구받았고 없었음">Asked for evidence, had none</td></tr>
+        <tr><td data-en="Asking for unseen combinations is unfair" data-ko="못 본 조합을 묻는 것은 불공정">Unseen combinations are unfair</td><td data-en="That is precisely what is being measured" data-ko="그것이 바로 재려는 것">That is what is being measured</td><td data-en="Corrected by the operator" data-ko="사용자 반박">Corrected</td></tr>
+        <tr><td data-en="On-device serving is too slow" data-ko="온디바이스 서빙은 너무 느림">On-device serving is too slow</td><td data-en="2.06 s measured, and the E6 runtime already paced around it" data-ko="실측 2.06초, E6 런타임이 이미 그렇게 페이싱해서 성공">2.06 s measured</td><td data-en="An A5000 slot-cost ratio was extrapolated to different hardware" data-ko="A5000 의 슬롯 비용 비율을 다른 하드웨어에 외삽">Extrapolated a ratio across hardware</td></tr>
+        <tr><td data-en="Discrete state adds ~137 tokens" data-ko="이산 state 가 약 137 토큰 추가">Discrete state adds ~137 tokens</td><td data-en="+32 — only the real seven dimensions are written" data-ko="+32 — 실제 7차원만 들어감">+32, seven dimensions only</td><td data-en="The pipeline order was not checked before measuring" data-ko="재기 전에 파이프라인 순서를 확인하지 않음">Pipeline order unchecked</td></tr>
+        <tr><td data-en="task_metric.py is optional for E7" data-ko="task_metric.py 는 E7 에 불필요">task_metric.py is optional</td><td data-en="Imported at module level; without it the whole package fails to import" data-ko="모듈 레벨 import 라 없으면 패키지 전체가 import 실패">Module-level import</td><td data-en="Read the config value, not the import graph" data-ko="config 값만 보고 import 그래프를 안 봄">Read the config, not the imports</td></tr>
+        <tr><td data-en="A running sshd means the port is open" data-ko="sshd 가 살아 있으면 포트가 열림">Running sshd means port open</td><td data-en="It was listening on 10022" data-ko="10022 에서 리스닝 중이었음">Listening on 10022</td><td data-en="systemctl is-active reports the unit, not the port" data-ko="systemctl is-active 는 유닛을 보고하지 포트를 보고하지 않음">is-active reports the unit</td></tr>
+        <tr><td data-en="The source tarball matches training" data-ko="소스 tarball 이 학습 코드와 같음">Tarball matches training</td><td data-en="Eight uncommitted model and inference edits were missing" data-ko="커밋 안 된 모델·추론 수정 8개 누락">Eight uncommitted edits missing</td><td data-en="git status, after the archive had been built from HEAD" data-ko="HEAD 로 아카이브를 만든 뒤 git status">git status</td></tr>
+        <tr><td data-en="Sampling divergence proves the wiring is live" data-ko="샘플링 divergence 가 배선 정상의 근거">Divergence proves the wiring</td><td data-en="It was sampling noise; the conclusion survives on other evidence" data-ko="샘플링 노이즈였음. 결론은 다른 근거로 유지">It was sampling noise</td><td data-en="The same observation, run twice" data-ko="같은 관측을 두 번 돌림">Same observation, twice</td></tr>
+      </tbody></table></div>
+
+      <p class="protocol-note" data-en="They share a shape: a weak signal read as a settled fact — a unit’s status read as a port, a config value read as an import graph, a pooled distribution read as a per-episode state, a ratio measured on one GPU applied to another. That is why the guards in this stage are fail-closed and why every metric now prints its own ceiling next to its result." data-ko="공통점이 있습니다 — 약한 신호를 확정으로 읽은 것들입니다. 유닛 상태를 포트로, config 값을 import 그래프로, 합산 분포를 에피소드별 상태로, 한 GPU 에서 잰 비율을 다른 GPU 에. 그래서 이 단계의 가드가 전부 fail-closed 이고, 모든 지표가 결과 옆에 자기 천장을 같이 출력합니다.">They share a shape: a weak signal read as a settled fact.</p>
+    </div></section>
+
+    <!-- ─────────────────────────────────────────────────── open -->
+    <section id="open" class="section"><div class="container">
+      <div class="section-head"><div>
+        <p class="section-label" data-en="Open" data-ko="열린 것">Open</p>
+        <h2 data-en="What is running, and what is blocked." data-ko="돌고 있는 것과 막힌 것.">What is running, and what is blocked.</h2>
+      </div></div>
+
+      <div class="research-paper">
+        <div class="paper-section"><h2 data-en="Running" data-ko="진행 중">Running</h2><div>
+          <ul>
+            <li data-en="v2 training to 20,000 steps, with the steering metric measured automatically at every checkpoint. Monotone so far: 0.72% → 1.32% → 1.49% of the steering a shelf change needs." data-ko="v2 학습 20,000 step 까지, 체크포인트마다 조향 지표 자동 측정. 지금까지 단조 증가: 책장 변경 필요량의 0.72% → 1.32% → 1.49%.">v2 training to 20,000 steps, steering measured at every checkpoint (0.72% → 1.32% → 1.49%)</li>
+            <li data-en="A three-way comparison — JAX, the PyTorch joint forward used in training, and the cached forward used in deployment — to split the remaining amplitude gap between PyTorch’s arithmetic and its serving path." data-ko="3-way 비교 — JAX, 학습에 쓰는 PyTorch joint forward, 배포에 쓰는 cached forward — 남은 진폭 차이가 PyTorch 수학인지 서빙 경로인지 가르기 위해.">Three-way comparison to split the remaining amplitude gap</li>
+          </ul>
+        </div></div>
+
+        <div class="paper-section"><h2 data-en="Blocked" data-ko="막힌 것">Blocked</h2><div>
+          <ul>
+            <li data-en="Physical rollout on P3 and P6. The deployed bundle produces 0.36 of the demonstrated amplitude against JAX’s 0.86, so a rollout result could not be read as policy quality. Parity on the workstation comes first." data-ko="P3·P6 실기 롤아웃. 배포 번들이 시연 진폭의 0.36 을 내고 JAX 는 0.86 이라, 롤아웃 결과를 정책 품질로 읽을 수 없습니다. 워크스테이션 parity 가 먼저입니다.">P3/P6 rollout — the bundle is degraded, so a result could not be read as policy quality</li>
+            <li data-en="The paper corpus. Layout and category were collected in blocks, and no augmentation removes that retroactively; it has to be recollected with both randomised and the label exposure fixed." data-ko="논문 코퍼스. 레이아웃과 카테고리를 블록으로 수집했고 어떤 증강도 소급해서 지우지 못합니다. 둘 다 무작위화하고 라벨 노출을 고정해서 다시 수집해야 합니다.">The paper corpus — blocking cannot be removed retroactively</li>
+          </ul>
+        </div></div>
+
+        <div class="paper-section"><h2 data-en="Order of operations" data-ko="작업 순서">Order of operations</h2><div>
+          <div class="diagram-shell">
+<pre class="mermaid" aria-label="Order in which the remaining work has to happen">
+flowchart LR
+    A["JAX reference"] --> B["Workstation<br/>PyTorch parity"]
+    B --> C["Same bundle<br/>to the Jetson"]
+    C --> D["Jetson action<br/>= workstation action"]
+    D --> E["Dry run"]
+    E --> F["Low-speed robot"]
+    F --> G["P3 / P6 rollout<br/>24 trials per layout"]
+    classDef now fill:#eef3f1,stroke:#64716d
+    class B now
+</pre>
+          </div>
+          <p style="margin-top:1rem" data-en="Twenty-four trials per layout, three categories by eight, is the smallest count at which fourteen successes rejects chance at p &lt; 0.05. Two layouts, forty-eight trials, roughly an hour and a half at the measured inference latency." data-ko="레이아웃당 24회(3 카테고리 × 8회)가 14회 성공으로 우연을 p &lt; 0.05 에서 기각할 수 있는 최소 횟수입니다. 두 배치 48회, 실측 추론 지연으로 약 1시간 반입니다.">24 trials per layout is the smallest count at which 14 successes rejects chance at p &lt; 0.05.</p>
+        </div></div>
+      </div>
+
+      <div class="panel narrow project-scope" style="margin-top:2rem">
+        <p class="section-label" data-en="Current scope" data-ko="현재 범위">Current scope</p>
+        <p data-en="This log reports dataset integrity, offline counterfactual measurements on two trained checkpoints, a shortcut analysis of the corpus, and a backend-parity investigation. It claims no task-success rate, no grounding accuracy, and no physical rollout result. The steering figures are offline measurements of a single action chunk mid-transport and are not a prediction of rollout success. The v2 run is incomplete." data-ko="이 일지는 데이터셋 무결성, 학습된 체크포인트 2개에 대한 오프라인 반사실 측정, 코퍼스의 지름길 분석, 백엔드 일치 조사를 보고합니다. 태스크 성공률, 그라운딩 정확도, 실기 롤아웃 결과는 주장하지 않습니다. 조향 수치는 이송 도중 단일 액션 청크에 대한 오프라인 측정이며 롤아웃 성공의 예측이 아닙니다. v2 런은 미완입니다.">This log claims no task-success rate, no grounding accuracy, and no physical rollout result. The steering figures are offline measurements of one action chunk mid-transport.</p>
+      </div>
+    </div></section>
+
+  </main>
+
+  <footer class="site-footer"><div class="container footer-grid"><p>© 2026 Ma-VLA Research Program · Stage 2 Research Log</p><div class="footer-links"><a href="/projects/e7-xarm6-policy.html">Stage 2B</a><a href="/projects/quest3-xarm6.html">Stage 2A</a><a href="/research.html" data-en="Research Program" data-ko="연구 프로그램">Research Program</a></div></div></footer>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      securityLevel: "loose",
+      theme: "base",
+      flowchart: { curve: "basis", htmlLabels: true },
+      themeVariables: {
+        primaryColor: "#eef3f1",
+        primaryTextColor: "#17211f",
+        primaryBorderColor: "#64716d",
+        lineColor: "#64716d",
+        secondaryColor: "#ffffff",
+        tertiaryColor: "#f4f0e8",
+        clusterBkg: "#f7f8f6",
+        clusterBorder: "#dce4e1",
+        fontFamily: "Pretendard Variable, Pretendard, system-ui, sans-serif"
+      }
+    });
+  </script>
+</body>
+</html>
