@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stage 3 · Deployment Fidelity — Ma-VLA</title>
+  <meta name="description" content="Moving a trained policy onto the deployment machine changed the policy. The defect, the rule that fixes it, the 1/N invariant it obeys, and the gates that now stand in the way.">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" crossorigin>
+  <link rel="stylesheet" href="/style.css?v=20260819a"><script src="/script.js?v=20260819a" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-en="Skip to content" data-ko="본문으로 건너뛰기">Skip to content</a>
+  <header class="site-header"><div class="container nav-shell"><a class="brand" href="/"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 16c3.5 0 3.5-8 7-8s3.5 8 7 8"/><path d="M4 8c3.5 0 3.5 8 7 8s3.5-8 7-8"/></svg></span><span>Ma-VLA</span></a><nav class="primary-nav"></nav></div></header>
+  <main id="main">
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     OWNER: TRAINING-SERVER (RTX A5000) · 2026-08-19
+     규약은 /OWNERSHIP.md 참조.
+     이 페이지는 Stage 3 — 배포 충실도. Stage 2 로그(e7-stage2-log.html)와 다른
+     층위다. Stage 2 는 "기호를 장면에 붙이는가"를 JAX 에서 묻고, 이 페이지는
+     "학습된 정책이 배포 기계에서 같은 정책인가"를 변환 경계와 PyTorch 에서 묻는다.
+     ★ 하드웨어 태그를 반드시 유지할 것: [R] RTX A5000 / [J] Jetson / [P] paired.
+       지연 수치는 절대 섞지 않는다.
+     ★ 세 팔은 runtime / ordinary / derived 로만 부른다. 글자(A/B/C)와 디렉터리
+       이름(_fixed, _merged)으로 부르지 말 것 — 그게 §4.10 이 지목한 실패다.
+     ★ 철회한 주장은 지우지 말고 §withdrawn 으로 옮긴다.
+     근거: openpi_upstream_clean/docs/STAGE3_NARRATIVE.md · E7_DEPLOYMENT_FIDELITY_LOG.md
+═══════════════════════════════════════════════════════════════════════════ -->
+    <section id="top" class="page-hero"><div class="container">
+      <p class="breadcrumb"><a href="/">Ma-VLA</a> / <a href="/research.html">Research Program</a> / <a href="/projects/e7-stage2-log.html">Stage 2 Log</a> / Stage 3</p>
+      <p class="eyebrow" data-en="Stage 3 · Deployment fidelity" data-ko="Stage 3 · 배포 충실도">Stage 3 · Deployment fidelity</p>
+      <h1 data-en="Moving the policy to the robot changed the policy." data-ko="정책을 로봇으로 옮기는 것이 정책을 바꿨다.">Moving the policy to the robot changed the policy.</h1>
+      <p data-en="Same keys, same shapes, same dtypes, same 848 tensors — and a different model. Strict loading passed, the smoke test passed, the hand-written reference passed, and the arm still wound a joint 75° past anything in the demonstrations. This page is the record of finding out why: one adapter folded by a rule that was right for the other four, an invariant that says the damage is exactly 1/N, and the gates that now refuse to let it happen again." data-ko="키도 shape 도 dtype 도 텐서 848 개도 같은데 다른 모델이었습니다. strict 로딩이 통과했고 스모크 테스트가 통과했고 손수 만든 참조 구현까지 통과했는데, 팔은 시연 어디에도 없는 각도까지 관절을 75° 더 감았습니다. 이 페이지는 그 이유를 찾은 기록입니다 — 나머지 넷에는 맞았던 규칙으로 접힌 어댑터 하나, 피해가 정확히 1/N 이라고 말하는 불변량, 그리고 그것이 다시 일어나지 못하게 막는 게이트들.">Same keys, same shapes, same 848 tensors — and a different model.</p>
+      <div class="status-row">
+        <span class="status-pill"><span class="status-dot"></span><span data-en="Log open · last entry 2026-08-19" data-ko="기록 진행 중 · 최종 2026-08-19">Log open · 2026-08-19</span></span>
+        <span class="status-pill" data-en="9 checkpoints · 2 embodiments" data-ko="체크포인트 9개 · embodiment 2개">9 ckpt · 2 embodiments</span>
+        <span class="status-pill" data-en="4,860 synthetic cases · 6 external lowerings" data-ko="합성 4,860건 · 외부 lowering 6개">4,860 cases · 6 lowerings</span>
+        <span class="status-pill" data-en="Physical evidence: existence statements only" data-ko="실기 증거: 존재 진술만">Physical: existence only</span>
+      </div>
+    </div></section>
+
+    <!-- ─────────────────────────────────────────────────── the claim -->
+    <section id="the-claim" class="section alt"><div class="container">
+      <div class="section-head"><div>
+        <p class="section-label" data-en="The claim" data-ko="중심 명제">The claim</p>
+        <h2 data-en="A conversion step is part of the model, not part of the plumbing." data-ko="변환은 배관이 아니라 모델의 일부다.">A conversion step is part of the model, not part of the plumbing.</h2>
+      </div><p data-en="Everything downstream of training is treated as transport. This is a case where transport was arithmetic, the arithmetic was wrong, and every check that a normal pipeline runs said it was fine." data-ko="학습 이후는 보통 전부 “운반”으로 취급됩니다. 이 사례에서는 운반이 곧 산술이었고, 그 산술이 틀렸으며, 보통 파이프라인이 돌리는 모든 검사가 이상 없다고 답했습니다.">Transport was arithmetic, the arithmetic was wrong, and every normal check passed.</p></div>
+
+      <div class="card-grid">
+        <article class="card"><h3 data-en="Stage 2 asks" data-ko="Stage 2 가 묻는 것">Stage 2 asks</h3><p data-en="Does the policy attach a symbol to the scene — given “science”, does it go to that sign? Measured in JAX, on the training server, before any conversion." data-ko="정책이 기호를 장면에 붙이는가 — “science” 를 받으면 그 간판으로 가는가. 변환 이전, 학습서버의 JAX 에서 잽니다.">Symbol grounding. Measured in JAX, before any conversion.</p></article>
+        <article class="card"><h3 data-en="Stage 3 asks" data-ko="Stage 3 가 묻는 것">Stage 3 asks</h3><p data-en="Is the trained policy the same policy on the deployment machine? Measured across the conversion boundary, in PyTorch." data-ko="학습된 정책이 배포 기계에서 같은 정책인가. 변환 경계를 가로질러 PyTorch 에서 잽니다.">Is it the same policy after conversion? Measured in PyTorch.</p></article>
+        <article class="card"><h3 data-en="Why they do not mix" data-ko="왜 섞으면 안 되나">Why they do not mix</h3><p data-en="Stage 2’s steering numbers were taken in JAX and never crossed the converter, so the defect does not touch them. The one place they meet is Stage 2’s physical rollouts, which ran on converted bundles — and which bundle each run used is still unresolved." data-ko="Stage 2 의 조향 수치는 JAX 에서 잰 것이고 변환기를 거치지 않았으므로 이 결함의 영향을 받지 않습니다. 겹치는 곳은 단 하나, Stage 2 의 실기 롤아웃입니다 — 변환 번들로 돌았고, 어느 run 이 어느 번들이었는지가 아직 미확정입니다.">Only the physical rollouts overlap, and their bundle mapping is unresolved.</p></article>
+      </div>
+
+      <div class="paper-section"><h2 data-en="Five boundaries, and the one that was never checked" data-ko="다섯 경계, 그리고 아무도 검사하지 않은 하나">Five boundaries</h2><div>
+        <div class="diagram-shell">
+<pre class="mermaid" aria-label="Five boundaries from training to execution">
+flowchart LR
+    tr["Training"] -->|"① numeric"| cv["Conversion"]
+    cv -->|"② composition"| bd["Bundle"]
+    bd -->|"③ content"| st["Startup"]
+    st -->|"④ hash"| ex["Execution"]
+    ex -->|"⑤ record"| lg["Rollout log"]
+    classDef bad fill:#f8ecec,stroke:#a86b6b
+    classDef ok fill:#eef3f1,stroke:#64716d
+    class cv bad
+    class tr,bd,st,ex,lg ok
+</pre>
+        </div>
+        <p data-en="Boundary ① is where the defect lived. Nothing downstream can see it: a wrongly folded weight has the same key, the same shape and the same dtype as a right one, so ②, ③ and ④ all pass a bundle that is arithmetically wrong. The check has to happen at ①, while both forms are still in memory." data-ko="결함은 경계 ① 에 있었습니다. 그 아래로는 아무도 볼 수 없습니다 — 잘못 접힌 weight 는 올바른 것과 키·shape·dtype 이 전부 같아서 ②·③·④ 가 산술적으로 틀린 번들을 그대로 통과시킵니다. 검사는 두 형태가 아직 메모리에 같이 있는 ① 에서만 가능합니다.">The defect lived at ①, and nothing downstream can see it.</p>
+      </div></div>
+    </div></section>
+
+    <!-- ─────────────────────────────────────────────────── the three arms -->
+    <section id="arms" class="section"><div class="container">
+      <div class="section-head"><div>
+        <p class="section-label" data-en="Naming" data-ko="명명 규약">Naming</p>
+        <h2 data-en="Three arms, called by what they are." data-ko="세 팔을, 그것이 무엇인지로 부른다.">Three arms, called by what they are.</h2>
+      </div><p data-en="Letters were abandoned on 2026-08-16: the training server’s A/B/C and the robot side’s B=runtime disagreed, and unifying on either would have required re-reading every prior record. Directory names are worse than letters — one bundle called _fixed is the runtime arm and one called _merged is the derived arm." data-ko="2026-08-16 에 글자를 폐기했습니다. 학습서버의 A/B/C 와 로봇 측의 B=runtime 이 충돌했고, 어느 쪽으로 통일해도 기존 기록을 전부 소급해 다시 읽어야 했기 때문입니다. 디렉터리 이름은 글자보다 나쁩니다 — `_fixed` 가 runtime 이고 `_merged` 가 derived 입니다.">Letters were abandoned. Directory names are worse than letters.</p></div>
+
+      <div class="table-scroll"><table class="flat-table"><thead><tr>
+        <th data-en="Name" data-ko="이름">Name</th>
+        <th data-en="How attn_vec is represented" data-ko="attn_vec 표현">attn_vec representation</th>
+        <th data-en="Tensors" data-ko="텐서">Tensors</th>
+        <th data-en="Fingerprint" data-ko="지문">Fingerprint</th>
+        <th data-en="Verdict" data-ko="판정">Verdict</th>
+      </tr></thead><tbody>
+        <tr><td><strong>runtime</strong></td><td data-en="Adapter stays in the graph; base W unmerged" data-ko="어댑터가 그래프에 남고 base W 는 미병합">Adapter stays in the graph</td><td><strong>884</strong></td><td><code>9ce49845d2ac41ce</code></td><td class="verdict-pass" data-en="Reference" data-ko="기준">Reference</td></tr>
+        <tr><td><strong>ordinary</strong></td><td><code>W + A@B</code></td><td>848</td><td><code>481038b50e0eb4fe</code></td><td class="verdict-fail" data-en="Defective" data-ko="결함">Defective</td></tr>
+        <tr><td><strong>derived</strong></td><td><code>W + A@(Σ<sub>N</sub> B)</code></td><td>848</td><td><code>f648be200b6ca8f1</code></td><td class="verdict-pass" data-en="Equivalent to runtime" data-ko="runtime 과 등가">Equivalent</td></tr>
+      </tbody></table></div>
+      <p class="protocol-note" data-en="The manifest.json of the ordinary bundle and the runtime bundle are byte-identical, and both declare bundle_format: pytorch_lora_merged — which is false for the runtime one. A manifest did not identify a bundle. Hashes do." data-ko="ordinary 번들과 runtime 번들의 manifest.json 이 byte 단위로 동일하고, 둘 다 `bundle_format: pytorch_lora_merged` 라고 선언하는데 runtime 쪽에서는 그것이 거짓입니다. manifest 는 번들을 식별하지 못했습니다. 해시는 합니다.">The two manifests were byte-identical, and one of them was lying.</p>
+    </div></section>
+
+    <!-- ─────────────────────────────────────────────────── what was silent -->
+    <section id="what-was-silent" class="section alt"><div class="container">
+      <div class="section-head"><div>
+        <p class="section-label" data-en="Why it was not caught" data-ko="왜 안 잡혔나">Why it was not caught</p>
+        <h2 data-en="Six checks passed on a model that was wrong." data-ko="틀린 모델에서 검사 여섯 개가 통과했다.">Six checks passed on a model that was wrong.</h2>
+      </div><p data-en="The symptom was a policy with small amplitude — observationally indistinguishable from “undertrained” or “not enough data”, whose remedies point the opposite way." data-ko="증상은 “진폭이 작은 정책” 이었습니다. “학습이 덜 됐다 / 데이터가 부족하다” 와 관측상 구분되지 않는데, 처방은 정반대입니다.">Small amplitude — indistinguishable from undertrained, and the remedy is opposite.</p></div>
+
+      <div class="table-scroll"><table class="flat-table"><thead><tr>
+        <th data-en="Check" data-ko="검사">Check</th><th data-en="Result" data-ko="결과">Result</th><th data-en="Why it could not see it" data-ko="왜 못 봤나">Why it could not see it</th>
+      </tr></thead><tbody>
+        <tr><td data-en="Weight comparison" data-ko="가중치 대조">Weight comparison</td><td class="verdict-pass">pass</td><td data-en="Both sides hold a merged weight of the same shape" data-ko="양쪽이 같은 형태의 병합 weight 를 갖는다">Same shape either way</td></tr>
+        <tr><td data-en="Loading with every name required to match" data-ko="모든 이름이 맞아야 통과하는 로딩">Strict loading</td><td class="verdict-pass">pass</td><td data-en="The name lists are identical; the only two absent are shared with another table and never called" data-ko="이름 목록이 동일. 빠진 둘은 다른 표와 공유되고 호출되지 않는 것">Identical name lists</td></tr>
+        <tr><td data-en="Adapter wiring" data-ko="어댑터 배선">Adapter wiring</td><td class="verdict-pass">pass</td><td data-en="36 tensors consumed, all non-zero" data-ko="36 개 텐서 정상 소비, 전부 비-0">Consumed and non-zero</td></tr>
+        <tr><td data-en="Inference smoke test" data-ko="추론 스모크">Inference smoke test</td><td class="verdict-pass">pass</td><td data-en="Runs without error and returns plausible values" data-ko="에러 없이 돌고 그럴듯한 값이 나온다">Plausible values</td></tr>
+        <tr><td data-en="Training loss" data-ko="학습 손실">Training loss</td><td class="verdict-pass">0.0155</td><td data-en="Training never touches the converted weights" data-ko="학습은 변환된 weight 를 건드리지 않는다">Converged, in JAX</td></tr>
+        <tr><td data-en="Hand-written reference implementation" data-ko="손수 만든 참조 구현">Hand-written reference</td><td class="verdict-fail" data-en="agreed to 1e-3" data-ko="1e-3 으로 일치">agreed to 1e-3</td><td data-en="It inherited the same folding assumption — it was folding too" data-ko="같은 folding 가정을 물려받았다 — 그것도 접고 있었다">It was folding too</td></tr>
+      </tbody></table></div>
+
+      <p data-en="Thirteen hypotheses were measured before the conversion was accused: bitwise weights, strict loading, RMSNorm defaults, execution precision, the integration loop, model amplification, an E6 control, the serving cache path, inputs, operand precision, RoPE, a teacher-forced block, and the adapter fold rule. RoPE turned out to be a genuine second defect. The rest were excluded." data-ko="변환을 지목하기 전에 가설 13 개를 전부 측정했습니다 — bitwise 가중치, strict 로딩, RMSNorm 기본값, 실행 정밀도, 적분 루프, 모델 증폭, E6 대조, 서빙 캐시 경로, 입력, 피연산자 정밀도, RoPE, teacher-forced block, 어댑터 fold 규칙. RoPE 는 별개의 진짜 결함으로 판명됐고 나머지는 배제됐습니다.">Thirteen hypotheses were measured before the conversion was accused.</p>
+    </div></section>
+
+    <!-- ─────────────────────────────────────────────────── root cause -->
+    <section id="root-cause" class="section"><div class="container">
+      <div class="section-head"><div>
+        <p class="section-label" data-en="Root cause" data-ko="근본 원인">Root cause</p>
+        <h2 data-en="Eight opinions were collapsed into one, and nothing checked for it." data-ko="여덟 개의 의견이 하나로 뭉개졌고, 아무도 검사하지 않았다.">Eight opinions collapsed into one.</h2>
+      </div><p data-en="The model does not spell out how to bake in each trained correction. It generates that instruction automatically, by editing the layer’s own description of what it computes. The edit is a text substitution, and nothing afterwards checks that the edited description still says the right thing." data-ko="모델은 학습된 보정항을 어떻게 구워 넣을지를 일일이 적어두지 않습니다. 층이 스스로 “나는 이런 계산을 한다” 고 적어둔 서술을 편집해서 그 지시를 자동 생성합니다. 편집은 문자열 치환이고, 그 뒤로 편집된 서술이 여전히 옳은 말을 하는지 아무도 검사하지 않습니다.">The instruction is generated by a text edit, and never validated.</p></div>
+
+      <div class="metrics">
+        <div class="metric"><strong>1 / 5</strong><span data-en="adapters folded wrongly" data-ko="잘못 접힌 어댑터">adapters folded wrongly</span><small data-en="the converter was 80% right" data-ko="변환기는 80% 맞았다">80% right</small></div>
+        <div class="metric"><strong>5.77e-02</strong><span data-en="attn_vec, runtime vs ordinary fold" data-ko="attn_vec, 런타임 대 일반 병합">attn_vec relative error</span><small data-en="the other four: ~1e-15" data-ko="나머지 넷: ~1e-15">others ~1e-15</small></div>
+        <div class="metric"><strong>27%</strong><span data-en="of the adapter’s output effect survived" data-ko="어댑터 출력 효과 중 살아남은 양">of the effect survived</span><small>0.01600 / 0.05922</small></div>
+      </div>
+
+      <div class="paper-section"><h2 data-en="Eight heads, and only one of them counted" data-ko="head 여덟 개 중 하나만 세어졌다">Eight heads, one counted</h2><div>
+        <p data-en="Attention in this model works in eight parallel streams — “heads”. Each looks at the scene a different way, and at the end their eight opinions are combined into one answer. The small trained correction that was added during fine-tuning was written to be combined the same way: all eight heads contribute to it." data-ko="이 모델의 attention 은 여덟 갈래로 동시에 돕니다 — “head” 입니다. 각각이 장면을 다르게 보고, 마지막에 여덟 개의 의견이 하나의 답으로 합쳐집니다. 미세조정 중에 더해진 작은 보정항도 같은 방식으로 합쳐지도록 쓰여 있었습니다 — 여덟 head 가 전부 기여합니다.">Attention runs in eight parallel streams, and the trained correction was written so all eight contribute.</p>
+        <p data-en="When the correction is baked into the main weights for deployment, the standard recipe pairs each head with its own share and adds them up. For the other four places in the model that is exactly right. For this one it is not, because here the eight shares were never meant to be kept apart — they were meant to be added together first, and then applied to every head. Pairing them off keeps one term out of every eight and silently discards the rest." data-ko="배포를 위해 그 보정항을 본체 가중치에 굽는 단계에서, 표준 방식은 각 head 를 자기 몫과 짝지어 더합니다. 모델의 다른 네 자리에서는 그것이 정확히 맞습니다. 이 자리에서만 틀립니다 — 여기서는 여덟 몫을 따로 두는 것이 아니라 **먼저 다 더한 다음** 모든 head 에 적용해야 했기 때문입니다. 짝지어 버리면 여덟 항 중 하나만 남고 나머지는 조용히 사라집니다.">The standard recipe pairs each head with its own share. Here the shares were meant to be added together first.</p>
+        <p data-en="Nothing in the model announces which of the two it is. The recipe is chosen by a text substitution that produces a formula and never asks whether the formula still says the right thing — and in this one case, the substitution leaves the head axis with nowhere to go, so it is summed away without complaint." data-ko="둘 중 어느 쪽인지 모델이 알려주지 않습니다. 방식은 문자열 치환으로 만들어진 수식이 정하는데, 그 수식이 여전히 옳은 말을 하는지는 아무도 묻지 않습니다 — 그리고 이 한 경우에만, 치환의 결과로 head 축이 갈 곳을 잃고 아무 항의 없이 합산돼 사라집니다.">The recipe is chosen by a text substitution that never checks whether the result still means the right thing.</p>
+        <p class="protocol-note" data-en="For the record, the two forms differ by where one sum is taken — the wrong one pairs head n with share n, the right one adds all shares before applying them. The full statement and proof are in the repository." data-ko="기록용으로 적자면, 두 형태는 합을 어디서 취하느냐만 다릅니다 — 틀린 쪽은 head n 을 몫 n 과 짝짓고, 옳은 쪽은 몫을 전부 더한 뒤 적용합니다. 완전한 진술과 증명은 저장소에 있습니다.">The two forms differ only by where one sum is taken.</p>
+      </div></div>
+    </div></section>
+
+    <!-- ─────────────────────────────────────────────────── the rule -->
+    <section id="the-rule" class="section alt"><div class="container">
+      <div class="section-head"><div>
+        <p class="section-label" data-en="The fix" data-ko="해법">The fix</p>
+        <h2 data-en="Let the model’s own description decide how to bake it." data-ko="굽는 방법을 모델 자신의 서술이 정하게 한다.">Let the description decide.</h2>
+      </div><p data-en="The literature already settled when a trained correction can be baked in: if the layer is linear at inference, an equivalent weight exists. That answers whether. It does not answer how, and the answer the whole ecosystem uses is a single recipe that happens to be right most of the time." data-ko="학습된 보정항을 언제 구워 넣을 수 있는지는 문헌이 이미 답했습니다 — 추론 시점에 선형이면 등가 가중치가 존재합니다. 그것은 “되는가” 에 대한 답입니다. “어떻게” 에 대한 답은 아니고, 생태계 전체가 쓰는 답은 대부분의 경우에 우연히 맞는 하나의 방식뿐입니다.">The literature settled whether. It did not settle how.</p></div>
+
+      <div class="paper-section"><h2 data-en="Ask the layer, do not recognise it" data-ko="층을 알아보지 말고 물어보라">Ask the layer</h2><div>
+        <p data-en="The obvious repair is to notice this one layer and treat it specially. That was rejected. A special case has to be remembered, and the next person to add a layer will not know to add it to the list — which is exactly how this defect got in, since the previous version had such a list and this layer was not on it." data-ko="뻔한 수리는 이 층 하나를 알아보고 특수 처리하는 것입니다. 그 방법을 버렸습니다. 특수 케이스는 누군가 기억해야 하는데, 다음에 층을 추가하는 사람은 그 목록에 넣어야 한다는 걸 모릅니다 — 이 결함이 들어온 경로가 정확히 그것입니다. 이전 버전에 그런 목록이 있었고 이 층이 거기 없었습니다.">A special case has to be remembered. That is exactly how this defect got in.</p>
+        <p data-en="Instead the converter reads the layer’s own description of what it computes — every layer already carries one — and works out from that whether anything would be lost by baking the correction in. If something would, it uses the recipe that does not lose it. The name of this layer appears nowhere in the converter. A layer added next year is either handled correctly or stops the conversion." data-ko="대신 변환기는 층이 스스로 “나는 이런 계산을 한다” 고 적어둔 서술을 읽습니다 — 모든 층이 이미 하나씩 갖고 있습니다 — 그리고 거기서 보정항을 구워 넣을 때 잃는 것이 있는지를 판단합니다. 있으면 잃지 않는 방식을 씁니다. 이 층의 이름은 변환기 어디에도 나오지 않습니다. 내년에 층이 추가되면 자동으로 옳게 처리되거나 변환이 멈춥니다.">The converter reads each layer’s own description. This layer’s name appears nowhere in it.</p>
+        <div class="table-scroll"><table class="flat-table"><thead><tr>
+          <th data-en="Approach" data-ko="접근">Approach</th><th data-en="Right" data-ko="맞음">Right</th><th data-en="Silently wrong" data-ko="조용히 틀림">Silently wrong</th><th data-en="No answer" data-ko="답 없음">No answer</th>
+        </tr></thead><tbody>
+          <tr><td data-en="The standard recipe everyone uses" data-ko="모두가 쓰는 표준 방식">The standard recipe</td><td>6</td><td class="verdict-fail"><strong>7</strong></td><td>0</td></tr>
+          <tr><td data-en="Reshape into a matrix and multiply" data-ko="행렬로 펴서 곱하기">Reshape and multiply</td><td>6</td><td class="verdict-fail"><strong>6</strong></td><td>3</td></tr>
+          <tr><td data-en="Recognise the layer by name" data-ko="층을 이름으로 알아보기">Recognise by name</td><td>6</td><td>0</td><td class="verdict-partial"><strong>9</strong></td></tr>
+          <tr><td data-en="Apply the special rule by position" data-ko="특수 규칙을 위치로 적용">Apply by position</td><td>5</td><td class="verdict-fail"><strong>2</strong></td><td>6</td></tr>
+          <tr><td><strong data-en="Read the description (this work)" data-ko="서술을 읽기 (본 작업)">Read the description</strong></td><td class="verdict-pass"><strong>15</strong></td><td class="verdict-pass"><strong>0</strong></td><td class="verdict-pass"><strong>0</strong></td></tr>
+        </tbody></table></div>
+        <p data-en="Fifteen layer descriptions were scored. The prior approach is not wrong — it is incomplete; it declines to answer where it is unsure, which is safe but leaves nine layers unhandled. The row that matters most is the fourth: applying the special rule by position, the only way to extend it without reading the description, breaks a layer the standard recipe already handled correctly. Two layers can sit in the same position with the same size and need opposite treatment. Only the description tells them apart." data-ko="층 서술 15 개를 채점했습니다. 선행 접근은 틀린 것이 아니라 불완전합니다 — 확신이 없는 곳에서 답을 거부하는데, 안전하지만 9 개 층이 처리되지 않은 채 남습니다. 가장 중요한 행은 네 번째입니다. 특수 규칙을 위치로 적용하는 것, 즉 서술을 안 읽고 확장할 수 있는 유일한 방법은, 표준 방식이 이미 잘 처리하던 층을 망가뜨립니다. 두 층이 같은 위치에 같은 크기로 앉아 있으면서 정반대의 처리를 요구할 수 있습니다. 구별은 서술에만 있습니다.">Two layers can look identical and need opposite treatment. Only the description tells them apart.</p>
+      </div></div>
+
+      <div class="paper-section"><h2 data-en="A gate that has to run before the evidence is gone" data-ko="증거가 사라지기 전에 돌아야 하는 게이트">A gate that runs before the evidence is gone</h2><div>
+        <p data-en="A wrongly baked weight and a correctly baked one are the same size, the same type, and carry the same names. Once the conversion is finished there is nothing left to compare against. So the check has to happen during the conversion, while both forms are still in memory: the same test input is pushed through the trained correction and through the baked weight, and if the two answers differ the conversion stops and writes nothing." data-ko="잘못 구운 가중치와 제대로 구운 가중치는 크기도 타입도 이름도 같습니다. 변환이 끝나고 나면 대조할 대상이 남아 있지 않습니다. 그래서 검사는 두 형태가 아직 메모리에 같이 있는 변환 도중에 이뤄져야 합니다 — 같은 테스트 입력을 학습된 보정항과 구워진 가중치에 각각 통과시키고, 두 답이 다르면 변환을 멈추고 아무것도 쓰지 않습니다.">Once the conversion finishes there is nothing left to compare against.</p>
+        <p data-en="Reproducing the broken bundle on purpose, to use as a control, took two deliberate edits: swapping the recipe back, and switching the gate off. The first alone produces no file." data-ko="대조군으로 쓰려고 깨진 번들을 일부러 다시 만들 때 의도적인 수정이 두 번 필요했습니다 — 방식을 되돌리는 것, 그리고 게이트를 끄는 것. 앞의 것만으로는 파일이 나오지 않습니다.">Rebuilding the broken bundle on purpose took two deliberate edits, not one.</p>
+        <p data-en="The gate is precise about what it covers, and it is worth being equally precise about what it does not. It bounds the baking step. It does not bound what happens when the result is rounded down to a smaller number format for storage — and that rounding turns out to be about two thousand times larger than the baking error, and lands in the same range as the difference that remains between a correctly baked model and one that was never baked at all." data-ko="게이트는 자기가 덮는 범위에 대해 정확하고, 덮지 않는 범위에 대해서도 똑같이 정확하게 적어둘 가치가 있습니다. 게이트는 굽는 단계를 bound 합니다. 결과를 저장을 위해 더 작은 수 형식으로 내림할 때 벌어지는 일은 bound 하지 않습니다 — 그리고 그 내림이 굽는 오차의 약 2 천 배로 드러났고, 제대로 구운 모델과 아예 굽지 않은 모델 사이에 남는 차이와 같은 범위에 들어옵니다.">It bounds the baking step. It does not bound the rounding that follows.</p>
+        <p class="protocol-note" data-en="Which leads to a consequence worth saying plainly: the model that keeps the correction separate is very slightly more faithful than any baked version can be. Baking is chosen for speed, and “correctness is free” is true of the time saved, not of the last digits." data-ko="여기서 분명히 적어둘 귀결이 하나 나옵니다 — 보정항을 따로 두는 모델이 어떤 구운 버전보다도 아주 조금 더 충실합니다. 굽는 것은 속도를 위한 선택이고, “정확성이 공짜다” 는 아낀 시간에 대해 참이지 마지막 자릿수에 대해 참이 아닙니다.">The unbaked model is slightly more faithful than any baked one can be.</p>
+      </div></div>
+    </div></section>
+
+    <section id="one-over-n" class="section"><div class="container">
+      <div class="section-head"><div>
+        <p class="section-label" data-en="The invariant" data-ko="불변량">The invariant</p>
+        <h2 data-en="Seven eighths is thrown away, and training does not change that." data-ko="8분의 7 이 버려지고, 학습이 그것을 바꾸지 않는다.">Seven eighths, every time.</h2>
+      </div><p data-en="The same computation was run on eight checkpoints where the defect had never been looked for. No bundles were needed — both folds come straight out of the JAX parameters. The question was not causality, which one checkpoint split two ways had already settled, but whether the discovering checkpoint was peculiar." data-ko="결함을 찾아본 적 없는 체크포인트 8 개에 같은 계산을 걸었습니다. 번들을 만들 필요가 없습니다 — 두 fold 다 JAX 파라미터에서 직접 나옵니다. 묻는 것은 인과가 아니라(그건 한 체크포인트를 두 갈래로 나눠 이미 닫혔습니다) “발견한 체크포인트가 유별났나” 입니다.">Not causality — whether the discovering checkpoint was peculiar.</p></div>
+
+      <div class="table-scroll"><table class="flat-table"><thead><tr>
+        <th data-en="Checkpoint" data-ko="체크포인트">Checkpoint</th><th>preserved</th><th>cos</th><th>‖ord‖/‖der‖</th><th>‖dW<sub>der</sub>‖/‖W‖</th>
+      </tr></thead><tbody>
+        <tr><td><strong>e7_grounded_v1</strong> <span class="muted" data-en="(discovery)" data-ko="(발견)">(discovery)</span></td><td><strong>12.494%</strong></td><td>0.531</td><td>0.2355</td><td>6.886%</td></tr>
+        <tr><td>e7_grounded_v2</td><td><strong>12.496%</strong></td><td>0.533</td><td>0.2345</td><td>6.923%</td></tr>
+        <tr><td>e6_v23 <span class="muted" data-en="(control)" data-ko="(대조)">(control)</span></td><td><strong>12.489%</strong></td><td>0.525</td><td>0.2379</td><td>6.604%</td></tr>
+        <tr><td>e6_v34_rangefloor</td><td><strong>12.493%</strong></td><td>0.520</td><td>0.2404</td><td>6.465%</td></tr>
+        <tr><td>e6_v35_lossweight</td><td><strong>12.493%</strong></td><td>0.519</td><td>0.2406</td><td>6.455%</td></tr>
+        <tr><td>e6_v36_zscore</td><td><strong>12.492%</strong></td><td>0.559</td><td>0.2234</td><td>7.441%</td></tr>
+        <tr><td>e6_v40_holdout_base</td><td><strong>12.491%</strong></td><td>0.525</td><td>0.2379</td><td>6.606%</td></tr>
+        <tr><td>e6_v43_holdout_taskmetric</td><td><strong>12.492%</strong></td><td>0.525</td><td>0.2381</td><td>6.601%</td></tr>
+        <tr><td>e6_v44_valcurve</td><td><strong>12.491%</strong></td><td>0.525</td><td>0.2379</td><td>6.609%</td></tr>
+      </tbody></table></div>
+
+      <p data-en="Two of the three columns wander: how well the two versions point the same way ranges from 0.52 to 0.56, and their relative size from 0.22 to 0.24. Their product does not wander at all. It sits at 12.5% on every checkpoint — one part in eight, which is one head out of eight. The reason is countable rather than statistical: pairing each head with its own share keeps the eight matching terms and drops the fifty-six that cross between heads, and the matching ones are one eighth of the total no matter what the correction learned." data-ko="세 열 중 둘은 흔들립니다 — 두 버전이 같은 방향을 얼마나 가리키는지가 0.52~0.56, 상대적 크기가 0.22~0.24 로 움직입니다. 그런데 그 곱은 전혀 흔들리지 않습니다. 모든 체크포인트에서 12.5% 에 앉아 있습니다 — 여덟 중 하나, 즉 head 여덟 개 중 하나입니다. 이유는 통계가 아니라 셈입니다. 각 head 를 자기 몫과 짝지으면 맞아떨어지는 여덟 항만 남고 head 사이를 가로지르는 쉰여섯 항이 버려지는데, 남는 여덟은 보정항이 무엇을 학습했든 전체의 8분의 1 입니다.">Two quantities wander, their product does not. One head out of eight.</p>
+
+      <div class="paper-section"><h2 data-en="Checked with corrections that were never trained" data-ko="학습한 적 없는 보정항으로 확인">Checked with untrained corrections</h2><div>
+        <pre><code>N          2        4        8        16       32
+measured   0.5015   0.2497   0.1251   0.0625   0.0312
+1/N        0.5      0.25     0.125    0.0625   0.03125
+
+head correlation  0.0 / 0.2 / 0.5 / 0.9  →  0.1250 / 0.1249 / 0.1250 / 0.1250   (unmoved)
+head scale spread σ=0 / 0.5 / 1.0 / 2.0 →  0.1248 / 0.1246 / 0.2791 / 0.0591   (breaks here)</code></pre>
+        <p data-en="So severity is predictable: the larger N, the worse. Eight heads discard 87.5%. The last line is why every checkpoint carries a measured value rather than an asserted 1/N — the invariant breaks when head scales are strongly unequal, and all nine trained checkpoints happened to be on the even side." data-ko="따라서 심각도는 예측 가능합니다 — `N` 이 클수록 나쁩니다. head 8 개면 87.5% 를 버립니다. 마지막 줄이 `1/N` 을 단언하지 않고 체크포인트마다 실측을 싣는 이유입니다 — head 크기가 크게 불균등하면 불변량이 깨지고, 학습된 체크포인트 9 개는 전부 균등 쪽이었습니다.">Severity is predictable in N — and the invariant breaks when head scales are unequal.</p>
+      </div></div>
+
+      <p class="protocol-note" data-en="This is a weight-level quantity. It does not transfer numerically to the output level — 12.5% at the weights sits alongside roughly 47% relative error at the policy output, which is a different measurement of a different thing. The next section is the output-level one." data-ko="이것은 **가중치 수준** 의 양입니다. 출력 수준으로 수치가 그대로 옮겨가지 않습니다 — 가중치의 12.5% 옆에 정책 출력의 약 47% 상대오차가 나란히 서 있고, 둘은 서로 다른 것을 재는 서로 다른 측정입니다. 다음 절이 출력 수준입니다.">A weight-level quantity. It does not transfer numerically to the output level.</p>
+    </div></section>
+
+    <!-- ─────────────────────────────────────────────────── policy level -->
+    <section id="policy-level" class="section alt"><div class="container">
+      <div class="section-head"><div>
+        <p class="section-label" data-en="Independent reproduction · policy output" data-ko="독립 재현 · 정책 출력">Independent reproduction · policy output</p>
+        <h2 data-en="Five checkpoints, and the failure is the same size in all of them." data-ko="체크포인트 다섯, 실패의 크기가 전부 같다.">Five checkpoints, one failure size.</h2>
+      </div><p data-en="The weight-level invariant says the fold discards a fixed fraction. It does not say what that does to a policy. This measures the policy: same protocol as the flow-amplification measurement, run on five checkpoints spanning two embodiments, two tasks and four training objectives." data-ko="가중치 수준 불변량은 fold 가 고정 비율을 버린다고 말하지, 그것이 정책에 무엇을 하는지는 말하지 않습니다. 이 절은 정책을 잽니다 — flow 증폭 측정과 같은 프로토콜을, 두 embodiment · 두 태스크 · 네 가지 학습 목적에 걸친 체크포인트 5 개에 걸었습니다.">The weight invariant says nothing about the policy. This measures the policy.</p></div>
+
+      <div class="evidence-badges">
+        <span class="evidence-badge code">[R] RTX A5000</span>
+        <span class="evidence-badge log" data-en="24 obs × 5 pinned noise × 4 step counts" data-ko="24 관측 × 5 고정노이즈 × 4 스텝">24 obs × 5 noise × 4 steps</span>
+        <span class="evidence-badge log">seed 20260816</span>
+        <span class="evidence-badge code">measure_flow_amplification.py</span>
+      </div>
+
+      <div class="table-scroll"><table class="flat-table"><thead><tr>
+        <th data-en="Checkpoint" data-ko="체크포인트">Checkpoint</th>
+        <th data-en="Embodiment · task" data-ko="Embodiment · 태스크">Embodiment · task</th>
+        <th>1 step</th><th>2</th><th>5</th><th>10</th>
+      </tr></thead><tbody>
+        <tr><td colspan="6" class="muted" data-en="ordinary — relative error against the runtime reference" data-ko="ordinary — runtime 기준 대비 상대오차"><strong>ordinary</strong> — relative error against the runtime reference</td></tr>
+        <tr><td>e7_grounded_v1</td><td data-en="xArm6 · book insertion" data-ko="xArm6 · 책 삽입">xArm6 · insertion</td><td>0.4767</td><td>0.4696</td><td>0.5891</td><td>0.6305</td></tr>
+        <tr><td>e7_grounded_v2</td><td data-en="xArm6 · book insertion" data-ko="xArm6 · 책 삽입">xArm6 · insertion</td><td>0.4749</td><td>0.4979</td><td>0.5833</td><td>0.6188</td></tr>
+        <tr><td>e6_v23</td><td data-en="Dobot · pick and place" data-ko="Dobot · 픽앤플레이스">Dobot · pick–place</td><td>0.4737</td><td>0.5525</td><td>0.6686</td><td>0.7064</td></tr>
+        <tr><td>e6_v36_zscore</td><td data-en="Dobot · pick and place" data-ko="Dobot · 픽앤플레이스">Dobot · pick–place</td><td>0.4619</td><td>0.5037</td><td>0.5806</td><td>0.6070</td></tr>
+        <tr><td>e6_v43_holdout</td><td data-en="Dobot · pick and place" data-ko="Dobot · 픽앤플레이스">Dobot · pick–place</td><td>0.4647</td><td>0.5008</td><td>0.5899</td><td>0.6141</td></tr>
+        <tr><td colspan="2"><strong data-en="span across five checkpoints" data-ko="다섯 체크포인트 편차">span</strong></td><td class="verdict-pass"><strong>0.015</strong></td><td>0.083</td><td>0.088</td><td>0.099</td></tr>
+      </tbody></table></div>
+
+      <div class="metrics">
+        <div class="metric"><strong>0.462 – 0.477</strong><span data-en="1-step ordinary error, all five" data-ko="1-step ordinary 오차, 다섯 전부">1-step, all five</span><small data-en="span 0.015 across two robots" data-ko="로봇 둘에 걸쳐 편차 0.015">span 0.015</small></div>
+        <div class="metric"><strong>≥ 0.99997</strong><span data-en="derived vs runtime, cosine" data-ko="derived 대 runtime, 코사인">derived vs runtime, cos</span><small data-en="every checkpoint, every step count" data-ko="모든 체크포인트, 모든 스텝">every row</small></div>
+        <div class="metric"><strong>0.0021 – 0.0080</strong><span data-en="derived relative error" data-ko="derived 상대오차">derived rel error</span><small data-en="consistent with bf16 storage" data-ko="bf16 저장과 일관">bf16-consistent</small></div>
+      </div>
+
+      <p data-en="Every checkpoint shows the same pattern: ordinary starts near 0.47 at one integration step and rises monotonically as steps increase, while derived starts small and falls. The mismatch is not accumulated linearly — it is re-introduced at every step of the iterative flow integration, so each step starts from an already-wrong state." data-ko="다섯 전부 같은 모양입니다 — ordinary 는 1 적분 스텝에서 0.47 근처에서 시작해 스텝이 늘수록 단조 증가하고, derived 는 작게 시작해 감소합니다. 오차가 단순 누적되는 것이 아니라, iterative flow integration 을 거치면서 mismatch 가 매 스텝 반복적으로 전파되며 각 스텝이 이미 틀린 상태에서 출발합니다.">Ordinary rises monotonically with integration steps; derived falls.</p>
+
+      <p class="protocol-note" data-en="What this establishes is checkpoint-independence of the policy-level failure — the same conversion defect produces the same size of policy error on checkpoints that were trained on different robots, different data and different objectives. It does not establish that the 12.5% weight-level invariant transfers to the output level. Those are two separate results measured two separate ways." data-ko="이 결과가 세우는 것은 정책 수준 실패의 **체크포인트 독립성** 입니다 — 서로 다른 로봇·데이터·목적으로 학습된 체크포인트들에서 같은 변환 결함이 같은 크기의 정책 오차를 냅니다. 가중치 수준의 12.5% 불변량이 출력 수준으로 옮겨간다는 것을 세우지는 **않습니다.** 둘은 서로 다른 방법으로 잰 서로 다른 결과입니다.">Checkpoint-independence of the policy-level failure. Not a transfer of the 1/N invariant.</p>
+    </div></section>
+
+    <!-- ─────────────────────────────────────────────────── deployment -->
+    <section id="deployment" class="section"><div class="container">
+      <div class="section-head"><div>
+        <p class="section-label" data-en="Deployment behaviour" data-ko="배포 거동">Deployment behaviour</p>
+        <h2 data-en="Everything held the same, one thing changed." data-ko="전부 똑같이 두고 하나만 바꿨다.">One thing changed.</h2>
+      </div><p data-en="Same config, same dataset, same code, same seed. Fifty inputs stratified across five action-magnitude bands, ten draws each, noise pinned per draw and shared across all three arms. Joint dims 0–5 only; the gripper is excluded." data-ko="같은 config · 데이터셋 · 코드 · 시드. action-magnitude 5 층에서 50 입력, 입력당 10 draw, 노이즈는 draw 별로 고정해 세 팔에 동일하게 투입. 관절 dims 0..5 만, 그리퍼 제외.">Fifty inputs, ten draws, noise pinned and shared across all three arms.</p></div>
+
+      <div class="table-scroll"><table class="flat-table"><thead><tr>
+        <th data-en="Trajectory recovery (median)" data-ko="궤적 복원 (중앙값)">Trajectory recovery (median)</th><th>ordinary</th><th>derived</th><th data-en="runtime (reference)" data-ko="runtime (기준)">runtime (ref)</th>
+      </tr></thead><tbody>
+        <tr><td data-en="1 step" data-ko="1 스텝">1 step</td><td class="verdict-fail">0.443</td><td class="verdict-pass"><strong>0.806</strong></td><td>0.807</td></tr>
+        <tr><td data-en="8 steps" data-ko="8 스텝">8 steps</td><td class="verdict-fail">0.398</td><td class="verdict-pass"><strong>0.850</strong></td><td>0.850</td></tr>
+        <tr><td data-en="16 steps" data-ko="16 스텝"><strong>16 steps</strong></td><td class="verdict-fail"><strong>0.553</strong></td><td class="verdict-pass"><strong>0.929</strong></td><td><strong>0.929</strong></td></tr>
+      </tbody></table></div>
+
+      <div class="table-scroll"><table class="flat-table"><thead><tr>
+        <th data-en="Distribution metric" data-ko="분포 지표">Distribution metric</th><th>ordinary</th><th>derived</th><th data-en="runtime (ref)" data-ko="runtime (기준)">runtime (ref)</th><th data-en="95% CI (derived − ordinary)" data-ko="95% CI (derived − ordinary)">95% CI</th>
+      </tr></thead><tbody>
+        <tr><td data-en="Sample noise (deg)" data-ko="샘플 노이즈 (도)">Sample noise (°)</td><td>0.409</td><td><strong>0.244</strong></td><td>0.244</td><td><strong>[−0.188, −0.143]</strong></td></tr>
+        <tr><td>cosine</td><td>0.362</td><td><strong>0.612</strong></td><td>0.612</td><td><strong>[+0.155, +0.352]</strong></td></tr>
+        <tr><td data-en="Sign agreement" data-ko="부호 일치">Sign agreement</td><td>0.621</td><td><strong>0.744</strong></td><td>0.744</td><td><strong>[+0.068, +0.182]</strong></td></tr>
+        <tr><td data-en="Bias (deg)" data-ko="편향 (도)">Bias (°)</td><td>0.366</td><td><strong>0.234</strong></td><td>0.234</td><td><strong>[−0.164, −0.103]</strong></td></tr>
+      </tbody></table></div>
+      <p data-en="Paired bootstrap, B = 10,000. All four confidence intervals exclude zero. Derived matches runtime to within ~1e-4 on every metric and every recovery point, and sign agreement is identical to ten digits — that is Proposition 1 in measured form: the derived fold is the same policy as leaving the adapter in the graph." data-ko="paired bootstrap, B = 10,000. 네 지표 모두 신뢰구간이 0 을 포함하지 않습니다. derived 는 모든 지표와 복원 지점에서 runtime 과 상대차 ~1e-4 이내이고 부호일치는 소수 열째 자리까지 동일합니다 — 이것이 Proposition 1 의 실측 형태입니다. 유도된 fold 는 어댑터를 그래프에 남긴 것과 같은 정책입니다.">Derived matches runtime to ~1e-4. That is Proposition 1 in measured form.</p>
+
+      <div class="paper-section"><h2 data-en="It falls apart exactly where the task is hardest" data-ko="가장 어려운 구간에서 정확히 무너진다">It falls apart where the task is hardest</h2><div>
+        <div class="table-scroll"><table class="flat-table"><thead><tr>
+          <th>phase</th><th>n</th><th>ordinary</th><th>derived</th><th>runtime</th>
+        </tr></thead><tbody>
+          <tr><td>approach</td><td>10</td><td>0.333</td><td><strong>0.977</strong></td><td>0.977</td></tr>
+          <tr><td>lift</td><td>7</td><td>0.842</td><td><strong>0.979</strong></td><td>0.979</td></tr>
+          <tr><td>carry</td><td>16</td><td>0.436</td><td><strong>0.872</strong></td><td>0.872</td></tr>
+          <tr><td><strong>insert</strong></td><td>6</td><td class="verdict-fail"><strong>0.007</strong></td><td class="verdict-pass"><strong>0.688</strong></td><td>0.686</td></tr>
+          <tr><td>release</td><td>11</td><td>0.896</td><td><strong>0.965</strong></td><td>0.965</td></tr>
+        </tbody></table></div>
+        <p data-en="cos 0.007 in the insertion means the defective arm’s direction is effectively uncorrelated with the demonstration. Derived restores the reference there (0.688 against 0.686). The insertion is the phase with the tightest tolerance and the one where a wrong direction pushes a book into a shelf edge." data-ko="삽입 구간의 cos 0.007 은 결함 팔의 방향이 시연과 사실상 무상관이라는 뜻입니다. derived 는 그 구간에서 기준을 복원합니다(0.688 대 0.686). 삽입은 공차가 가장 좁은 구간이고, 방향이 틀리면 책을 책장 모서리로 밀어넣는 구간입니다.">In the insertion, the defective arm is uncorrelated with the demonstration.</p>
+        <p class="protocol-note" data-en="Phase labels here are not the converter’s — the parquet carries no phase, so they were derived from the gripper channel (first and last close crossings), and the rule is written into the conditions JSON. n = 6 for insert and 7 for lift, so the per-phase numbers are read for direction only, without intervals." data-ko="여기의 phase 라벨은 변환기 것이 아닙니다 — parquet 에 phase 가 없어 그리퍼 채널(닫힘 최초/최후 교차)에서 유도했고, 규칙은 조건 JSON 에 명시했습니다. insert n = 6, lift n = 7 로 층이 얕아 phase 별 값은 구간 없이 방향만 읽습니다.">Phase labels were derived from the gripper channel; n is small, so read direction only.</p>
+      </div></div>
+    </div></section>
+
+    <!-- ─────────────────────────────────────────────────── external -->
+    <section id="external" class="section alt"><div class="container">
+      <div class="section-head"><div>
+        <p class="section-label" data-en="Checked against other projects" data-ko="다른 프로젝트로 대조">Checked against other projects</p>
+        <h2 data-en="The same layer, written three ways, and only one of them breaks." data-ko="같은 층을 세 가지로 썼는데, 하나만 무너진다.">The same layer, three ways.</h2>
+      </div><p data-en="The fifteen test cases were written by the same person who wrote the rule, so they cannot say whether the rule describes something real or just describes this codebase. The way to find out is to take layers other teams published, leave them exactly as they are, and see whether the rule predicts which ones survive being baked. The rule was fixed before any of them were opened." data-ko="테스트 15 개는 규칙을 쓴 사람이 직접 만든 것이라, 그 규칙이 실재하는 무언가를 서술하는지 이 코드베이스만 서술하는지를 가르지 못합니다. 알아보는 방법은 다른 팀이 배포한 층을 그대로 가져와, 굽는 것을 견디는지를 규칙이 미리 맞히는지 보는 것입니다. 규칙은 그 층들을 열어보기 전에 확정돼 있었습니다.">Fifteen self-written tests cannot say whether the rule describes something real.</p></div>
+
+      <div class="table-scroll"><table class="flat-table"><thead><tr>
+        <th data-en="Project" data-ko="프로젝트">Project</th>
+        <th data-en="How it writes the correction" data-ko="보정항을 쓰는 방식">How it writes the correction</th>
+        <th data-en="Rule predicts" data-ko="규칙의 예측">Rule predicts</th>
+        <th data-en="Baking it in" data-ko="구워 넣으면">Baking it in</th>
+      </tr></thead><tbody>
+        <tr><td><strong>openpi</strong></td><td data-en="Reuses the layer’s own label for the head axis, so the axis survives into the second half" data-ko="head 축 라벨을 층 것 그대로 재사용해서, 그 축이 후반부까지 살아남음">Reuses the head label</td><td class="verdict-fail" data-en="unsafe" data-ko="위험">unsafe</td><td class="verdict-fail" data-en="breaks — off by 62%" data-ko="무너짐 — 62% 어긋남">breaks, 62%</td></tr>
+        <tr><td><strong>gemma</strong></td><td data-en="Gives the correction its own separate label" data-ko="보정항에 별도 라벨을 부여">Separate label</td><td class="verdict-pass" data-en="safe" data-ko="안전">safe</td><td class="verdict-pass" data-en="exact" data-ko="정확">exact</td></tr>
+        <tr><td><strong>axlearn</strong></td><td data-en="Folds both head axes away in the first half" data-ko="전반부에서 head 축 둘을 흡수">Absorbs both axes early</td><td class="verdict-pass" data-en="safe" data-ko="안전">safe</td><td class="verdict-pass" data-en="exact" data-ko="정확">exact</td></tr>
+      </tbody></table></div>
+      <p data-en="These three are the same layer doing the same job — the part of attention that merges the eight streams back into one. At the level of the layer itself the three projects describe it identically, character for character. What differs is only how each one attached the trained correction to it, and that is what decides whether baking is safe. It is not a property of the layer. It is a property of how the correction was written." data-ko="이 셋은 같은 일을 하는 같은 층입니다 — attention 의 여덟 갈래를 하나로 합치는 부분입니다. 층 자체의 수준에서는 세 프로젝트의 서술이 문자 단위로 동일합니다. 다른 것은 각자가 학습된 보정항을 거기에 어떻게 붙였는가 하나뿐이고, 그것이 굽는 것이 안전한지를 정합니다. 층의 성질이 아닙니다. 보정항을 어떻게 썼는지의 성질입니다.">The three describe the layer identically. Only the correction differs — and that is what decides safety.</p>
+
+      <p data-en="Three more layers were scored the same way, including openpi’s own query projection. That one matters most: same file, same convention, and it is safe. The defect is not openpi’s convention in general — it is that convention meeting this particular layer. Across three projects and six layers the rule and the measurement never disagreed." data-ko="같은 방식으로 세 층을 더 채점했고, 그 중에 openpi 자신의 query 투영이 있습니다. 그것이 가장 중요합니다 — 같은 파일, 같은 관례인데 안전합니다. 결함은 openpi 의 관례 전체가 아니라 그 관례와 이 특정 층의 만남입니다. 세 프로젝트 여섯 층에서 규칙과 측정이 한 번도 어긋나지 않았습니다.">Same file, same convention, and the query projection is safe.</p>
+
+      <div class="evidence-claim">
+        <p data-en="Across the public projects in this family, no one had a working reference for baking these corrections in. The ones that never tried simply avoided the problem. Exactly one public implementation tried, and it is the one that breaks. That is the honest denominator — not “this is a rare risk”, but “only one project actually attempted it”." data-ko="이 계열의 공개 프로젝트 중에 이 보정항을 구워 넣는 동작하는 참조 구현이 아무도 없었습니다. 시도하지 않은 쪽은 문제를 피해간 것입니다. 시도한 공개 구현은 정확히 하나이고, 무너지는 것이 그 하나입니다. 그것이 정직한 분모입니다 — “드문 위험이다” 가 아니라 “실제로 시도한 프로젝트가 하나뿐이었다” 입니다.">Exactly one public implementation tried, and it is the one that breaks.</p>
+      </div>
+
+      <p class="protocol-note" data-en="Stated carefully: for the other projects, the way the correction runs is theirs, but the baking is this work’s — we derived and implemented it, then scored it against their behaviour. And gemma does not bake anything, so it has no obligation to keep this property. The problem is that the condition anyone baking must rely on is not written down anywhere in the source, so an upstream change would give no warning." data-ko="조심스럽게 적자면 — 다른 프로젝트의 경우 보정항이 **도는** 방식은 그쪽 것이지만 **굽는** 것은 본 연구 것입니다. 우리가 유도해 구현한 뒤 그쪽 거동을 기준으로 채점했습니다. 그리고 gemma 는 아무것도 굽지 않으므로 이 성질을 지킬 의무가 없습니다. 문제는 굽는 쪽이 의존해야 하는 조건이 소스 어디에도 적혀 있지 않아서, 상류가 바뀌어도 경고가 없다는 것입니다.">The running is theirs; the baking is ours. And nothing in the source records the condition.</p>
+    </div></section>
+
+    <section id="gates" class="section"><div class="container">
+      <div class="section-head"><div>
+        <p class="section-label" data-en="Gate status" data-ko="게이트 현황">Gate status</p>
+        <h2 data-en="What is closed, and by what." data-ko="무엇이 닫혔고, 무엇으로 닫혔나.">What is closed, and by what.</h2>
+      </div><p data-en="Hardware tags are load-bearing. [R] is the RTX A5000, used for conversion and numerical validation only. [J] is the Jetson AGX Orin, used for deployment and the robot only. Latency numbers from the two are never mixed." data-ko="하드웨어 태그는 장식이 아닙니다. [R] 은 RTX A5000 으로 변환·수치 검증 전용이고, [J] 는 Jetson AGX Orin 으로 배포·로봇 전용입니다. 두 기계의 지연 수치는 절대 섞지 않습니다.">[R] converts and validates. [J] deploys. Their latency numbers never mix.</p></div>
+
+      <div class="table-scroll"><table class="flat-table"><thead><tr>
+        <th></th><th data-en="Gate" data-ko="게이트">Gate</th><th data-en="Status" data-ko="상태">Status</th><th data-en="Evidence" data-ko="근거">Evidence</th>
+      </tr></thead><tbody>
+        <tr><td>①</td><td data-en="Causality of the defect" data-ko="결함 인과성">Causality</td><td class="verdict-pass">closed</td><td data-en="One checkpoint split two ways, bundle as the only variable" data-ko="한 체크포인트를 두 갈래로, 변수는 번들 하나">bundle-only paired</td></tr>
+        <tr><td>②</td><td data-en="Mathematical cause" data-ko="수학적 원인">Mathematical cause</td><td class="verdict-pass">closed</td><td>Proposition 1 + Corollary 1</td></tr>
+        <tr><td>③</td><td data-en="General remedy" data-ko="일반 해법">General remedy</td><td class="verdict-pass">closed</td><td data-en="Zero operator names in the converter" data-ko="변환기에 연산자 이름 0 개">no operator names</td></tr>
+        <tr><td>④</td><td data-en="Correctness guarantee" data-ko="정확성 보장">Correctness</td><td class="verdict-pass">closed</td><td>2,160 + 2,700 cases + A3 negative test</td></tr>
+        <tr><td>⑤a</td><td data-en="Generality, internal" data-ko="일반성 (내부)">Generality (internal)</td><td class="verdict-pass">closed</td><td data-en="15 topologies, 4 orphan sets, 9 of them outside openpi" data-ko="topology 15, orphan set 4, 그 중 9 개가 openpi 밖">15 topologies</td></tr>
+        <tr><td>⑤b</td><td data-en="Generality, external" data-ko="일반성 (외부)">Generality (external)</td><td class="verdict-pass">closed</td><td data-en="3 projects, 6 lowerings, zero disagreements" data-ko="3 프로젝트 6 lowering, 불일치 0">6 lowerings, 0 disagreements</td></tr>
+        <tr><td>⑥a</td><td data-en="Physical, existing checkpoints" data-ko="실기 (기존 ckpt)">Physical (existing ckpt)</td><td class="verdict-partial">partial</td><td data-en="Two existence statements survive the audit; run→hash mapping unresolved" data-ko="감사 후 존재 진술 2 건만 생존. run→해시 매핑 미확정">2 existence statements</td></tr>
+        <tr><td>⑥b</td><td data-en="Independent reproduction" data-ko="독립 재현">Independent reproduction</td><td class="verdict-pass">closed</td><td data-en="9 checkpoints at the weights, 5 at the policy output" data-ko="가중치 9 개, 정책 출력 5 개">9 weight · 5 policy</td></tr>
+        <tr><td>⑦</td><td data-en="Comparison with alternatives" data-ko="대안 대비">Alternatives</td><td class="verdict-pass">closed</td><td data-en="Table 1 plus the external table" data-ko="Table 1 + 외부 표">Table 1 + external</td></tr>
+        <tr><td>⑧</td><td data-en="Cost" data-ko="비용">Cost</td><td class="verdict-pass">closed</td><td>[R] −12.71 ms (−7.2%) · [J] −144.7 ms (−4.9%)</td></tr>
+      </tbody></table></div>
+
+      <div class="paper-section"><h2 data-en="What the gates catch, by defect variant" data-ko="결함 변종별 포착 지점">What the gates catch</h2><div>
+        <div class="table-scroll"><table class="flat-table"><thead><tr>
+          <th data-en="Defect variant" data-ko="결함 변종">Defect variant</th><th data-en="Caught where" data-ko="어디서 잡히나">Caught where</th><th data-en="What bypassing it takes" data-ko="우회에 필요한 것">Bypass cost</th>
+        </tr></thead><tbody>
+          <tr><td data-en="Ordinary fold substituted back in" data-ko="ordinary fold 로 되돌림">Ordinary fold</td><td data-en="the parity check during conversion" data-ko="변환 중 대조 검사">the parity check</td><td data-en="one line, to disable the gate" data-ko="게이트 우회 1 줄">1 line</td></tr>
+          <tr><td data-en="Checkpoint with no adapter at all" data-ko="어댑터가 통째로 빠진 체크포인트">No adapter present</td><td data-en="the parity check during conversion" data-ko="변환 중 대조 검사">the parity check</td><td data-en="disable the gate" data-ko="게이트 우회">disable the gate</td></tr>
+          <tr><td data-en="Weight corrupted or truncated after merge" data-ko="병합 후 weight 손상·절단">Corrupted weights</td><td data-en="the file fingerprint recorded at export" data-ko="내보낼 때 기록한 파일 지문">the file fingerprint</td><td data-en="recompute the hash" data-ko="해시 재계산">recompute</td></tr>
+          <tr><td data-en="Runtime bundle mislabelled as merged" data-ko="runtime 번들을 merged 로 오표기">Mislabelled runtime bundle</td><td data-en="reading the state off the file itself" data-ko="파일 자체에서 상태를 읽음">reading the file itself</td><td data-en="actually deleting the extra tensors, not just relabelling" data-ko="이름만 바꾸는 게 아니라 여분 텐서를 실제로 지워야">delete them, not relabel</td></tr>
+          <tr><td data-en="Fold rule unknown (pre-stamp bundle)" data-ko="fold 규칙 미상 (스탬프 이전 번들)">Fold rule unknown</td><td data-en="the same reader, which refuses when it cannot tell" data-ko="같은 판독기 — 판별 불가면 거부">the same reader, refusing</td><td data-en="an explicit override, marked in the record as asserted rather than measured" data-ko="명시적 override — 기록에 “측정이 아니라 주장” 으로 남음">an explicit override</td></tr>
+        </tbody></table></div>
+        <p data-en="The last two rows are variants that actually happened. A claim does not beat evidence — telling the tool that a bundle was baked correctly does not make it agree, because it can see the unbaked correction still sitting in the file. The override opens only when there is genuinely nothing left to read." data-ko="마지막 두 행은 실제로 겪은 변종입니다. **주장이 증거를 이기지 못합니다** — 도구에게 “이 번들은 제대로 구웠다” 고 말해도 동의하지 않습니다. 굽지 않은 보정항이 파일 안에 그대로 앉아 있는 것이 보이기 때문입니다. override 는 정말로 읽을 것이 남아 있지 않을 때만 열립니다.">A claim does not beat evidence. The escape hatch opens only when there is none to read.</p>
+      </div></div>
+    </div></section>
+
+    <!-- ─────────────────────────────────────────────────── withdrawn -->
+    <section id="withdrawn" class="section alt"><div class="container">
+      <div class="section-head"><div>
+        <p class="section-label" data-en="Withdrawn" data-ko="철회">Withdrawn</p>
+        <h2 data-en="Claims that did not survive, and why." data-ko="살아남지 못한 주장과 그 이유.">Claims that did not survive.</h2>
+      </div><p data-en="Kept because several of them are the reason the current design has the shape it does, and because a measurement that cannot be reproduced is not a result no matter which direction it pointed. None of these belong in a paper." data-ko="남겨두는 이유는 몇 개가 지금 설계가 이 모양인 이유이기도 하고, 재현할 수 없는 측정은 어느 방향을 가리켰든 결과가 아니기 때문입니다. 이 중 무엇도 논문에 들어가지 않습니다.">A measurement that cannot be reproduced is not a result, whichever way it pointed.</p></div>
+
+      <div class="table-scroll"><table class="flat-table"><thead><tr>
+        <th data-en="Claim" data-ko="주장">Claim</th><th data-en="What was actually true" data-ko="실제">What was actually true</th><th data-en="Tag" data-ko="태그">Tag</th>
+      </tr></thead><tbody>
+        <tr><td data-en="Physical envelope 1.2% → 100% (“98.8% out of distribution”)" data-ko="실기 봉투 1.2% → 100% (“98.8% 가 분포 밖”)">Envelope 1.2% → 100%</td><td data-en="Survivorship bias — runs aborted for safety left no file, so the denominator is undefined. The metric does not even separate bundles: merged bundles had departing runs too, and one defective run was 100% inside for all 17,058 frames." data-ko="생존 편향 — 위험 사유로 중단된 시도는 파일이 없어 분모가 정의되지 않습니다. 게다가 이 지표는 번들을 가르지도 못합니다 — 병합 번들에도 이탈 run 이 있었고, 결함 쪽 run3 은 17,058 프레임 내내 100% 안이었습니다.">no denominator</td><td>[J]</td></tr>
+        <tr><td data-en="Physical grasp distance 547.6 → 3.6 mm" data-ko="실기 파지점 547.6 → 3.6 mm">Grasp 547.6 → 3.6 mm</td><td data-en="Three left-tail values quoted out of twenty under the same condition; the median is 593 mm. The metric is also confounded: the anchor sits 96.7 mm from the grasp point, so an arm that simply stops at the anchor records “~97 mm”." data-ko="동일 조건 20 개 중 왼쪽 끝 셋만 인용했고 중앙값은 593 mm 입니다. 지표 자체도 교락돼 있습니다 — 앵커가 파지점에서 96.7 mm 라, 팔이 앵커에 멈춰 있기만 해도 “~97 mm” 로 기록됩니다.">left tail only</td><td>[J]</td></tr>
+        <tr><td data-en="Flow amplification 0.276 → 1.602 (×5.8)" data-ko="flow 증폭 0.276 → 1.602 (×5.8)">Flow amp ×5.8</td><td data-en="Conditions were never recorded, so it could not be reproduced. Re-measured with a conditions JSON: 0.4767 → 0.6305, ×1.32. Direction identical, magnitude different. E6’s 1.144 → 2.010 is withdrawn for the same reason." data-ko="산출 조건이 기록되지 않아 재현 불가였습니다. 조건 JSON 을 붙여 재측정: 0.4767 → 0.6305, ×1.32. 방향은 같고 배율이 다릅니다. E6 의 1.144 → 2.010 도 같은 이유로 철회합니다.">×1.32 on re-measure</td><td>[R]</td></tr>
+        <tr><td data-en="Paired cos 0.727 → 0.899, insert +0.359 → +0.955" data-ko="paired cos 0.727 → 0.899, insert +0.359 → +0.955">Paired cos 0.727 → 0.899</td><td data-en="The producing script did not exist. Replaced by a recorded re-measurement: 0.553 → 0.929, insert 0.007 → 0.688. The old measurement had no runtime reference arm, so it could say how good merging was but not whether it matched the reference." data-ko="산출 스크립트가 존재하지 않았습니다. 조건을 기록한 재측정으로 대체 — 0.553 → 0.929, insert 0.007 → 0.688. 구 측정은 runtime 기준 팔이 없어 “병합이 얼마나 좋은가” 만 말할 수 있었고 “기준과 같은가” 는 말할 수 없었습니다.">no reference arm</td><td>[P]</td></tr>
+        <tr><td data-en="Unreachable weights 1.58 GB / 21.84%" data-ko="도달불가 1.58 GB / 21.84%">Unreachable 21.84%</td><td data-en="The largest block counted as unused was the word-embedding table, which the model stores once and refers to twice under different names. Counting by name double-counted it. Counting by where the bytes actually live: 7.28%, and it is one tensor." data-ko="미사용으로 잡힌 가장 큰 덩어리는 단어 임베딩 테이블이었는데, 모델이 한 번 저장하고 두 이름으로 참조하는 것입니다. 이름 단위로 세면 두 번 세어집니다. 바이트가 실제로 어디 있는지로 세면 7.28%, 텐서 하나입니다.">7.28% corrected</td><td>[R]</td></tr>
+        <tr><td data-en="The latency difference is “within the sd”" data-ko="지연 차이가 “sd 안”">“within the sd”</td><td data-en="Wrong statistic — it compared the per-call sd (≈2 ms) with a difference of means. At n = 500 the SE of the mean is ≈0.1 ms, giving t = 6.1. The difference resolves; it is also +0.45% and confounded with clock drift, so it stays uninterpreted." data-ko="잘못된 통계입니다 — 개별 호출 sd(≈2 ms) 와 **평균의** 차이를 비교했습니다. n = 500 에서 평균의 SE 는 ≈0.1 ms 이므로 t = 6.1 입니다. 분해는 되지만 +0.45% 이고 클럭 드리프트와 교락돼 있어 해석하지 않습니다.">t = 6.1</td><td>[R]</td></tr>
+        <tr><td data-en="“_fixed is a third fold state, exclude it from the rollouts”" data-ko="“_fixed 는 제3의 fold 상태 → 롤아웃에서 배제”">“_fixed is a third state”</td><td data-en="It is the runtime bundle (884 tensors), equivalent to derived at rel 0.0025 and cos 1.00000. It belongs in the corrected group, not excluded from it." data-ko="runtime 번들입니다(884 텐서). derived 와 rel 0.0025 / cos 1.00000 으로 등가이고, 배제 대상이 아니라 corrected 군에 들어갑니다.">it is runtime</td><td>[R]</td></tr>
+        <tr><td data-en="“sum_N(B) is our contribution”" data-ko="“sum_N(B) 병합식이 우리 기여”">“sum_N(B) is ours”</td><td data-en="It was already in an upstream issue. What is ours is deriving the rule from the layer’s own description rather than naming the layer, and the gate that refuses to write a bundle without it." data-ko="상류 이슈에 이미 있었습니다. 우리 것은 층을 이름으로 지목하는 대신 층 자신의 서술에서 규칙을 유도한 것, 그리고 그것 없이는 번들 쓰기를 거부하는 게이트입니다.">already upstream</td><td>—</td></tr>
+        <tr><td data-en="“27% is 1/√8 with sign cancellation”" data-ko="“27% 는 1/√8 에 부호 상쇄”">“27% is 1/√8”</td><td data-en="Right shape of argument, wrong number. What is actually fixed is the share kept — one part in eight, 12.5%. The other quantity people reach for moves around with how correlated the heads are. And the 27% is measured at the output while the 12.5% is measured at the weights; they are two different things." data-ko="논증의 모양은 옳지만 숫자가 틀렸습니다. 실제로 고정되는 것은 남는 몫 — 여덟 중 하나, 12.5% 입니다. 사람들이 흔히 집는 다른 양은 head 가 얼마나 상관돼 있는지에 따라 움직입니다. 그리고 27% 는 출력에서, 12.5% 는 가중치에서 잰 것이라 서로 다른 두 가지입니다.">1/N, not 1/√N</td><td>[R]</td></tr>
+      </tbody></table></div>
+
+      <div class="paper-section"><h2 data-en="What the physical evidence still supports" data-ko="실기 증거가 여전히 받치는 것">What the physical evidence still supports</h2><div>
+        <p data-en="The audit removed every quantitative physical claim. Two statements survive, and survive for a specific reason: when the missing data is known to be missing on the bad side — the operator stopped because it was dangerous, so the run that was cut is worse than the runs that were kept — the bias strengthens an existence statement rather than weakening it." data-ko="감사로 실기 정량 주장이 전부 사라졌습니다. 두 진술이 살아남고, 살아남는 이유가 구체적입니다 — 결측이 나쁜 쪽에 쏠려 있음을 아는 경우(위험해서 조작자가 끊었으므로 끊긴 것은 남은 것보다 나쁘다), 편향은 **존재 진술을 약화시키지 않고 강화합니다.**">When the missing data is missing on the bad side, bias strengthens an existence statement.</p>
+        <div class="table-scroll"><table class="flat-table"><thead><tr>
+          <th data-en="Statement form" data-ko="형태">Form</th><th data-en="Example" data-ko="예">Example</th><th data-en="Under this bias" data-ko="이 편향 하에서">Under this bias</th>
+        </tr></thead><tbody>
+          <tr><td data-en="Ratio" data-ko="비율">Ratio</td><td data-en="“98.8% outside the envelope”" data-ko="“98.8% 가 봉투 밖”">“98.8% outside”</td><td class="verdict-fail" data-en="invalid — no denominator" data-ko="무효 — 분모 없음">invalid</td></tr>
+          <tr><td data-en="Interval comparison" data-ko="구간 비교">Interval comparison</td><td data-en="“defective is N× worse than merged”" data-ko="“결함이 병합보다 N 배”">“N× worse”</td><td class="verdict-fail" data-en="invalid — both sides truncated" data-ko="무효 — 양쪽 다 절단">invalid</td></tr>
+          <tr><td data-en="Existence, bad side" data-ko="나쁜 쪽 존재">Existence, bad side</td><td data-en="“a rollout wound j6 to +182.8°”" data-ko="“j6 를 +182.8° 까지 감은 롤아웃이 있었다”">“wound j6 to +182.8°”</td><td class="verdict-pass" data-en="strengthened" data-ko="강화">strengthened</td></tr>
+          <tr><td data-en="Safety intervention" data-ko="안전 개입">Safety intervention</td><td data-en="“the operator repeatedly aborted for safety”" data-ko="“조작자가 안전을 이유로 반복 중단했다”">“repeatedly aborted”</td><td class="verdict-pass" data-en="strengthened" data-ko="강화">strengthened</td></tr>
+        </tbody></table></div>
+        <p class="protocol-note" data-en="Three constraints ride with those two statements: no count is given (no denominator); they are not extended to “only under the defective bundle” (two preserved runs cannot support a negative claim); and “abort” is never rendered as “fail” — the policy did not run to completion and fail, the operator stopped it. Even these two depend on a run→hash mapping that is still inferred after the fact." data-ko="두 진술에 제약 셋이 함께 갑니다 — 횟수를 적지 않고(분모 없음), “결함에서만” 으로 확장하지 않으며(보존 2 건으로 부정 진술을 받칠 수 없음), abort 를 fail 로 바꾸지 않습니다(정책이 완주해 실패한 게 아니라 조작자가 끊었습니다). 그리고 이 둘조차 run→해시 매핑이 여전히 사후 추론입니다.">No count, no “only under the defective bundle”, and abort is never rendered as fail.</p>
+      </div></div>
+    </div></section>
+
+    <!-- ─────────────────────────────────────────────────── open -->
+    <section id="open" class="section"><div class="container">
+      <div class="section-head"><div>
+        <p class="section-label" data-en="Open" data-ko="미확정">Open</p>
+        <h2 data-en="What is not settled, and what cannot be recovered." data-ko="닫히지 않은 것, 그리고 되찾을 수 없는 것.">What is not settled.</h2>
+      </div></div>
+
+      <div class="table-scroll"><table class="flat-table"><thead><tr>
+        <th data-en="Item" data-ko="항목">Item</th><th data-en="Status" data-ko="상태">Status</th>
+      </tr></thead><tbody>
+        <tr><td data-en="run → bundle mapping for the existing rollouts" data-ko="기존 롤아웃의 run → 번들 매핑">run → bundle mapping</td><td class="verdict-partial" data-en="Inferred after the fact, because boundary ⑤ was never implemented" data-ko="경계 ⑤ 미구현이라 사후 추론">inferred after the fact</td></tr>
+        <tr><td data-en="Boundary ④ — startup hash gate" data-ko="경계 ④ — 기동 해시 게이트">Boundary ④ startup gate</td><td class="verdict-fail" data-en="Not implemented on the robot side" data-ko="로봇 측 미구현">not implemented</td></tr>
+        <tr><td data-en="Boundary ⑤ — bundle hash in the rollout log" data-ko="경계 ⑤ — 롤아웃 로그의 번들 해시">Boundary ⑤ rollout logging</td><td class="verdict-fail" data-en="Not implemented" data-ko="미구현">not implemented</td></tr>
+        <tr><td data-en="Quantitative physical evidence" data-ko="실기 정량 증거">Quantitative physical evidence</td><td class="verdict-fail" data-en="None. Withdrawn in full by the audit; two existence statements remain" data-ko="없음. 감사로 전부 철회, 존재 진술 2 건만 남음">none</td></tr>
+        <tr><td data-en="Related work — nine citations unread in the original" data-ko="Related work — 원문 미확인 9 건">Related work, 9 unread</td><td class="verdict-partial" data-en="Marked ○; read or dropped before submission, never carried as-is" data-ko="`○` 표시. 투고 전에 읽거나 뺍니다. 그대로 싣지 않습니다">read or drop</td></tr>
+      </tbody></table></div>
+
+      <div class="paper-section"><h2 data-en="Not recoverable retroactively" data-ko="소급이 안 되는 것">Not recoverable retroactively</h2><div>
+        <p data-en="The run→hash mapping has logs and file mtimes as its only remaining evidence, and one more redeployment destroys it. Boundary ⑤ logging cannot be backfilled — if it is not added now, every future run has the same hole. And the fingerprint tying a bundle back to the checkpoint it came from is stamped only on conversions made after it existed. It is deliberately not written into the three older records, because doing so would be a declaration rather than a measurement." data-ko="run→해시 매핑은 로그와 파일 mtime 이 유일한 단서이고, 재배포가 한 번 더 일어나면 소실됩니다. 경계 ⑤ 로깅은 소급이 불가능합니다 — 지금 안 넣으면 앞으로의 run 도 같은 구멍입니다. 그리고 번들을 그것이 나온 체크포인트에 묶는 지문은 그 기능이 생긴 뒤의 변환본에만 찍힙니다. 기존 세 기록에 **의도적으로 소급하지 않습니다** — 그건 측정이 아니라 선언이기 때문입니다.">One more redeployment destroys the mapping. Boundary ⑤ cannot be backfilled.</p>
+      </div></div>
+
+      <p class="protocol-note" data-en="Measurement rule, applied throughout: every number carries its boundary, its hardware tag, n, the sample unit, the seed, the producing script and the commit — and the reference it is compared against, with evidence that the reference did not move. Numbers that cannot state those were re-measured or withdrawn." data-ko="전 구간에 적용한 측정 규칙 — 모든 수치는 경계, 하드웨어 태그, n, 표본 단위, 시드, 산출 스크립트, 커밋을 달고, 비교 기준과 그 기준이 이동하지 않았다는 근거를 함께 답니다. 그것을 댈 수 없는 수치는 재측정했거나 철회했습니다.">Every number carries its boundary, tag, n, seed, script, commit — and its reference.</p>
+    </div></section>
+  </main>
+
+  <footer class="site-footer"><div class="container footer-grid"><p>© 2026 Ma-VLA Research Program · Stage 3 Deployment Fidelity</p><div class="footer-links"><a href="/projects/e7-stage2-log.html">Stage 2 Log</a><a href="/projects/e7-xarm6-policy.html">Stage 2B</a><a href="/research.html" data-en="Research Program" data-ko="연구 프로그램">Research Program</a></div></div></footer>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      securityLevel: "loose",
+      theme: "base",
+      flowchart: { curve: "basis", htmlLabels: true },
+      themeVariables: {
+        primaryColor: "#eef3f1",
+        primaryTextColor: "#17211f",
+        primaryBorderColor: "#64716d",
+        lineColor: "#64716d",
+        secondaryColor: "#ffffff",
+        tertiaryColor: "#f4f0e8",
+        clusterBkg: "#f7f8f6",
+        clusterBorder: "#dce4e1",
+        fontFamily: "Pretendard Variable, Pretendard, system-ui, sans-serif"
+      }
+    });
+  </script>
+</body>
+</html>
