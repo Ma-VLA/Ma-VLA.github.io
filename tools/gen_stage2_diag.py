@@ -27,14 +27,14 @@ ROWS = [
     ("the category named",    "지시문의 카테고리", 15, False, "null"),
     ("the phase word",        "지시문의 phase 단어", 24, True, "cos +0.54"),
 ]
-W, H, L, R = 1000, 250, 210, 130
+W, H, L, R = 1000, 250, 210, 215
 PW = W - L - R
 o = [f'<svg class="vz" viewBox="0 0 {W} {H}" role="img" xmlns="http://www.w3.org/2000/svg" '
      f'aria-label="Which interventions moved the arm along its own destination axis, out of thirty held-out episodes">']
 o.append(f'<text class="vz-title" x="16" y="20" '
          f'{bi("Change one thing, and see if the arm turns","하나만 바꾸고 팔이 도는지 본다")}>'
          f'Change one thing, and see if the arm turns</text>')
-o.append(f'<text class="vz-total" x="{W-R+PW*0+118}" y="20" text-anchor="end" '
+o.append(f'<text class="vz-total" x="{W-16}" y="20" text-anchor="end" '
          f'{bi("30 held-out episodes","홀드아웃 30 에피소드")}>30 held-out episodes</text>')
 TOP, ROW = 48, 40
 # 우연 수준(15/30) 기준선
@@ -51,7 +51,7 @@ for i,(en,ko,n,ok,note) in enumerate(ROWS):
              f'<title>{esc(en)} · {n} of 30</title></rect>')
     o.append(f'<text class="vz-rowlbl" x="{L-12}" y="{y+16}" text-anchor="end" {bi(en,ko)}>{esc(en)}</text>')
     o.append(f'<text class="vz-val" x="{L+PW+10}" y="{y+16}">{n}/30</text>')
-    o.append(f'<text class="vz-sub" x="{L+PW+62}" y="{y+16}" {bi(note,note)}>{esc(note)}</text>')
+    o.append(f'<text class="vz-sub" x="{L+PW+64}" y="{y+16}" {bi(note,note)}>{esc(note)}</text>')
 o.append(f'<text class="vz-note" x="16" y="{TOP+len(ROWS)*ROW+22}" '
          f'{bi("Read as a direction, not a size: the question is whether the action moves along that episode’s own destination axis. A size test on the same data cannot tell these four apart.","크기가 아니라 방향으로 읽습니다 — 행동이 그 에피소드 자신의 목적지 축을 따라 움직이는가를 묻습니다. 같은 데이터에 크기 검정을 걸면 이 넷이 구분되지 않습니다.")}>'
          f'Read as a direction, not a size — a size test cannot tell these four apart.</text>')
@@ -64,7 +64,7 @@ BY_ROLE = [("the card holding the named word","지목된 단어가 적힌 카드
            ("the card holding the other word","다른 단어가 적힌 카드",0.22615),
            ("the remaining card","나머지 카드",0.22819)]
 BY_POS  = [("left","왼쪽",0.2200), ("centre","가운데",0.2314), ("right","오른쪽",0.2234)]
-W, H, L, R = 1000, 300, 250, 120
+W, H, L, R = 1000, 318, 250, 120
 PW = W - L - R
 MAX = 0.24
 o = [f'<svg class="vz" viewBox="0 0 {W} {H}" role="img" xmlns="http://www.w3.org/2000/svg" '
@@ -82,12 +82,12 @@ def group(o, top, rows, cls, head_en, head_ko):
                  f'<title>{esc(en)} · {v:.5f}</title></rect>')
         o.append(f'<text class="vz-rowlbl" x="{L-12}" y="{y+15}" text-anchor="end" {bi(en,ko)}>{esc(en)}</text>')
         o.append(f'<text class="vz-val" x="{L+w+10:.1f}" y="{y+15}">{v:.3f}</text>')
-group(o, 48, BY_ROLE, "vz2", "by what is written on it", "무엇이 적혀 있나로 나누면")
-group(o, 168, BY_POS, "vz1", "by where it sits", "어디에 놓였나로 나누면")
-o.append(f'<text class="vz-note" x="16" y="272" '
+group(o, 66, BY_ROLE, "vz2", "by what is written on it", "무엇이 적혀 있나로 나누면")
+group(o, 186, BY_POS, "vz1", "by where it sits", "어디에 놓였나로 나누면")
+o.append(f'<text class="vz-note" x="16" y="290" '
          f'{bi("Same three cards, grouped two ways. Grouped by meaning they agree to three decimals; grouped by position the middle one moves most, in every arrangement. The query reaches the picture and moves it — by position, not by meaning.","같은 세 카드를 두 가지로 묶었습니다. 의미로 묶으면 소수점 셋째 자리까지 같고, 위치로 묶으면 어느 배치에서든 가운데가 가장 크게 움직입니다. 질의는 그림에 닿아 그것을 흔들되, 의미가 아니라 위치로 흔듭니다.")}>'
          f'Grouped by meaning they agree to three decimals; grouped by position the middle one moves most.</text>')
-o.append(f'<text class="vz-sub" x="16" y="290" '
+o.append(f'<text class="vz-sub" x="16" y="308" '
          f'{bi("Relative change in the sign view’s internal state at layer 14, 60 query pairs over 30 held-out episodes.","14층에서 간판 뷰 내부 상태의 상대 변화. 홀드아웃 30 에피소드에 질의 쌍 60개.")}>'
          f'Relative change at layer 14, 60 query pairs over 30 held-out episodes.</text>')
 o.append('</svg>')

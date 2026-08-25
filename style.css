@@ -169,12 +169,14 @@ code, pre, kbd, samp, .mono, .code-line {
 .hero-evidence span { color: var(--muted); font-size: .82rem; }
 .paper-strip { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1.5rem; }
 
-.research-flow { display: flex; flex-wrap: wrap; gap: .8rem; align-items: center; }
-/* Nodes share the row evenly and the arrows take only what they need. Was a grid with
-   a fixed seven-column template, which meant the row silently wrapped the moment a
-   fifth stage was added. The stage count is not a constant. */
-.research-flow > .research-node { flex: 1 1 11rem; min-width: 0; }
-.research-flow > .research-arrow { flex: 0 0 auto; }
+/* Was a grid with a fixed seven-column template -- four stages and three arrows, written
+   when there were four stages. A fifth stage pushed two children onto a second row and the
+   row fell apart. The stage count is not a constant, so the columns are derived from the
+   available width instead: cards keep the same width whichever row they land on, including
+   a row that is not full. The arrows were between-card decoration and cannot survive
+   wrapping, so they are dropped here; the stage labels already read as a sequence. */
+.research-flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: .8rem; align-items: stretch; }
+.research-flow > .research-arrow { display: none; }
 .research-node { min-height: 15rem; padding: 1.5rem; border-top: 3px solid var(--primary); border-bottom: 1px solid var(--line); background: var(--surface); }
 .research-node.transition { border-top-color: var(--amber); }
 .research-node.operational { border-top-color: var(--blue); }
@@ -183,7 +185,10 @@ code, pre, kbd, samp, .mono, .code-line {
 .research-node.transition .stage-state { color: var(--amber); }
 .research-node.operational .stage-state { color: var(--blue); }
 .research-node.planned .stage-state { color: var(--muted); }
+.research-node { display: flex; flex-direction: column; }
 .research-node h3 { margin-bottom: .5rem; }
+.research-node p { flex: 1 1 auto; }
+.research-node .text-link { margin-top: 1rem; }
 .research-node p { color: var(--muted); }
 .research-arrow { color: var(--primary); font-size: 1.8rem; font-weight: 900; }
 .muted-stage { background: var(--surface-2); }
@@ -478,7 +483,7 @@ summary { padding: 1rem 1.15rem; cursor: pointer; font-family: var(--font-displa
   .lineage-card::after { display: none; }
   .card-grid.three { grid-template-columns: repeat(2, 1fr); }
   .figure-grid, .comparison { grid-template-columns: 1fr; }
-  .research-flow { flex-direction: column; align-items: stretch; }
+  .research-flow { grid-template-columns: 1fr; }
   .research-arrow { transform: rotate(90deg); text-align: center; }
   .architecture-chain { grid-template-columns: repeat(3, 1fr); }
   .architecture-step:nth-child(3) { border-right: 0; }

@@ -1,31 +1,31 @@
-<svg class="vz" viewBox="0 0 1000 300" role="img" xmlns="http://www.w3.org/2000/svg" aria-label="When the instruction names a different category, all three cards are disturbed alike; what separates them is position">
+<svg class="vz" viewBox="0 0 1000 318" role="img" xmlns="http://www.w3.org/2000/svg" aria-label="When the instruction names a different category, all three cards are disturbed alike; what separates them is position">
 <text class="vz-title" x="16" y="20" data-en="Name a different category, and see which card reacts" data-ko="다른 카테고리를 지목하고 어느 카드가 반응하는지 본다">Name a different category, and see which card reacts</text>
-<text class="vz-lbl" x="16" y="40" data-en="by what is written on it" data-ko="무엇이 적혀 있나로 나누면">by what is written on it</text>
-<rect class="vz-track" x="250" y="48" width="630" height="20" rx="4"/>
-<rect class="vz-seg vz2" x="250" y="48" width="578.6" height="20" rx="4"><title>the card holding the named word · 0.22042</title></rect>
-<text class="vz-rowlbl" x="238" y="63" text-anchor="end" data-en="the card holding the named word" data-ko="지목된 단어가 적힌 카드">the card holding the named word</text>
-<text class="vz-val" x="838.6" y="63">0.220</text>
-<rect class="vz-track" x="250" y="78" width="630" height="20" rx="4"/>
-<rect class="vz-seg vz2" x="250" y="78" width="593.6" height="20" rx="4"><title>the card holding the other word · 0.22615</title></rect>
-<text class="vz-rowlbl" x="238" y="93" text-anchor="end" data-en="the card holding the other word" data-ko="다른 단어가 적힌 카드">the card holding the other word</text>
-<text class="vz-val" x="853.6" y="93">0.226</text>
-<rect class="vz-track" x="250" y="108" width="630" height="20" rx="4"/>
-<rect class="vz-seg vz2" x="250" y="108" width="599.0" height="20" rx="4"><title>the remaining card · 0.22819</title></rect>
-<text class="vz-rowlbl" x="238" y="123" text-anchor="end" data-en="the remaining card" data-ko="나머지 카드">the remaining card</text>
-<text class="vz-val" x="859.0" y="123">0.228</text>
-<text class="vz-lbl" x="16" y="160" data-en="by where it sits" data-ko="어디에 놓였나로 나누면">by where it sits</text>
-<rect class="vz-track" x="250" y="168" width="630" height="20" rx="4"/>
-<rect class="vz-seg vz1" x="250" y="168" width="577.5" height="20" rx="4"><title>left · 0.22000</title></rect>
-<text class="vz-rowlbl" x="238" y="183" text-anchor="end" data-en="left" data-ko="왼쪽">left</text>
-<text class="vz-val" x="837.5" y="183">0.220</text>
-<rect class="vz-track" x="250" y="198" width="630" height="20" rx="4"/>
-<rect class="vz-seg vz1" x="250" y="198" width="607.4" height="20" rx="4"><title>centre · 0.23140</title></rect>
-<text class="vz-rowlbl" x="238" y="213" text-anchor="end" data-en="centre" data-ko="가운데">centre</text>
-<text class="vz-val" x="867.4" y="213">0.231</text>
-<rect class="vz-track" x="250" y="228" width="630" height="20" rx="4"/>
-<rect class="vz-seg vz1" x="250" y="228" width="586.4" height="20" rx="4"><title>right · 0.22340</title></rect>
-<text class="vz-rowlbl" x="238" y="243" text-anchor="end" data-en="right" data-ko="오른쪽">right</text>
-<text class="vz-val" x="846.4" y="243">0.223</text>
-<text class="vz-note" x="16" y="272" data-en="Same three cards, grouped two ways. Grouped by meaning they agree to three decimals; grouped by position the middle one moves most, in every arrangement. The query reaches the picture and moves it — by position, not by meaning." data-ko="같은 세 카드를 두 가지로 묶었습니다. 의미로 묶으면 소수점 셋째 자리까지 같고, 위치로 묶으면 어느 배치에서든 가운데가 가장 크게 움직입니다. 질의는 그림에 닿아 그것을 흔들되, 의미가 아니라 위치로 흔듭니다.">Grouped by meaning they agree to three decimals; grouped by position the middle one moves most.</text>
-<text class="vz-sub" x="16" y="290" data-en="Relative change in the sign view’s internal state at layer 14, 60 query pairs over 30 held-out episodes." data-ko="14층에서 간판 뷰 내부 상태의 상대 변화. 홀드아웃 30 에피소드에 질의 쌍 60개.">Relative change at layer 14, 60 query pairs over 30 held-out episodes.</text>
+<text class="vz-lbl" x="16" y="58" data-en="by what is written on it" data-ko="무엇이 적혀 있나로 나누면">by what is written on it</text>
+<rect class="vz-track" x="250" y="66" width="630" height="20" rx="4"/>
+<rect class="vz-seg vz2" x="250" y="66" width="578.6" height="20" rx="4"><title>the card holding the named word · 0.22042</title></rect>
+<text class="vz-rowlbl" x="238" y="81" text-anchor="end" data-en="the card holding the named word" data-ko="지목된 단어가 적힌 카드">the card holding the named word</text>
+<text class="vz-val" x="838.6" y="81">0.220</text>
+<rect class="vz-track" x="250" y="96" width="630" height="20" rx="4"/>
+<rect class="vz-seg vz2" x="250" y="96" width="593.6" height="20" rx="4"><title>the card holding the other word · 0.22615</title></rect>
+<text class="vz-rowlbl" x="238" y="111" text-anchor="end" data-en="the card holding the other word" data-ko="다른 단어가 적힌 카드">the card holding the other word</text>
+<text class="vz-val" x="853.6" y="111">0.226</text>
+<rect class="vz-track" x="250" y="126" width="630" height="20" rx="4"/>
+<rect class="vz-seg vz2" x="250" y="126" width="599.0" height="20" rx="4"><title>the remaining card · 0.22819</title></rect>
+<text class="vz-rowlbl" x="238" y="141" text-anchor="end" data-en="the remaining card" data-ko="나머지 카드">the remaining card</text>
+<text class="vz-val" x="859.0" y="141">0.228</text>
+<text class="vz-lbl" x="16" y="178" data-en="by where it sits" data-ko="어디에 놓였나로 나누면">by where it sits</text>
+<rect class="vz-track" x="250" y="186" width="630" height="20" rx="4"/>
+<rect class="vz-seg vz1" x="250" y="186" width="577.5" height="20" rx="4"><title>left · 0.22000</title></rect>
+<text class="vz-rowlbl" x="238" y="201" text-anchor="end" data-en="left" data-ko="왼쪽">left</text>
+<text class="vz-val" x="837.5" y="201">0.220</text>
+<rect class="vz-track" x="250" y="216" width="630" height="20" rx="4"/>
+<rect class="vz-seg vz1" x="250" y="216" width="607.4" height="20" rx="4"><title>centre · 0.23140</title></rect>
+<text class="vz-rowlbl" x="238" y="231" text-anchor="end" data-en="centre" data-ko="가운데">centre</text>
+<text class="vz-val" x="867.4" y="231">0.231</text>
+<rect class="vz-track" x="250" y="246" width="630" height="20" rx="4"/>
+<rect class="vz-seg vz1" x="250" y="246" width="586.4" height="20" rx="4"><title>right · 0.22340</title></rect>
+<text class="vz-rowlbl" x="238" y="261" text-anchor="end" data-en="right" data-ko="오른쪽">right</text>
+<text class="vz-val" x="846.4" y="261">0.223</text>
+<text class="vz-note" x="16" y="290" data-en="Same three cards, grouped two ways. Grouped by meaning they agree to three decimals; grouped by position the middle one moves most, in every arrangement. The query reaches the picture and moves it — by position, not by meaning." data-ko="같은 세 카드를 두 가지로 묶었습니다. 의미로 묶으면 소수점 셋째 자리까지 같고, 위치로 묶으면 어느 배치에서든 가운데가 가장 크게 움직입니다. 질의는 그림에 닿아 그것을 흔들되, 의미가 아니라 위치로 흔듭니다.">Grouped by meaning they agree to three decimals; grouped by position the middle one moves most.</text>
+<text class="vz-sub" x="16" y="308" data-en="Relative change in the sign view’s internal state at layer 14, 60 query pairs over 30 held-out episodes." data-ko="14층에서 간판 뷰 내부 상태의 상대 변화. 홀드아웃 30 에피소드에 질의 쌍 60개.">Relative change at layer 14, 60 query pairs over 30 held-out episodes.</text>
 </svg>
