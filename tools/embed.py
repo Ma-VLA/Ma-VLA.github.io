@@ -30,6 +30,8 @@ TARGETS = [
     ("b_prompt.svg", "projects/e7-xarm6-policy.html", "Prompt token cost"),
     ("c_wrap.svg", "projects/e7-xarm6-policy.html", "One wrapped frame"),
     ("d_timing.svg", "projects/e7-xarm6-policy.html", "A 16-step chunk"),
+    ("f_interventions.svg", "projects/e7-stage2-log.html", "Which interventions moved the arm"),
+    ("g_selectivity.svg", "projects/e7-stage2-log.html", "When the instruction names a different"),
 ]
 
 

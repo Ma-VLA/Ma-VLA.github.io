@@ -231,9 +231,9 @@
 <text class="vz-sub" x="910" y="143" text-anchor="end">19.1%</text>
 <text class="vz-val" x="82" y="168" text-anchor="end">j5</text>
 <rect class="vz-track" x="92" y="156" width="756.0" height="16" rx="3"/>
-<rect class="vz-seg vz1" x="92" y="156" width="756.0" height="16" rx="3"><title>j5 · 0.13174 · 21.9% of the real-dimension loss</title></rect>
+<rect class="vz-seg vz1" x="92" y="156" width="756.0" height="16" rx="3"><title>j5 · 0.13174 · 25.7% of the real-dimension loss</title></rect>
 <text class="vz-in" x="840.0" y="168" text-anchor="end">0.13174</text>
-<text class="vz-flag" x="910" y="168" text-anchor="end">21.9%</text>
+<text class="vz-flag" x="910" y="168" text-anchor="end">25.7%</text>
 <text class="vz-rowlbl" x="82" y="193" text-anchor="end">j6</text>
 <rect class="vz-track" x="92" y="181" width="756.0" height="16" rx="3"/>
 <rect class="vz-seg vz1 vz-dim" x="92" y="181" width="250.1" height="16" rx="3"><title>j6 · 0.04359 · 8.5% of the real-dimension loss</title></rect>
@@ -248,11 +248,11 @@
 <line class="vz-grid" x1="46" y1="238" x2="910" y2="238"/>
 <text class="vz-rowlbl" x="82" y="257" text-anchor="end" data-en="25 pad" data-ko="패딩 25">25 pad</text>
 <rect class="vz-track" x="92" y="245" width="756.0" height="16" rx="3"/>
-<rect class="vz-seg vz2" x="92" y="245" width="1.5" height="16" rx="3"><title>25 padding dimensions · mean 0.00016 each · 0.00399 in total</title></rect>
-<text class="vz-sub" x="101.5" y="257">0.00016 each</text>
-<text class="vz-flag" x="910" y="257" text-anchor="end">0.78% of all</text>
-<text class="vz-note" x="16" y="290" data-en="The action space is 32 wide and the robot has 7 dimensions. The 25 padding dimensions carry 0.78% of the reported loss — the real dimensions average 453 times more — so the padding is close to free and replacing the head with a native 7-dimensional one has almost nothing to recover." data-ko="액션 공간은 32차원이고 로봇은 7차원이다. 패딩 25차원이 보고된 loss의 0.78%를 차지하고 실제 차원은 평균 453배 크다 — 즉 패딩은 사실상 공짜이고, 헤드를 native 7차원으로 교체해도 되찾을 게 거의 없다.">The 25 padding dimensions carry 0.78% of the loss; the real dimensions average 453× more.</text>
-<text class="vz-note" x="16" y="308" data-en="j5 carries 21.9% of the real-dimension loss, second only to the binary suction channel at 23.2%. The task and collection procedure left it nearly static, and the normalizer divides it by a range 13.4 times narrower than the other joints." data-ko="j5는 실제 차원 loss의 21.9%로, 이진 흡착 채널 23.2% 다음입니다. 작업과 수집 절차가 이 관절을 거의 정지 상태로 만들었고, 정규화는 다른 관절보다 13.4배 좁은 범위로 나눕니다.">j5 carries 21.9%, second to the suction channel at 23.2%; the task left it nearly static.</text>
+<rect class="vz-seg vz2" x="92" y="245" width="1.5" height="16" rx="3"><title>25 padding dimensions · mean 0.00019 each · 0.00478 in total</title></rect>
+<text class="vz-sub" x="101.5" y="257">0.00019 each</text>
+<text class="vz-flag" x="910" y="257" text-anchor="end">0.92% of all</text>
+<text class="vz-note" x="16" y="290" data-en="The action space is 32 wide and the robot has 7 dimensions. The 25 padding dimensions carry 0.92% of the reported loss — the real dimensions average 383 times more — so the padding is close to free and replacing the head with a native 7-dimensional one has almost nothing to recover." data-ko="액션 공간은 32차원이고 로봇은 7차원이다. 패딩 25차원이 보고된 loss의 0.92%를 차지하고 실제 차원은 평균 383배 크다 — 즉 패딩은 사실상 공짜이고, 헤드를 native 7차원으로 교체해도 되찾을 게 거의 없다.">The 25 padding dimensions carry 0.92% of the loss; the real dimensions average 383× more.</text>
+<text class="vz-note" x="16" y="308" data-en="j5 is the largest single share at 25.7%, and it is the joint the arm holds mechanically fixed — the normalizer divides it by a range 13.4 times narrower than the other joints." data-ko="j5가 25.7%로 단독 최대인데, 이 관절은 팔이 기계적으로 고정하고 있는 관절이다 — 정규화가 다른 관절보다 13.4배 좁은 범위로 나눈다.">j5 is the largest single share at 25.7% — and it is the joint held mechanically fixed.</text>
 </svg>
         <figcaption><div class="evidence-badges"><span class="evidence-badge">Data verified</span><span class="evidence-badge log">Measured on v23</span></div><span data-en="Measured with a script that replicates the training loss and keeps the per-dimension term. Six batches of eight at horizon 16." data-ko="학습 loss를 복제하되 차원별 항을 유지하는 스크립트로 측정했습니다. horizon 16에서 8개씩 6배치입니다.">Measured with a script that replicates the training loss and keeps the per-dimension term.</span></figcaption>
       </figure>

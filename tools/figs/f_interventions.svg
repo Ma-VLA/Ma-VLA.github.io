@@ -1,0 +1,27 @@
+<svg class="vz" viewBox="0 0 1000 250" role="img" xmlns="http://www.w3.org/2000/svg" aria-label="Which interventions moved the arm along its own destination axis, out of thirty held-out episodes">
+<text class="vz-title" x="16" y="20" data-en="Change one thing, and see if the arm turns" data-ko="하나만 바꾸고 팔이 도는지 본다">Change one thing, and see if the arm turns</text>
+<text class="vz-total" x="988" y="20" text-anchor="end" data-en="30 held-out episodes" data-ko="홀드아웃 30 에피소드">30 held-out episodes</text>
+<line class="vz-axis" x1="540.0" y1="42" x2="540.0" y2="200" stroke-dasharray="3 3"/>
+<text class="vz-sub" x="540.0" y="36" text-anchor="middle" data-en="chance" data-ko="우연">chance</text>
+<rect class="vz-track" x="210" y="48" width="660" height="22" rx="4"/>
+<rect class="vz-seg vz1" x="210" y="48" width="616.0" height="22" rx="4"><title>the whole sign view · 28 of 30</title></rect>
+<text class="vz-rowlbl" x="198" y="64" text-anchor="end" data-en="the whole sign view" data-ko="간판 뷰 전체">the whole sign view</text>
+<text class="vz-val" x="880" y="64">28/30</text>
+<text class="vz-sub" x="932" y="64" data-en="p = 4.3e-07" data-ko="p = 4.3e-07">p = 4.3e-07</text>
+<rect class="vz-track" x="210" y="88" width="660" height="22" rx="4"/>
+<rect class="vz-seg vz2" x="210" y="88" width="352.0" height="22" rx="4"><title>only the printed words · 16 of 30</title></rect>
+<text class="vz-rowlbl" x="198" y="104" text-anchor="end" data-en="only the printed words" data-ko="인쇄된 글자만">only the printed words</text>
+<text class="vz-val" x="880" y="104">16/30</text>
+<text class="vz-sub" x="932" y="104" data-en="not detected" data-ko="not detected">not detected</text>
+<rect class="vz-track" x="210" y="128" width="660" height="22" rx="4"/>
+<rect class="vz-seg vz2" x="210" y="128" width="330.0" height="22" rx="4"><title>the category named · 15 of 30</title></rect>
+<text class="vz-rowlbl" x="198" y="144" text-anchor="end" data-en="the category named" data-ko="지시문의 카테고리">the category named</text>
+<text class="vz-val" x="880" y="144">15/30</text>
+<text class="vz-sub" x="932" y="144" data-en="null" data-ko="null">null</text>
+<rect class="vz-track" x="210" y="168" width="660" height="22" rx="4"/>
+<rect class="vz-seg vz1" x="210" y="168" width="528.0" height="22" rx="4"><title>the phase word · 24 of 30</title></rect>
+<text class="vz-rowlbl" x="198" y="184" text-anchor="end" data-en="the phase word" data-ko="지시문의 phase 단어">the phase word</text>
+<text class="vz-val" x="880" y="184">24/30</text>
+<text class="vz-sub" x="932" y="184" data-en="cos +0.54" data-ko="cos +0.54">cos +0.54</text>
+<text class="vz-note" x="16" y="230" data-en="Read as a direction, not a size: the question is whether the action moves along that episode’s own destination axis. A size test on the same data cannot tell these four apart." data-ko="크기가 아니라 방향으로 읽습니다 — 행동이 그 에피소드 자신의 목적지 축을 따라 움직이는가를 묻습니다. 같은 데이터에 크기 검정을 걸면 이 넷이 구분되지 않습니다.">Read as a direction, not a size — a size test cannot tell these four apart.</text>
+</svg>
