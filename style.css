@@ -169,7 +169,12 @@ code, pre, kbd, samp, .mono, .code-line {
 .hero-evidence span { color: var(--muted); font-size: .82rem; }
 .paper-strip { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1.5rem; }
 
-.research-flow { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr); gap: .8rem; align-items: center; }
+.research-flow { display: flex; flex-wrap: wrap; gap: .8rem; align-items: center; }
+/* Nodes share the row evenly and the arrows take only what they need. Was a grid with
+   a fixed seven-column template, which meant the row silently wrapped the moment a
+   fifth stage was added. The stage count is not a constant. */
+.research-flow > .research-node { flex: 1 1 11rem; min-width: 0; }
+.research-flow > .research-arrow { flex: 0 0 auto; }
 .research-node { min-height: 15rem; padding: 1.5rem; border-top: 3px solid var(--primary); border-bottom: 1px solid var(--line); background: var(--surface); }
 .research-node.transition { border-top-color: var(--amber); }
 .research-node.operational { border-top-color: var(--blue); }
@@ -473,7 +478,7 @@ summary { padding: 1rem 1.15rem; cursor: pointer; font-family: var(--font-displa
   .lineage-card::after { display: none; }
   .card-grid.three { grid-template-columns: repeat(2, 1fr); }
   .figure-grid, .comparison { grid-template-columns: 1fr; }
-  .research-flow { grid-template-columns: 1fr; }
+  .research-flow { flex-direction: column; align-items: stretch; }
   .research-arrow { transform: rotate(90deg); text-align: center; }
   .architecture-chain { grid-template-columns: repeat(3, 1fr); }
   .architecture-step:nth-child(3) { border-right: 0; }
