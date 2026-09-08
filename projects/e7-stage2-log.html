@@ -822,6 +822,30 @@ flowchart LR
           </figure>
         </div></div>
 
+        <div class="paper-section"><h2 data-en="What we now do before trusting an instrument" data-ko="계측기를 믿기 전에 하는 일">Before trusting an instrument</h2><div>
+          <p data-en="Three controls failed during this work, all of them ours rather than the model&rsquo;s, and each would have turned a null result into a story." data-ko="이 작업 중에 대조군이 세 번 실패했습니다. 셋 다 모델이 아니라 우리 쪽 결함이었고, 하나하나가 &ldquo;아무 일도 없었다&rdquo; 를 그럴듯한 이야기로 바꿀 뻔했습니다.">Three controls failed, all of them ours, and each would have turned a null result into a story.</p>
+          <ul>
+            <li data-en="An intervention that never reached the model. Every arm returned bit-identical output, which looks like a real null until you notice that identical to the last bit is not what a real null looks like. The compiled program had been frozen before the setting was changed." data-ko="개입이 모델에 닿지 않은 경우. 모든 조건이 비트 단위로 같은 출력을 냈습니다. 진짜 &ldquo;효과 없음&rdquo; 처럼 보이지만, 마지막 비트까지 같은 것은 진짜 효과 없음의 모습이 아닙니다. 설정을 바꾸기 전에 계산 그래프가 이미 굳어 있었습니다.">An intervention that never reached the model — every arm bit-identical.</li>
+            <li data-en="A control that passes when nothing works. &ldquo;With the knob at zero, all three forced choices agree&rdquo; is also satisfied when the knob does nothing at all. It now has to be paired with a check that turning the knob up does move the output." data-ko="아무것도 작동하지 않을 때도 통과하는 대조군. &ldquo;세기를 0 으로 두면 세 강제가 서로 같다&rdquo; 는 세기 조절 자체가 안 먹을 때도 성립합니다. 이제는 &ldquo;세기를 올리면 출력이 실제로 움직인다&rdquo; 는 검사와 짝지어야 합니다.">A control that also passes when the knob does nothing.</li>
+            <li data-en="A noise floor that was not one. Rebuilding the same configuration produces the same program and therefore exactly zero difference, which measures nothing. The floor has to come from two programs that are compiled differently but must agree mathematically." data-ko="바닥이 아니었던 바닥. 같은 설정을 다시 빌드하면 같은 프로그램이 나와 차이가 정확히 0 이고, 그건 아무것도 재지 않습니다. 바닥은 &ldquo;서로 다르게 컴파일됐지만 수학적으로는 같아야 하는&rdquo; 두 프로그램에서 나와야 합니다.">A noise floor that measured nothing.</li>
+          </ul>
+
+        </div></div>
+      </div>
+    </div></section>
+
+    <!-- ─────────────────────────────────────────────────── repair -->
+    <!-- ═══ OWNER: TRAINING-SERVER (RTX A5000) · 2026-09-09 · DO NOT EDIT ═══
+         §query-blindness 에서 갈라져 나온 절이다. 앞은 진단, 여기는 처치와 그 한계.
+         ★ "고쳤다" 로 읽히게 쓰지 말 것 — 고친 것은 선택이고, 팔은 아직 안 따라온다. -->
+    <section id="three-questions" class="section"><div class="container">
+      <div class="section-head"><div>
+        <p class="section-label" data-en="The repair" data-ko="처치">The repair</p>
+        <h2 data-en="Asking three questions of one picture, and what that did not fix." data-ko="사진 한 장에 질문 셋, 그리고 그것으로 안 고쳐진 것.">Three questions of one picture — and what it did not fix.</h2>
+      </div><p data-en="If ignoring the question is free, the fix is to make it cost something. The change is to the marking scheme rather than to the images or the data balance, and it does repair the reading — on the pairings training happened to contain." data-ko="질문을 무시하는 것이 공짜라면, 값을 치르게 만드는 것이 처치입니다. 이미지도 데이터 비율도 아니고 채점 방식을 바꾸는 것이고, 실제로 읽기가 복구됩니다 — 학습에 들어 있던 짝에 한해서.">Make ignoring the question cost something. It repairs the reading — for the pairings training contained.</p></div>
+
+      <div class="research-paper">
+
         <div class="paper-section"><h2 data-en="Three questions on one picture" data-ko="사진 한 장에 질문 셋">Three questions, one picture</h2><div>
           <p data-en="The repair does not touch the images and does not rebalance the data. It changes what counts as a complete answer. During training the same photograph is now asked all three questions at once — where does humanities go, where does liberal arts go, where does science go — and each one is marked against a different sign." data-ko="처치는 이미지를 건드리지 않고 데이터 비율도 다시 맞추지 않습니다. 바꾼 것은 &ldquo;답을 다 했다&rdquo; 의 기준입니다. 학습할 때 같은 사진에 세 질문을 한꺼번에 겁니다 — humanities 는 어디, liberal arts 는 어디, science 는 어디 — 그리고 각각을 서로 다른 간판으로 채점합니다.">The same photograph is asked all three questions at once, each marked against a different sign.</p>
           <p data-en="That is the whole idea: with one right answer per picture, ignoring the question is free; with three, it caps you at one in three. The shortcut stops paying." data-ko="요지는 이것입니다 — 사진마다 정답이 하나면 질문을 무시해도 손해가 없지만, 셋이면 무시하는 순간 3분의 1 이 상한이 됩니다. 지름길이 더는 남는 장사가 아니게 됩니다.">With one answer per picture, ignoring the question is free. With three, it caps you at one in three.</p>
@@ -842,21 +866,13 @@ flowchart LR
           <p data-en="On the training episodes the part picks the right sign every time — before the repair and after it. If picking correctly were enough, those rollouts should end at the right shelf. They end there about a third of the time: thirty-one of eighty-four before, twenty-seven after. The change did not help, and it was never going to, because there was no headroom left to gain on that set." data-ko="학습 에피소드에서 이 부품은 처치 전에도 후에도 간판을 매번 맞게 고릅니다. 맞게 고르는 것으로 충분하다면 그 롤아웃은 맞는 책장에서 끝나야 합니다. 실제로는 3분의 1 정도입니다 — 처치 전 84 중 31, 후 84 중 27. 처치가 도움이 안 됐고, 애초에 될 수 없었습니다. 그 집합에서는 더 올릴 여지가 없었기 때문입니다.">Picking is right every time on those episodes; the rollout still ends at the right shelf about a third of the time.</p>
           <p data-en="That is the finding, and it does not depend on the repair at all. With the sign choice correct eighty-four times out of eighty-four, the trajectory reaches the matching shelf twenty-seven to thirty-one times out of eighty-four. Whatever decides where the arm goes is not being told what the selector decided." data-ko="이것이 이번 결과이고, 처치와는 무관하게 성립합니다. 간판 선택이 84번 중 84번 맞는 상태에서 궤적은 84번 중 27~31번만 해당 책장에 도달합니다. 팔이 어디로 갈지 정하는 무엇이, 선택기가 정한 것을 전달받지 못하고 있습니다.">With the choice right 84 of 84, the trajectory reaches the matching shelf 27 to 31 of 84.</p>
           <p class="protocol-note" data-en="Two supporting measurements agree. Swapping the category word moves the produced joint angles by about a third of a degree, before the repair and after — against the roughly twenty-one degrees that separate one shelf&rsquo;s staging pose from the next. And forcing the selector onto a chosen sign by hand, at strengths up to the maximum the mechanism allows, changes where the arm ends without changing it toward the sign that was forced." data-ko="보조 측정 둘이 같은 말을 합니다. 분야 단어를 바꿔도 나오는 관절 각도는 0.3도 남짓 움직입니다 — 처치 전에도 후에도. 책장 하나와 다음 책장의 대기 자세를 가르는 각도가 21도쯤인 것과 비교하면 그렇습니다. 그리고 선택기를 손으로 특정 간판에 강제로 고정해 봐도 — 구조가 허용하는 최대 세기까지 — 팔이 끝나는 자리는 바뀌지만, 강제한 간판 쪽으로 바뀌지는 않습니다.">Swapping the word moves the joints by a third of a degree, against twenty-one degrees between shelves.</p>
-        </div></div>
-
-        <div class="paper-section"><h2 data-en="What we now do before trusting an instrument" data-ko="계측기를 믿기 전에 하는 일">Before trusting an instrument</h2><div>
-          <p data-en="Three controls failed during this work, all of them ours rather than the model&rsquo;s, and each would have turned a null result into a story." data-ko="이 작업 중에 대조군이 세 번 실패했습니다. 셋 다 모델이 아니라 우리 쪽 결함이었고, 하나하나가 &ldquo;아무 일도 없었다&rdquo; 를 그럴듯한 이야기로 바꿀 뻔했습니다.">Three controls failed, all of them ours, and each would have turned a null result into a story.</p>
-          <ul>
-            <li data-en="An intervention that never reached the model. Every arm returned bit-identical output, which looks like a real null until you notice that identical to the last bit is not what a real null looks like. The compiled program had been frozen before the setting was changed." data-ko="개입이 모델에 닿지 않은 경우. 모든 조건이 비트 단위로 같은 출력을 냈습니다. 진짜 &ldquo;효과 없음&rdquo; 처럼 보이지만, 마지막 비트까지 같은 것은 진짜 효과 없음의 모습이 아닙니다. 설정을 바꾸기 전에 계산 그래프가 이미 굳어 있었습니다.">An intervention that never reached the model — every arm bit-identical.</li>
-            <li data-en="A control that passes when nothing works. &ldquo;With the knob at zero, all three forced choices agree&rdquo; is also satisfied when the knob does nothing at all. It now has to be paired with a check that turning the knob up does move the output." data-ko="아무것도 작동하지 않을 때도 통과하는 대조군. &ldquo;세기를 0 으로 두면 세 강제가 서로 같다&rdquo; 는 세기 조절 자체가 안 먹을 때도 성립합니다. 이제는 &ldquo;세기를 올리면 출력이 실제로 움직인다&rdquo; 는 검사와 짝지어야 합니다.">A control that also passes when the knob does nothing.</li>
-            <li data-en="A noise floor that was not one. Rebuilding the same configuration produces the same program and therefore exactly zero difference, which measures nothing. The floor has to come from two programs that are compiled differently but must agree mathematically." data-ko="바닥이 아니었던 바닥. 같은 설정을 다시 빌드하면 같은 프로그램이 나와 차이가 정확히 0 이고, 그건 아무것도 재지 않습니다. 바닥은 &ldquo;서로 다르게 컴파일됐지만 수학적으로는 같아야 하는&rdquo; 두 프로그램에서 나와야 합니다.">A noise floor that measured nothing.</li>
-          </ul>
           <p class="protocol-note" data-en="Scope. These are training-server measurements in JAX; nothing here crosses the conversion boundary. The rollouts hold the camera images fixed while the joint state advances, so they approximate the robot rather than stand in for it. The held-out set has been used to steer several decisions and is a development set now, not an exam: a clean test needs a sign arrangement withheld from the start, with the baseline retrained on the same split." data-ko="범위. 여기 숫자는 학습서버의 JAX 실측이고 변환 경계를 넘지 않습니다. 롤아웃은 관절 상태만 진행시키고 카메라 그림은 고정한 근사라, 실기를 대신하지 못합니다. 시험용 집합은 이미 여러 결정에 썼으므로 지금은 시험지가 아니라 개발셋입니다 — 깨끗한 시험을 하려면 간판 배치 하나를 처음부터 빼두고, 기준선도 같은 분할로 다시 학습해야 합니다.">Scope: JAX only, fixed-image rollouts, and the held-out set is a development set now.</p>
         </div></div>
+
       </div>
     </div></section>
 
-    <section id="open" class="section"><div class="container">
+    <section id="open" class="section alt"><div class="container">
       <div class="section-head"><div>
         <p class="section-label" data-en="Open" data-ko="열린 것">Open</p>
         <h2 data-en="Where the stage actually stands." data-ko="이 단계가 실제로 서 있는 자리.">Where the stage stands.</h2>
