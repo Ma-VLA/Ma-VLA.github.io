@@ -19,5 +19,5 @@
 <line class="vz-axis" x1="140" y1="166" x2="910" y2="166"/>
 <text class="vz-sub" x="140" y="182">0</text>
 <text class="vz-sub" x="910" y="182" text-anchor="end">200</text>
-<text class="vz-note" x="16" y="196" data-en="Worst case over every category and destination. The field is padded to 200, so all four styles give the same 728-token sequence — wording costs nothing." data-ko="카테고리·목적지 전 조합 중 최악값. 영역이 200으로 패딩되므로 네 방식 모두 동일한 728 시퀀스 — 문구 비용은 0.">The field is padded, so all four give the same 728-token sequence — wording costs nothing.</text>
+<text class="vz-note" x="16" y="196" data-en="Worst case over every category and destination. The field is padded to 200, so all four styles give the same 984-token sequence — wording costs nothing." data-ko="카테고리·목적지 전 조합 중 최악값. 영역이 200으로 패딩되므로 네 방식 모두 동일한 984 시퀀스 — 문구 비용은 0.">The field is padded, so all four give the same 984-token sequence — wording costs nothing.</text>
 </svg>

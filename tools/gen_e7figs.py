@@ -9,12 +9,12 @@ def bi(en, ko): return f'data-en="{esc(en)}" data-ko="{esc(ko)}"'
 
 # ══════════════ A. sequence budget ══════════════
 W, H, L, R = 1000, 190, 16, 16
-segs = [("image", 512, "vz1", "2 slots × 256 patches"), ("prompt", 200, "vz2", "padded field"),
+segs = [("image", 768, "vz1", "3 slots × 256 patches"), ("prompt", 200, "vz2", "padded field"),
         ("action", 16, "vz3", "= action horizon")]
 total = sum(s[1] for s in segs)
 o = [f'<svg class="vz" viewBox="0 0 {W} {H}" role="img" xmlns="http://www.w3.org/2000/svg" '
-     f'aria-label="Token budget: 512 image plus 200 prompt plus 16 action equals 728">']
-o.append(f'<text class="vz-title" x="{L}" y="20" {bi("Where the 728 tokens go","728 토큰의 배분")}>Where the 728 tokens go</text>')
+     f'aria-label="Token budget: 768 image plus 200 prompt plus 16 action equals 984">']
+o.append(f'<text class="vz-title" x="{L}" y="20" {bi("Where the 984 tokens go","984 토큰의 배분")}>Where the 984 tokens go</text>')
 x, PW, BY, BH = L, W-L-R, 44, 42
 for name, n, cls, sub in segs:
     w = PW * n / total - 2
@@ -29,14 +29,16 @@ for name, n, cls, sub in segs:
     o.append(f'<text class="vz-sub" x="{lx:.1f}" y="{BY+BH+33:.1f}" text-anchor="middle">{sub}</text>')
     x += w + 2
 # prompt 필드 안의 실사용 표시
-px = L + PW * 512 / total
+px = L + PW * 768 / total
 pw = PW * 200 / total
-uw = pw * 34 / 200
+uw = pw * 47 / 200
 o.append(f'<rect class="vz-used" x="{px+1:.1f}" y="{BY+BH+44}" width="{uw:.1f}" height="8" rx="3"/>')
 o.append(f'<rect class="vz-usedtrack" x="{px+1+uw:.1f}" y="{BY+BH+44}" width="{pw-2-uw:.1f}" height="8" rx="3"/>')
-o.append(f'<text class="vz-note" x="{px+1:.1f}" y="{BY+BH+70}" '
-         f'{bi("12–34 tokens actually used, measured with the PaliGemma tokenizer — the rest is padding","PaliGemma 토크나이저 실측 12–34 토큰 사용, 나머지는 패딩")}>'
-         f'12–34 tokens actually used — the rest is padding</text>')
+# 🔴 주석은 왼쪽 끝에 붙인다. 프롬프트 칸 아래에 두면 이미지 칸이 커질 때
+# (2슬롯 512 -> 3슬롯 768) 남는 폭이 줄어 문장이 오른쪽으로 잘린다.
+o.append(f'<text class="vz-note" x="{L}" y="{BY+BH+70}" '
+         f'{bi("42–47 tokens actually used, measured with the PaliGemma tokenizer over the nineteen deployed task strings with the discretised state block — the rest is padding","PaliGemma 토크나이저 실측 42~47 토큰 사용 — 배포된 19개 task 문자열, 이산화 상태 블록 포함. 나머지는 패딩")}>'
+         f'42–47 tokens actually used — the rest is padding</text>')
 o.append(f'<text class="vz-total" x="{W-R}" y="20" text-anchor="end">{total} total</text>')
 o.append('</svg>')
 (OUT/'a_budget.svg').write_text('\n'.join(o), encoding='utf-8')
@@ -60,8 +62,8 @@ o.append(f'<line class="vz-axis" x1="{L}" y1="{TOP+len(STYLES)*ROW-6}" x2="{L+PW
 o.append(f'<text class="vz-sub" x="{L}" y="{TOP+len(STYLES)*ROW+10}">0</text>')
 o.append(f'<text class="vz-sub" x="{L+PW}" y="{TOP+len(STYLES)*ROW+10}" text-anchor="end">200</text>')
 o.append(f'<text class="vz-note" x="16" y="{H-12}" '
-         f'{bi("Worst case over every category and destination. The field is padded to 200, so all four styles give the same 728-token sequence — wording costs nothing.","카테고리·목적지 전 조합 중 최악값. 영역이 200으로 패딩되므로 네 방식 모두 동일한 728 시퀀스 — 문구 비용은 0.")}>'
-         f'The field is padded, so all four give the same 728-token sequence — wording costs nothing.</text>')
+         f'{bi("Worst case over every category and destination. The field is padded to 200, so all four styles give the same 984-token sequence — wording costs nothing.","카테고리·목적지 전 조합 중 최악값. 영역이 200으로 패딩되므로 네 방식 모두 동일한 984 시퀀스 — 문구 비용은 0.")}>'
+         f'The field is padded, so all four give the same 984-token sequence — wording costs nothing.</text>')
 o.append('</svg>')
 (OUT/'b_prompt.svg').write_text('\n'.join(o), encoding='utf-8')
 

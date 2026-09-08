@@ -6,7 +6,7 @@
   <meta name="description" content="The training-server side of the xArm6 stage: task definition, three-machine topology, the verified collection-to-inference contract, prompt-contract hashing, and dataset integrity guards.">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" crossorigin>
-  <link rel="stylesheet" href="/style.css?v=20260825d"><script src="/script.js?v=20260825d" defer></script>
+  <link rel="stylesheet" href="/style.css?v=20260909b"><script src="/script.js?v=20260909b" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main" data-en="Skip to content" data-ko="본문으로 건너뛰기">Skip to content</a>
@@ -108,12 +108,12 @@ flowchart LR
     <section id="collection-to-inference-contract" class="section alt"><div class="container"><div class="section-head"><div><p class="section-label" data-en="Collection-to-inference contract" data-ko="수집→추론 계약">Collection-to-inference contract</p><h2 data-en="Four hand-offs, each one a place where two sides can silently disagree." data-ko="네 번의 인계, 각각이 양쪽이 조용히 어긋날 수 있는 지점.">Four hand-offs, each one a place where two sides can silently disagree.</h2></div><p data-en="A mismatch at any of these boundaries does not raise an error. The robot still moves; it moves wrongly, and the regression is attributed to the policy. Each boundary is therefore written down rather than inferred from code." data-ko="이 경계 중 어디서 불일치가 나도 오류가 발생하지 않습니다. 로봇은 그대로 움직이고, 다만 잘못 움직이며, 그 회귀는 정책 탓으로 돌아갑니다. 그래서 각 경계를 코드에서 유추하지 않고 문서로 고정합니다.">A mismatch at these boundaries raises no error — the robot still moves, just wrongly.</p></div>
       <div class="table-scroll"><table class="flat-table"><thead><tr><th data-en="Stage" data-ko="단계">Stage</th><th data-en="Transformation" data-ko="변환">Transformation</th><th data-en="Pinned by" data-ko="고정 수단">Pinned by</th></tr></thead><tbody>
         <tr><td data-en="1 · CSV → LeRobot parquet" data-ko="1 · CSV → LeRobot parquet">1 · CSV → LeRobot parquet</td><td data-en="N recorded frames become N−1 rows. State is absolute; action is the forward difference." data-ko="기록된 N 프레임이 N−1 행이 됩니다. state는 절대값, action은 전방 차분입니다.">N frames become N−1 rows; state absolute, action forward difference.</td><td data-en="Converter, with integrity guards" data-ko="변환기 + 무결성 가드">Converter, with integrity guards</td></tr>
-        <tr><td data-en="2 · parquet → model input" data-ko="2 · parquet → 모델 입력">2 · parquet → model input</td><td data-en="Two camera slots, percentile normalization, 7D padded to the model's 32D action space." data-ko="카메라 2슬롯, 백분위 정규화, 7D를 모델 내부 32D 액션 공간으로 패딩.">Two camera slots, percentile normalization, 7D padded to 32D.</td><td><code>norm_stats.json</code></td></tr>
+        <tr><td data-en="2 · parquet → model input" data-ko="2 · parquet → 모델 입력">2 · parquet → model input</td><td data-en="Three camera slots, percentile normalization, 7D padded to the model's 32D action space." data-ko="카메라 3슬롯, 백분위 정규화, 7D를 모델 내부 32D 액션 공간으로 패딩.">Three camera slots, percentile normalization, 7D padded to 32D.</td><td><code>norm_stats.json</code></td></tr>
         <tr><td data-en="3 · training" data-ko="3 · 학습">3 · training</td><td data-en="Flow matching. SigLIP LoRA on blocks 18–26, action-expert LoRA, and the action head are trained; the language model stays frozen." data-ko="Flow matching. SigLIP 18–26 블록 LoRA, action expert LoRA, action head만 학습하고 언어 모델은 동결합니다.">Flow matching; SigLIP 18–26 LoRA, action-expert LoRA, action head. Language model frozen.</td><td data-en="Training config, carried in the bundle" data-ko="학습 config, 번들에 동봉">Training config, carried in the bundle</td></tr>
         <tr><td data-en="4 · inference" data-ko="4 · 추론">4 · inference</td><td data-en="Raw observation in, a 16 × 7 chunk of joint deltas out, already de-normalized." data-ko="원시 관측이 들어가고, 이미 역정규화된 16 × 7 관절 델타 청크가 나옵니다.">Raw observation in; a de-normalized 16 × 7 chunk out.</td><td data-en="Manifest, verified at startup" data-ko="manifest, 기동 시 검증">Manifest, verified at startup</td></tr>
       </tbody></table></div>
 
-      <div class="contract" style="margin-top:2rem"><div class="contract-box"><h3 data-en="Policy observation" data-ko="정책 관측">Policy observation</h3><p class="muted" data-en="Two RGB images, seven raw state values, and the rendered prompt string." data-ko="RGB 이미지 2장, 원시 상태 7개, 렌더된 프롬프트 문자열.">Two RGB images, seven raw state values, and the rendered prompt string.</p><code class="code-line">HIK RGB + ZED RGB + [j1…j6 deg, gripper] + prompt</code></div><div class="contract-arrow">→</div><div class="contract-box"><h3 data-en="16 × 7 action chunk" data-ko="16 × 7 액션 청크">16 × 7 action chunk</h3><p class="muted" data-en="Six per-frame joint deltas in degrees, and the gripper command as an absolute value at index 6." data-ko="degree 단위의 프레임당 관절 델타 6개, 그리고 index 6에 절대값으로 놓인 그리퍼 명령.">Six per-frame joint deltas in degrees; gripper absolute at index 6.</p><code class="code-line">[Δj1, Δj2, Δj3, Δj4, Δj5, Δj6, gripper_abs]</code></div></div>
+      <div class="contract" style="margin-top:2rem"><div class="contract-box"><h3 data-en="Policy observation" data-ko="정책 관측">Policy observation</h3><p class="muted" data-en="Three RGB images, seven raw state values, and the rendered prompt string." data-ko="RGB 이미지 3장, 원시 상태 7개, 렌더된 프롬프트 문자열.">Three RGB images, seven raw state values, and the rendered prompt string.</p><code class="code-line">HIK RGB + ZED RGB + label-view RGB + [j1…j6 deg, gripper] + prompt</code></div><div class="contract-arrow">→</div><div class="contract-box"><h3 data-en="16 × 7 action chunk" data-ko="16 × 7 액션 청크">16 × 7 action chunk</h3><p class="muted" data-en="Six per-frame joint deltas in degrees, and the gripper command as an absolute value at index 6." data-ko="degree 단위의 프레임당 관절 델타 6개, 그리고 index 6에 절대값으로 놓인 그리퍼 명령.">Six per-frame joint deltas in degrees; gripper absolute at index 6.</p><code class="code-line">[Δj1, Δj2, Δj3, Δj4, Δj5, Δj6, gripper_abs]</code></div></div>
 
       <div class="research-paper" style="margin-top:2rem">
         <div class="paper-section"><h2 data-en="Three failure modes that produce motion instead of errors" data-ko="오류 대신 동작을 만드는 실패 3가지">Three failure modes that produce motion instead of errors</h2><div><ul class="plain-list">
@@ -128,32 +128,32 @@ flowchart LR
     <section id="prompt-contract" class="section"><div class="container"><div class="section-head"><div><p class="section-label" data-en="Prompt contract" data-ko="프롬프트 계약">Prompt contract</p><h2 data-en="The prompt string is an interface, so it is hashed." data-ko="프롬프트 문자열은 인터페이스이므로 해시합니다.">The prompt string is an interface, so it is hashed.</h2></div><p data-en="Training and inference must produce byte-identical prompt text. A single differing character changes the token sequence, and the policy is then answering a question it was never trained on — silently. Both sides therefore import the same renderer rather than keeping parallel copies." data-ko="학습과 추론이 바이트 단위로 동일한 프롬프트 텍스트를 만들어야 합니다. 한 글자만 달라도 토큰 시퀀스가 달라지고, 정책은 학습한 적 없는 질문에 답하게 됩니다 — 조용히. 그래서 양쪽이 사본을 각자 두지 않고 같은 렌더러를 import합니다.">Training and inference import the same renderer; a single differing character changes the token sequence.</p></div>
       <div class="research-paper">
         <div class="paper-section"><h2 data-en="Sequence budget" data-ko="시퀀스 예산">Sequence budget</h2><div><div class="table-scroll"><table class="flat-table"><thead><tr><th data-en="Component" data-ko="구성">Component</th><th data-en="Tokens" data-ko="토큰">Tokens</th><th data-en="Note" data-ko="비고">Note</th></tr></thead><tbody>
-          <tr><td data-en="Two image slots" data-ko="이미지 2슬롯">Two image slots</td><td>512</td><td data-en="224 ÷ 14 = 16, so 16 × 16 = 256 patches per slot" data-ko="224 ÷ 14 = 16이므로 슬롯당 16 × 16 = 256 패치">256 patches per slot</td></tr>
-          <tr><td data-en="Prompt field" data-ko="프롬프트 영역">Prompt field</td><td>200</td><td data-en="Padded; the rendered prompt measures 12–34 tokens depending on style" data-ko="패딩됨. 렌더된 프롬프트는 방식에 따라 12–34 토큰">Padded; 12–34 measured</td></tr>
+          <tr><td data-en="Three image slots" data-ko="이미지 3슬롯">Three image slots</td><td>768</td><td data-en="224 ÷ 14 = 16, so 16 × 16 = 256 patches per slot" data-ko="224 ÷ 14 = 16이므로 슬롯당 16 × 16 = 256 패치">256 patches per slot</td></tr>
+          <tr><td data-en="Prompt field" data-ko="프롬프트 영역">Prompt field</td><td>200</td><td data-en="Padded; the deployed prompt plus its state block measures 42–47 tokens" data-ko="패딩됨. 렌더된 프롬프트는 방식에 따라 12–34 토큰">Padded; 42–47 measured</td></tr>
           <tr><td data-en="Action suffix" data-ko="액션 suffix">Action suffix</td><td>16</td><td data-en="Equal to the action horizon" data-ko="action horizon과 동일">Equal to the action horizon</td></tr>
-          <tr><td><strong data-en="Total" data-ko="합계">Total</strong></td><td><strong>728</strong></td><td data-en="Unchanged by prompt wording, since the field is padded" data-ko="프롬프트 문구가 바뀌어도 영역이 패딩되므로 불변">Unchanged by prompt wording</td></tr>
-        </tbody></table></div><p class="protocol-note" data-en="Whether the robot state is also serialised into the prompt is a configuration flag that defaults to off. When it is on, the tokenizer wraps the text with a discretised state block — 30 to 44 additional tokens depending on the values, measured — with no error and no visible symptom. The flag is part of the hashed contract for that reason." data-ko="로봇 상태를 프롬프트에 함께 직렬화할지는 기본값이 꺼짐인 설정 플래그입니다. 켜지면 토크나이저가 이산화된 상태 블록으로 텍스트를 감쌉니다 — 값에 따라 30~44 토큰 추가(실측). 오류도, 눈에 보이는 증상도 없습니다. 이 플래그가 해시 계약에 포함된 이유입니다.">A configuration flag adds a discretised state block worth 30–44 tokens with no visible symptom, so it is part of the hash.</p></div></div>
+          <tr><td><strong data-en="Total" data-ko="합계">Total</strong></td><td><strong>984</strong></td><td data-en="Unchanged by prompt wording, since the field is padded" data-ko="프롬프트 문구가 바뀌어도 영역이 패딩되므로 불변">Unchanged by prompt wording</td></tr>
+        </tbody></table></div><p class="protocol-note" data-en="Whether the robot state is also serialised into the prompt is a configuration flag. On π0.5 it defaults to on, and every E7 run has it on. When it is on, the tokenizer wraps the text with a discretised state block — 30 to 44 additional tokens depending on the values, measured — with no error and no visible symptom. The flag is part of the hashed contract for that reason." data-ko="로봇 상태를 프롬프트에 함께 직렬화할지는 설정 플래그입니다. π0.5 에서는 기본값이 켜짐이고, E7 의 모든 학습이 켠 채로 돌았습니다. 켜지면 토크나이저가 이산화된 상태 블록으로 텍스트를 감쌉니다 — 값에 따라 30~44 토큰 추가(실측). 오류도, 눈에 보이는 증상도 없습니다. 이 플래그가 해시 계약에 포함된 이유입니다.">A configuration flag adds a discretised state block worth 30–44 tokens with no visible symptom, so it is part of the hash.</p></div></div>
       <figure class="lineage-figure" style="margin-top:1.5rem">
-<svg class="vz" viewBox="0 0 1000 190" role="img" xmlns="http://www.w3.org/2000/svg" aria-label="Token budget: 512 image plus 200 prompt plus 16 action equals 728">
-<text class="vz-title" x="16" y="20" data-en="Where the 728 tokens go" data-ko="728 토큰의 배분">Where the 728 tokens go</text>
-<rect class="vz-seg vz1" x="16.0" y="44" width="678.8" height="42" rx="4"><title>image · 512 tokens · 70.3%</title></rect>
-<text class="vz-in" x="355.4" y="70.0" text-anchor="middle">512</text>
-<text class="vz-lbl" x="355.4" y="104.0" text-anchor="middle">image</text>
-<text class="vz-sub" x="355.4" y="119.0" text-anchor="middle">2 slots × 256 patches</text>
-<rect class="vz-seg vz2" x="696.8" y="44" width="263.9" height="42" rx="4"><title>prompt · 200 tokens · 27.5%</title></rect>
-<text class="vz-in" x="828.8" y="70.0" text-anchor="middle">200</text>
-<text class="vz-lbl" x="828.8" y="104.0" text-anchor="middle">prompt</text>
-<text class="vz-sub" x="828.8" y="119.0" text-anchor="middle">padded field</text>
-<rect class="vz-seg vz3" x="962.7" y="44" width="19.3" height="42" rx="4"><title>action · 16 tokens · 2.2%</title></rect>
-<text class="vz-out" x="972.4" y="36.0" text-anchor="middle">16</text>
+<svg class="vz" viewBox="0 0 1000 190" role="img" xmlns="http://www.w3.org/2000/svg" aria-label="Token budget: 768 image plus 200 prompt plus 16 action equals 984">
+<text class="vz-title" x="16" y="20" data-en="Where the 984 tokens go" data-ko="984 토큰의 배분">Where the 984 tokens go</text>
+<rect class="vz-seg vz1" x="16.0" y="44" width="753.5" height="42" rx="4"><title>image · 768 tokens · 78.0%</title></rect>
+<text class="vz-in" x="392.8" y="70.0" text-anchor="middle">768</text>
+<text class="vz-lbl" x="392.8" y="104.0" text-anchor="middle">image</text>
+<text class="vz-sub" x="392.8" y="119.0" text-anchor="middle">3 slots × 256 patches</text>
+<rect class="vz-seg vz2" x="771.5" y="44" width="194.7" height="42" rx="4"><title>prompt · 200 tokens · 20.3%</title></rect>
+<text class="vz-in" x="868.9" y="70.0" text-anchor="middle">200</text>
+<text class="vz-lbl" x="868.9" y="104.0" text-anchor="middle">prompt</text>
+<text class="vz-sub" x="868.9" y="119.0" text-anchor="middle">padded field</text>
+<rect class="vz-seg vz3" x="968.3" y="44" width="13.7" height="42" rx="4"><title>action · 16 tokens · 1.6%</title></rect>
+<text class="vz-out" x="975.1" y="36.0" text-anchor="middle">16</text>
 <text class="vz-lbl" x="954.0" y="104.0" text-anchor="middle">action</text>
 <text class="vz-sub" x="954.0" y="119.0" text-anchor="middle">= action horizon</text>
-<rect class="vz-used" x="697.8" y="130" width="45.2" height="8" rx="3"/>
-<rect class="vz-usedtrack" x="743.0" y="130" width="218.7" height="8" rx="3"/>
-<text class="vz-note" x="697.8" y="156" data-en="12–34 tokens actually used, measured with the PaliGemma tokenizer — the rest is padding" data-ko="PaliGemma 토크나이저 실측 12–34 토큰 사용, 나머지는 패딩">12–34 tokens actually used — the rest is padding</text>
-<text class="vz-total" x="984" y="20" text-anchor="end">728 total</text>
+<rect class="vz-used" x="772.5" y="130" width="46.2" height="8" rx="3"/>
+<rect class="vz-usedtrack" x="818.7" y="130" width="148.5" height="8" rx="3"/>
+<text class="vz-note" x="16" y="156" data-en="42–47 tokens actually used, measured with the PaliGemma tokenizer over the nineteen deployed task strings with the discretised state block — the rest is padding" data-ko="PaliGemma 토크나이저 실측 42~47 토큰 사용 — 배포된 19개 task 문자열, 이산화 상태 블록 포함. 나머지는 패딩">42–47 tokens actually used — the rest is padding</text>
+<text class="vz-total" x="984" y="20" text-anchor="end">984 total</text>
 </svg>
-        <figcaption><div class="evidence-badges"><span class="evidence-badge code">Config verified</span><span class="evidence-badge">Derived</span></div><span data-en="Two image slots at 256 patches each, a 200-token prompt field, and a 16-token action suffix." data-ko="이미지 2슬롯 × 256 패치, 200 토큰 프롬프트 영역, 16 토큰 액션 suffix.">Two image slots at 256 patches each, a 200-token prompt field, and a 16-token action suffix.</span></figcaption>
+        <figcaption><div class="evidence-badges"><span class="evidence-badge code">Config verified</span><span class="evidence-badge">Derived</span></div><span data-en="Three image slots at 256 patches each, a 200-token prompt field, and a 16-token action suffix." data-ko="이미지 3슬롯 × 256 패치, 200 토큰 프롬프트 영역, 16 토큰 액션 suffix.">Three image slots at 256 patches each, a 200-token prompt field, and a 16-token action suffix.</span></figcaption>
       </figure>
       <figure class="lineage-figure" style="margin-top:1.5rem">
 <svg class="vz" viewBox="0 0 1000 208" role="img" xmlns="http://www.w3.org/2000/svg" aria-label="Prompt token cost by style, against the 200-token field">
@@ -177,7 +177,7 @@ flowchart LR
 <line class="vz-axis" x1="140" y1="166" x2="910" y2="166"/>
 <text class="vz-sub" x="140" y="182">0</text>
 <text class="vz-sub" x="910" y="182" text-anchor="end">200</text>
-<text class="vz-note" x="16" y="196" data-en="Worst case over every category and destination. The field is padded to 200, so all four styles give the same 728-token sequence — wording costs nothing." data-ko="카테고리·목적지 전 조합 중 최악값. 영역이 200으로 패딩되므로 네 방식 모두 동일한 728 시퀀스 — 문구 비용은 0.">The field is padded, so all four give the same 728-token sequence — wording costs nothing.</text>
+<text class="vz-note" x="16" y="196" data-en="Worst case over every category and destination. The field is padded to 200, so all four styles give the same 984-token sequence — wording costs nothing." data-ko="카테고리·목적지 전 조합 중 최악값. 영역이 200으로 패딩되므로 네 방식 모두 동일한 984 시퀀스 — 문구 비용은 0.">The field is padded, so all four give the same 984-token sequence — wording costs nothing.</text>
 </svg>
         <figcaption><div class="evidence-badges"><span class="evidence-badge log">Tokenizer measured</span></div><span data-en="Worst case over every category and destination, measured with the PaliGemma tokenizer openpi pins." data-ko="카테고리·목적지 전 조합 최악값. openpi가 고정한 PaliGemma 토크나이저로 실측.">Worst case over every category and destination, measured with the PaliGemma tokenizer openpi pins.</span></figcaption>
       </figure>
