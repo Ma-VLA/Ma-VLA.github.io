@@ -6,7 +6,7 @@
   <meta name="description" content="A dated, test-case-indexed record of the xArm6 grounding stage: what was collected, what each experiment measured, what it returned, and what was withdrawn.">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" crossorigin>
-  <link rel="stylesheet" href="/style.css?v=20260825d"><script src="/script.js?v=20260825d" defer></script>
+  <link rel="stylesheet" href="/style.css?v=20260909a"><script src="/script.js?v=20260909a" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main" data-en="Skip to content" data-ko="본문으로 건너뛰기">Skip to content</a>
@@ -750,6 +750,111 @@ flowchart LR
       <p class="protocol-note" data-en="Scope. Every number above comes from fixed-observation offline rollouts: the observation is not updated as the arm moves, the readout window is eight chunks measured from a fixed offset, and that window lands at a different point in the episode for each shelf. The robot has none of those limits — it reports which shelf the book actually went into. This is a registration, not a result." data-ko="범위. 위의 모든 수치는 고정 관측 오프라인 롤아웃에서 나왔습니다 — 팔이 움직여도 관측이 갱신되지 않고, 판독 창은 고정 오프셋에서 8청크이며, 그 창은 선반마다 에피소드의 다른 지점에 놓입니다. 로봇에는 그 제약이 없습니다 — 책이 실제로 어느 선반에 들어갔는지를 보고합니다. 이것은 등록이지 결과가 아닙니다.">Scope: fixed-observation offline rollouts. This is a registration, not a result.</p>
     </div></section>
     <!-- ═══ END OWNER: TRAINING-SERVER ═══ -->
+
+    <!-- ─────────────────────────────────────────────────── selector -->
+    <!-- ═══ OWNER: TRAINING-SERVER (RTX A5000) · 2026-09-09 · DO NOT EDIT ═══
+         근거: openpi_upstream_clean/docs/stage2_mcp/E7_FULL_AUDIT_20260827.md §37
+         ★ 여기 숫자는 전부 JAX · 학습서버 실측이다. 변환기를 거치지 않았다.
+         ★ "고쳤다" 로 읽히게 쓰지 말 것 — 고친 것은 선택이고, 팔은 아직 안 따라온다. -->
+    <section id="query-blindness" class="section alt"><div class="container">
+      <div class="section-head"><div>
+        <p class="section-label" data-en="Selector diagnosis" data-ko="선택기 진단">Selector diagnosis</p>
+        <h2 data-en="It scored a hundred percent without reading the question." data-ko="문제를 안 읽고도 100점을 받았다.">A hundred percent, without reading the question.</h2>
+      </div><p data-en="An outside service tells the policy one word — the book&rsquo;s category. Inside the policy, one small part has to decide which of the three printed shelf signs that word belongs to. On the training episodes it got that right every single time, and it turned out it was not using the word at all." data-ko="외부 서비스는 정책에 단어 하나만 줍니다 — 책의 분야. 그 단어가 책장에 붙은 세 간판 중 어느 것을 가리키는지는 정책 안의 작은 부품이 정합니다. 학습 에피소드에서 이 부품은 한 번도 틀리지 않았는데, 알고 보니 단어를 쓰고 있지 않았습니다.">It never missed on the training episodes — and it was not using the word.</p></div>
+
+      <div class="research-paper">
+
+        <div class="paper-section"><h2 data-en="Eighty-four out of eighty-four" data-ko="84문제 84개 정답">Eighty-four out of eighty-four</h2><div>
+          <p data-en="The test is simple. Show the part a training episode, ask it which sign the episode&rsquo;s category belongs to, and check the answer. It was right on all eighty-four. On the face of it, the hard part of the task — connecting a word to a printed sign — looked solved." data-ko="시험은 간단합니다. 학습 에피소드를 하나 보여주고, 그 에피소드의 분야가 어느 간판에 해당하는지 물어보고, 답을 맞춰봅니다. 84개 전부 맞혔습니다. 겉보기에는 이 과제에서 제일 어려운 부분 — 단어를 인쇄된 간판에 연결하는 일 — 이 풀린 것처럼 보였습니다.">Right on all eighty-four. It looked like the hard part was solved.</p>
+          <p data-en="Then we changed the word and left everything else alone. Same photograph, same robot pose, same moment in the episode — only &ldquo;science&rdquo; became &ldquo;humanities&rdquo;. The correct sign is now a different one, so the answer should move. Across a hundred and sixty-eight such swaps, the answer moved zero times." data-ko="그다음 단어만 바꾸고 나머지는 그대로 뒀습니다. 같은 사진, 같은 로봇 자세, 에피소드의 같은 순간 — &ldquo;science&rdquo; 를 &ldquo;humanities&rdquo; 로 바꿨을 뿐입니다. 정답 간판이 달라졌으니 답도 달라져야 합니다. 이런 교체를 168번 했는데, 답이 바뀐 횟수는 0번이었습니다.">Then we swapped the word. In a hundred and sixty-eight swaps, the answer never moved.</p>
+          <p class="protocol-note" data-en="So the eighty-four was not evidence of word-to-sign grounding. Each training episode has exactly one right answer, and the picture alone is enough to find it — the book being carried is visible, and each sign arrangement was only ever paired with two of the three categories. A part that ignores the word entirely can still score full marks." data-ko="따라서 84/84 는 단어와 간판을 잇는 능력의 증거가 아니었습니다. 학습 에피소드는 정답이 하나뿐이고, 그림만 봐도 그 하나를 찾을 수 있습니다 — 들고 있는 책이 화면에 보이고, 간판 배치마다 세 분야 중 두 개씩만 학습에 들어갔기 때문입니다. 단어를 통째로 무시해도 만점이 나옵니다.">One right answer per episode means the picture alone suffices. Ignoring the word still scores full marks.</p>
+        </div></div>
+
+        <div class="paper-section"><h2 data-en="A part that never moves still scores half" data-ko="아무것도 안 하는 부품이 절반을 맞힌다">Never moving still scores half</h2><div>
+          <p data-en="On the held-out episodes the same swap test returned fifty percent, which reads like &ldquo;it follows the word about half the time&rdquo;. It does not. There are three signs and three categories, and each category owns a different one, so a part that always answers the same thing is right on exactly one of the three by construction. Fifty percent was what a completely frozen answer produces." data-ko="시험용 에피소드에서 같은 교체 시험을 하면 50% 가 나옵니다. &ldquo;절반은 단어를 따라간다&rdquo; 처럼 읽히지만 아닙니다. 간판이 셋이고 분야가 셋이며 분야마다 정답 간판이 다르니, 늘 같은 답만 내는 부품도 셋 중 하나에서는 저절로 맞습니다. 50% 는 답이 완전히 굳어 있을 때 나오는 값이었습니다.">Three signs, three categories — a frozen answer is right on one of three by construction.</p>
+          <p data-en="Every number on this page is therefore printed next to what a frozen answer would have produced on the same episodes. Without that column, the baseline&rsquo;s fifty percent looks like partial success and the whole diagnosis goes the wrong way." data-ko="그래서 이 페이지의 모든 숫자는 &ldquo;답이 굳어 있었다면 나왔을 값&rdquo; 과 나란히 적습니다. 그 열이 없으면 기준선의 50% 가 부분적 성공처럼 보이고, 진단 전체가 반대 방향으로 갑니다.">Every figure here is printed beside what a frozen answer would give.</p>
+          <div class="table-scroll"><table class="flat-table"><thead><tr>
+            <th data-en="" data-ko=""></th>
+            <th data-en="Right on its own question" data-ko="자기 질문을 맞힘">Own question</th>
+            <th data-en="Right after the word is swapped" data-ko="단어를 바꾼 뒤 맞힘">After the swap</th>
+            <th data-en="What a frozen answer gives" data-ko="답이 굳어 있었다면">If frozen</th>
+          </tr></thead><tbody>
+            <tr><td data-en="Baseline, held-out" data-ko="기준선 · 시험용">Baseline, held-out</td><td>1 / 29</td><td>29 / 58</td><td>28 / 58</td></tr>
+            <tr><td data-en="Baseline, training" data-ko="기준선 · 학습">Baseline, training</td><td>84 / 84</td><td>0 / 168</td><td>0 / 168</td></tr>
+            <tr><td data-en="Repaired, held-out" data-ko="처치 후 · 시험용">Repaired, held-out</td><td>10 / 29</td><td><b>54 / 58</b></td><td>19 / 58</td></tr>
+            <tr><td data-en="Repaired, training" data-ko="처치 후 · 학습">Repaired, training</td><td>84 / 84</td><td><b>90 / 168</b></td><td>0 / 168</td></tr>
+          </tbody></table></div>
+          <figure class="lineage-figure" style="margin-top:1.5rem">
+<svg class="vz" viewBox="0 0 1000 300" role="img" xmlns="http://www.w3.org/2000/svg" aria-label="How often the chosen sign follows the swapped word, printed beside what a frozen answer would give">
+<text class="vz-title" x="16" y="20" data-en="Swap the word, and see if the chosen sign follows" data-ko="단어를 바꾸고 고르는 간판이 따라오는지 본다">Swap the word, and see if the chosen sign follows</text>
+<text class="vz-sub" x="16" y="40" data-en="A part that always answers the same thing is still right on one of the three signs — that is the hollow marker, not zero." data-ko="늘 같은 답만 내는 부품도 세 간판 중 하나에서는 저절로 맞습니다 — 그 값이 빈 표식이고, 0 이 아닙니다.">A part that never moves is still right on one sign in three — that is the hollow marker.</text>
+<rect class="vz-track" x="232" y="74" width="558" height="22" rx="4"/>
+<rect class="vz-seg vz2" x="232" y="74" width="279.0" height="22" rx="4"><title>Baseline · held-out · 29 of 58</title></rect>
+<line class="vz-axis" x1="501.4" y1="69" x2="501.4" y2="101" stroke-dasharray="3 3"/>
+<circle class="vz-axis" cx="501.4" cy="85" r="5" fill="none"/>
+<text class="vz-rowlbl" x="220" y="90" text-anchor="end" data-en="Baseline · held-out" data-ko="기준선 · 시험용">Baseline · held-out</text>
+<text class="vz-val" x="802" y="90">29/58</text>
+<text class="vz-sub" x="868" y="90" data-en="frozen 28" data-ko="굳은 답 28">frozen 28</text>
+<rect class="vz-track" x="232" y="118" width="558" height="22" rx="4"/>
+<rect class="vz-seg vz2" x="232" y="118" width="0.0" height="22" rx="4"><title>Baseline · training · 0 of 168</title></rect>
+<line class="vz-axis" x1="232.0" y1="113" x2="232.0" y2="145" stroke-dasharray="3 3"/>
+<circle class="vz-axis" cx="232.0" cy="129" r="5" fill="none"/>
+<text class="vz-rowlbl" x="220" y="134" text-anchor="end" data-en="Baseline · training" data-ko="기준선 · 학습">Baseline · training</text>
+<text class="vz-val" x="802" y="134">0/168</text>
+<text class="vz-sub" x="868" y="134" data-en="frozen 0" data-ko="굳은 답 0">frozen 0</text>
+<rect class="vz-track" x="232" y="162" width="558" height="22" rx="4"/>
+<rect class="vz-seg vz1" x="232" y="162" width="519.5" height="22" rx="4"><title>Repaired · held-out · 54 of 58</title></rect>
+<line class="vz-axis" x1="414.8" y1="157" x2="414.8" y2="189" stroke-dasharray="3 3"/>
+<circle class="vz-axis" cx="414.8" cy="173" r="5" fill="none"/>
+<text class="vz-rowlbl" x="220" y="178" text-anchor="end" data-en="Repaired · held-out" data-ko="처치 후 · 시험용">Repaired · held-out</text>
+<text class="vz-val" x="802" y="178">54/58</text>
+<text class="vz-sub" x="868" y="178" data-en="frozen 19" data-ko="굳은 답 19">frozen 19</text>
+<rect class="vz-track" x="232" y="206" width="558" height="22" rx="4"/>
+<rect class="vz-seg vz1" x="232" y="206" width="298.9" height="22" rx="4"><title>Repaired · training · 90 of 168</title></rect>
+<line class="vz-axis" x1="232.0" y1="201" x2="232.0" y2="233" stroke-dasharray="3 3"/>
+<circle class="vz-axis" cx="232.0" cy="217" r="5" fill="none"/>
+<text class="vz-rowlbl" x="220" y="222" text-anchor="end" data-en="Repaired · training" data-ko="처치 후 · 학습">Repaired · training</text>
+<text class="vz-val" x="802" y="222">90/168</text>
+<text class="vz-sub" x="868" y="222" data-en="frozen 0" data-ko="굳은 답 0">frozen 0</text>
+<text class="vz-note" x="16" y="272" data-en="The two baseline rows sit on their own marker: the answer did not move at all. After the repair the bar clears the marker on both sets — the word is now being read. It is still read only for the pairings of sign arrangement and category that training contained." data-ko="기준선 두 행은 자기 표식 위에 그대로 앉아 있습니다 — 답이 전혀 움직이지 않았습니다. 처치 후에는 두 집합 모두 막대가 표식을 넘어섭니다. 단어를 읽고 있다는 뜻입니다. 다만 학습에 들어 있던 간판 배치와 분야의 짝에 한해서입니다.">The baseline rows sit on their own marker — the answer did not move at all.</text>
+<text class="vz-sub" x="16" y="292" data-en="Held-out episodes, 29 of them, contribute two swaps each; training episodes, 84, contribute two each. Measured in JAX on the training server." data-ko="시험용 에피소드 29개가 각각 두 번씩, 학습 에피소드 84개가 각각 두 번씩 기여합니다. 학습서버의 JAX 실측입니다.">29 held-out and 84 training episodes, two swaps each. Measured in JAX.</text>
+</svg>
+          </figure>
+        </div></div>
+
+        <div class="paper-section"><h2 data-en="Three questions on one picture" data-ko="사진 한 장에 질문 셋">Three questions, one picture</h2><div>
+          <p data-en="The repair does not touch the images and does not rebalance the data. It changes what counts as a complete answer. During training the same photograph is now asked all three questions at once — where does humanities go, where does liberal arts go, where does science go — and each one is marked against a different sign." data-ko="처치는 이미지를 건드리지 않고 데이터 비율도 다시 맞추지 않습니다. 바꾼 것은 &ldquo;답을 다 했다&rdquo; 의 기준입니다. 학습할 때 같은 사진에 세 질문을 한꺼번에 겁니다 — humanities 는 어디, liberal arts 는 어디, science 는 어디 — 그리고 각각을 서로 다른 간판으로 채점합니다.">The same photograph is asked all three questions at once, each marked against a different sign.</p>
+          <p data-en="That is the whole idea: with one right answer per picture, ignoring the question is free; with three, it caps you at one in three. The shortcut stops paying." data-ko="요지는 이것입니다 — 사진마다 정답이 하나면 질문을 무시해도 손해가 없지만, 셋이면 무시하는 순간 3분의 1 이 상한이 됩니다. 지름길이 더는 남는 장사가 아니게 됩니다.">With one answer per picture, ignoring the question is free. With three, it caps you at one in three.</p>
+          <p class="protocol-note" data-en="The two extra questions are marked on the sign choice only. They carry no motion target. Marking them against the recorded motion would teach the opposite of the intent — that the arm should do the same thing no matter which category it was given — so the movement objective stays on the episodes where the word and the demonstration actually agree." data-ko="추가된 두 질문은 <b>간판 선택만</b> 채점합니다. 동작 정답은 붙이지 않습니다. 단어를 바꾼 표본에 녹화된 동작을 정답으로 주면 의도와 정반대 — &ldquo;어떤 분야를 받든 같은 동작을 해라&rdquo; — 를 가르치게 되므로, 동작 학습은 단어와 시연이 실제로 일치하는 표본에만 겁니다.">The extra questions grade the sign choice only. Attaching motion targets to them would teach the opposite.</p>
+        </div></div>
+
+        <div class="paper-section"><h2 data-en="It worked, and how the question is read matters" data-ko="작동했고, 질문을 어떻게 읽느냐가 갈랐다">It worked — and how the question is read matters</h2><div>
+          <p data-en="After the repair the part follows the word: swap the category and the chosen sign moves with it, ninety-three percent of the time on the held-out episodes against thirty-three for a frozen answer. Two versions were trained that differ in one respect only — how the question is turned into something the model can compare against the image." data-ko="처치 후에는 부품이 단어를 따라갑니다. 분야를 바꾸면 고르는 간판이 같이 움직입니다 — 시험용 에피소드에서 93%, 답이 굳어 있었다면 33% 인 자리에서. 학습은 두 판본을 돌렸고, 다른 것은 딱 하나 — 질문을 이미지와 견줄 수 있는 형태로 만드는 방식입니다.">The chosen sign now moves with the word: ninety-three percent, against thirty-three for a frozen answer.</p>
+          <p data-en="Averaging the whole instruction sentence barely worked. Taking the category words on their own worked. The sentence average is nearly identical whichever category it contains — the two versions differ in the fourth decimal place — and the model could in principle have used a difference that small. It did not." data-ko="지시 문장 전체를 평균 내는 방식은 거의 듣지 않았습니다. 분야 단어만 따로 떼어 쓰는 방식은 들었습니다. 문장 평균은 어느 분야가 들어가든 사실상 같은 값입니다 — 두 판본의 차이가 소수점 넷째 자리입니다. 모델이 그 작은 차이를 쓸 수도 있었지만, 쓰지 않고 있었습니다.">Averaging the sentence barely worked; using the category words alone did.</p>
+        </div></div>
+
+        <div class="paper-section"><h2 data-en="What it did not repair" data-ko="고쳐지지 않은 것">What it did not repair</h2><div>
+          <p data-en="Following the word is not the same as knowing where the word goes. Split the results by whether that particular pairing of sign arrangement and category ever appeared in training, and the two halves come apart: ninety-three percent on pairings it has seen, thirty-five on pairings it has not — which is what guessing gives." data-ko="단어를 따라간다는 것과 그 단어가 어디로 가는지 안다는 것은 다릅니다. &ldquo;이 간판 배치와 이 분야&rdquo; 라는 짝이 학습에 나온 적 있는지로 갈라 보면 둘이 갈립니다 — 본 적 있는 짝은 93%, 없는 짝은 35% 이고 이건 찍는 것과 같습니다.">Ninety-three percent on pairings it has seen; thirty-five — chance — on pairings it has not.</p>
+          <p data-en="Every held-out episode is an unseen pairing, by construction of the split, so on its own questions the repaired part still scores about a third. The bottleneck moved rather than closed: it was not reading the question, and now it reads the question but only recognises the combinations it was shown." data-ko="시험용 에피소드는 분할 방식상 전부 처음 보는 짝이라, 자기 질문에 대해서는 처치 후에도 3분의 1 수준입니다. 병목이 사라진 게 아니라 옮겨간 것입니다 — 질문을 안 읽던 상태에서, 질문은 읽되 보여준 조합만 아는 상태로.">The bottleneck moved rather than closed.</p>
+        </div></div>
+
+        <div class="paper-section"><h2 data-en="The arm did not follow" data-ko="팔은 따라오지 않았다">The arm did not follow</h2><div>
+          <p data-en="On the training episodes the part picks the right sign every time — before the repair and after it. If picking correctly were enough, those rollouts should end at the right shelf. They end there about a third of the time: thirty-one of eighty-four before, twenty-seven after. The change did not help, and it was never going to, because there was no headroom left to gain on that set." data-ko="학습 에피소드에서 이 부품은 처치 전에도 후에도 간판을 매번 맞게 고릅니다. 맞게 고르는 것으로 충분하다면 그 롤아웃은 맞는 책장에서 끝나야 합니다. 실제로는 3분의 1 정도입니다 — 처치 전 84 중 31, 후 84 중 27. 처치가 도움이 안 됐고, 애초에 될 수 없었습니다. 그 집합에서는 더 올릴 여지가 없었기 때문입니다.">Picking is right every time on those episodes; the rollout still ends at the right shelf about a third of the time.</p>
+          <p data-en="That is the finding, and it does not depend on the repair at all. With the sign choice correct eighty-four times out of eighty-four, the trajectory reaches the matching shelf twenty-seven to thirty-one times out of eighty-four. Whatever decides where the arm goes is not being told what the selector decided." data-ko="이것이 이번 결과이고, 처치와는 무관하게 성립합니다. 간판 선택이 84번 중 84번 맞는 상태에서 궤적은 84번 중 27~31번만 해당 책장에 도달합니다. 팔이 어디로 갈지 정하는 무엇이, 선택기가 정한 것을 전달받지 못하고 있습니다.">With the choice right 84 of 84, the trajectory reaches the matching shelf 27 to 31 of 84.</p>
+          <p class="protocol-note" data-en="Two supporting measurements agree. Swapping the category word moves the produced joint angles by about a third of a degree, before the repair and after — against the roughly twenty-one degrees that separate one shelf&rsquo;s staging pose from the next. And forcing the selector onto a chosen sign by hand, at strengths up to the maximum the mechanism allows, changes where the arm ends without changing it toward the sign that was forced." data-ko="보조 측정 둘이 같은 말을 합니다. 분야 단어를 바꿔도 나오는 관절 각도는 0.3도 남짓 움직입니다 — 처치 전에도 후에도. 책장 하나와 다음 책장의 대기 자세를 가르는 각도가 21도쯤인 것과 비교하면 그렇습니다. 그리고 선택기를 손으로 특정 간판에 강제로 고정해 봐도 — 구조가 허용하는 최대 세기까지 — 팔이 끝나는 자리는 바뀌지만 <b>강제한 간판 쪽으로</b> 바뀌지는 않습니다.">Swapping the word moves the joints by a third of a degree, against twenty-one degrees between shelves.</p>
+        </div></div>
+
+        <div class="paper-section"><h2 data-en="What we now do before trusting an instrument" data-ko="계측기를 믿기 전에 하는 일">Before trusting an instrument</h2><div>
+          <p data-en="Three controls failed during this work, all of them ours rather than the model&rsquo;s, and each would have turned a null result into a story." data-ko="이 작업 중에 대조군이 세 번 실패했습니다. 셋 다 모델이 아니라 우리 쪽 결함이었고, 하나하나가 &ldquo;아무 일도 없었다&rdquo; 를 그럴듯한 이야기로 바꿀 뻔했습니다.">Three controls failed, all of them ours, and each would have turned a null result into a story.</p>
+          <ul>
+            <li data-en="An intervention that never reached the model. Every arm returned bit-identical output, which looks like a real null until you notice that identical to the last bit is not what a real null looks like. The compiled program had been frozen before the setting was changed." data-ko="개입이 모델에 닿지 않은 경우. 모든 조건이 비트 단위로 같은 출력을 냈습니다. 진짜 &ldquo;효과 없음&rdquo; 처럼 보이지만, 마지막 비트까지 같은 것은 진짜 효과 없음의 모습이 아닙니다. 설정을 바꾸기 전에 계산 그래프가 이미 굳어 있었습니다.">An intervention that never reached the model — every arm bit-identical.</li>
+            <li data-en="A control that passes when nothing works. &ldquo;With the knob at zero, all three forced choices agree&rdquo; is also satisfied when the knob does nothing at all. It now has to be paired with a check that turning the knob up does move the output." data-ko="아무것도 작동하지 않을 때도 통과하는 대조군. &ldquo;세기를 0 으로 두면 세 강제가 서로 같다&rdquo; 는 세기 조절 자체가 안 먹을 때도 성립합니다. 이제는 &ldquo;세기를 올리면 출력이 실제로 움직인다&rdquo; 는 검사와 짝지어야 합니다.">A control that also passes when the knob does nothing.</li>
+            <li data-en="A noise floor that was not one. Rebuilding the same configuration produces the same program and therefore exactly zero difference, which measures nothing. The floor has to come from two programs that are compiled differently but must agree mathematically." data-ko="바닥이 아니었던 바닥. 같은 설정을 다시 빌드하면 같은 프로그램이 나와 차이가 정확히 0 이고, 그건 아무것도 재지 않습니다. 바닥은 &ldquo;서로 다르게 컴파일됐지만 수학적으로는 같아야 하는&rdquo; 두 프로그램에서 나와야 합니다.">A noise floor that measured nothing.</li>
+          </ul>
+          <p class="protocol-note" data-en="Scope. These are training-server measurements in JAX; nothing here crosses the conversion boundary. The rollouts hold the camera images fixed while the joint state advances, so they approximate the robot rather than stand in for it. The held-out set has been used to steer several decisions and is a development set now, not an exam: a clean test needs a sign arrangement withheld from the start, with the baseline retrained on the same split." data-ko="범위. 여기 숫자는 학습서버의 JAX 실측이고 변환 경계를 넘지 않습니다. 롤아웃은 관절 상태만 진행시키고 카메라 그림은 고정한 근사라, 실기를 대신하지 못합니다. 시험용 집합은 이미 여러 결정에 썼으므로 지금은 시험지가 아니라 개발셋입니다 — 깨끗한 시험을 하려면 간판 배치 하나를 처음부터 빼두고, 기준선도 같은 분할로 다시 학습해야 합니다.">Scope: JAX only, fixed-image rollouts, and the held-out set is a development set now.</p>
+        </div></div>
+      </div>
+    </div></section>
 
     <section id="open" class="section"><div class="container">
       <div class="section-head"><div>

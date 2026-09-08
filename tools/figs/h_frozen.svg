@@ -1,0 +1,34 @@
+<svg class="vz" viewBox="0 0 1000 300" role="img" xmlns="http://www.w3.org/2000/svg" aria-label="How often the chosen sign follows the swapped word, printed beside what a frozen answer would give">
+<text class="vz-title" x="16" y="20" data-en="Swap the word, and see if the chosen sign follows" data-ko="단어를 바꾸고 고르는 간판이 따라오는지 본다">Swap the word, and see if the chosen sign follows</text>
+<text class="vz-sub" x="16" y="40" data-en="A part that always answers the same thing is still right on one of the three signs — that is the hollow marker, not zero." data-ko="늘 같은 답만 내는 부품도 세 간판 중 하나에서는 저절로 맞습니다 — 그 값이 빈 표식이고, 0 이 아닙니다.">A part that never moves is still right on one sign in three — that is the hollow marker.</text>
+<rect class="vz-track" x="232" y="74" width="558" height="22" rx="4"/>
+<rect class="vz-seg vz2" x="232" y="74" width="279.0" height="22" rx="4"><title>Baseline · held-out · 29 of 58</title></rect>
+<line class="vz-axis" x1="501.4" y1="69" x2="501.4" y2="101" stroke-dasharray="3 3"/>
+<circle class="vz-axis" cx="501.4" cy="85" r="5" fill="none"/>
+<text class="vz-rowlbl" x="220" y="90" text-anchor="end" data-en="Baseline · held-out" data-ko="기준선 · 시험용">Baseline · held-out</text>
+<text class="vz-val" x="802" y="90">29/58</text>
+<text class="vz-sub" x="868" y="90" data-en="frozen 28" data-ko="굳은 답 28">frozen 28</text>
+<rect class="vz-track" x="232" y="118" width="558" height="22" rx="4"/>
+<rect class="vz-seg vz2" x="232" y="118" width="0.0" height="22" rx="4"><title>Baseline · training · 0 of 168</title></rect>
+<line class="vz-axis" x1="232.0" y1="113" x2="232.0" y2="145" stroke-dasharray="3 3"/>
+<circle class="vz-axis" cx="232.0" cy="129" r="5" fill="none"/>
+<text class="vz-rowlbl" x="220" y="134" text-anchor="end" data-en="Baseline · training" data-ko="기준선 · 학습">Baseline · training</text>
+<text class="vz-val" x="802" y="134">0/168</text>
+<text class="vz-sub" x="868" y="134" data-en="frozen 0" data-ko="굳은 답 0">frozen 0</text>
+<rect class="vz-track" x="232" y="162" width="558" height="22" rx="4"/>
+<rect class="vz-seg vz1" x="232" y="162" width="519.5" height="22" rx="4"><title>Repaired · held-out · 54 of 58</title></rect>
+<line class="vz-axis" x1="414.8" y1="157" x2="414.8" y2="189" stroke-dasharray="3 3"/>
+<circle class="vz-axis" cx="414.8" cy="173" r="5" fill="none"/>
+<text class="vz-rowlbl" x="220" y="178" text-anchor="end" data-en="Repaired · held-out" data-ko="처치 후 · 시험용">Repaired · held-out</text>
+<text class="vz-val" x="802" y="178">54/58</text>
+<text class="vz-sub" x="868" y="178" data-en="frozen 19" data-ko="굳은 답 19">frozen 19</text>
+<rect class="vz-track" x="232" y="206" width="558" height="22" rx="4"/>
+<rect class="vz-seg vz1" x="232" y="206" width="298.9" height="22" rx="4"><title>Repaired · training · 90 of 168</title></rect>
+<line class="vz-axis" x1="232.0" y1="201" x2="232.0" y2="233" stroke-dasharray="3 3"/>
+<circle class="vz-axis" cx="232.0" cy="217" r="5" fill="none"/>
+<text class="vz-rowlbl" x="220" y="222" text-anchor="end" data-en="Repaired · training" data-ko="처치 후 · 학습">Repaired · training</text>
+<text class="vz-val" x="802" y="222">90/168</text>
+<text class="vz-sub" x="868" y="222" data-en="frozen 0" data-ko="굳은 답 0">frozen 0</text>
+<text class="vz-note" x="16" y="272" data-en="The two baseline rows sit on their own marker: the answer did not move at all. After the repair the bar clears the marker on both sets — the word is now being read. It is still read only for the pairings of sign arrangement and category that training contained." data-ko="기준선 두 행은 자기 표식 위에 그대로 앉아 있습니다 — 답이 전혀 움직이지 않았습니다. 처치 후에는 두 집합 모두 막대가 표식을 넘어섭니다. 단어를 읽고 있다는 뜻입니다. 다만 학습에 들어 있던 간판 배치와 분야의 짝에 한해서입니다.">The baseline rows sit on their own marker — the answer did not move at all.</text>
+<text class="vz-sub" x="16" y="292" data-en="Held-out episodes, 29 of them, contribute two swaps each; training episodes, 84, contribute two each. Measured in JAX on the training server." data-ko="시험용 에피소드 29개가 각각 두 번씩, 학습 에피소드 84개가 각각 두 번씩 기여합니다. 학습서버의 JAX 실측입니다.">29 held-out and 84 training episodes, two swaps each. Measured in JAX.</text>
+</svg>
